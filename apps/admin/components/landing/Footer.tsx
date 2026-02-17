@@ -82,7 +82,7 @@ export function Footer() {
 
         <div className="flex flex-col items-center justify-between pt-8 border-t border-border md:flex-row">
           <div className="mb-4 text-[13px] font-mono text-text-muted md:mb-0">
-            © 2025 Food. All rights reserved.
+            © {new Date().getFullYear()} Food. All rights reserved.
           </div>
           <div className="flex gap-4">
             {["𝕏", "in", "ig"].map((icon) => (
