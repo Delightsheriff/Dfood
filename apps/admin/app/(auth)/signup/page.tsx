@@ -258,11 +258,21 @@ export default function SignupPage() {
             </div>
 
             {/* Step Indicator */}
-            <div className="flex items-center mb-10">
-              {[1, 2, 3].map((s) => (
-                <div key={s} className="flex items-center">
+            <div className="mb-10">
+              <div className="relative flex items-center justify-between mb-2">
+                {/* Connector lines behind circles */}
+                <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex pointer-events-none">
                   <div
-                    className={`w-8 h-8 rounded-full border flex items-center justify-center text-[12px] font-mono transition-all duration-300 relative z-10 ${
+                    className={`flex-1 h-px transition-colors duration-300 ${step > 1 ? "bg-green-500/40" : "bg-border "}`}
+                  />
+                  <div
+                    className={`flex-1 h-px transition-colors duration-300 ${step > 2 ? "bg-green-500/40" : "bg-border"}`}
+                  />
+                </div>
+                {[1, 2, 3].map((s) => (
+                  <div
+                    key={s}
+                    className={`relative z-10 w-8 h-8 rounded-full border flex items-center justify-center text-[12px] font-mono transition-all duration-300 ${
                       step === s
                         ? "bg-orange border-orange text-white"
                         : step > s
@@ -272,28 +282,21 @@ export default function SignupPage() {
                   >
                     {step > s ? <Check size={14} /> : s}
                   </div>
-                  {s < 3 && (
-                    <div
-                      className={`w-15 md:w-25 h-px transition-colors duration-300 ${
-                        step > s ? "bg-green-500/40" : "bg-border"
-                      }`}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <div className="flex justify-between mb-8 mt-2 px-1">
-              {["Your Info", "Restaurant", "Confirm"].map((label, i) => (
-                <span
-                  key={label}
-                  className={`text-[11px] font-mono uppercase tracking-wider transition-colors ${
-                    step === i + 1 ? "text-orange" : "text-text-muted"
-                  }`}
-                >
-                  {label}
-                </span>
-              ))}
+              <div className="flex justify-between">
+                {["Your Info", "Restaurant", "Confirm"].map((label, i) => (
+                  <span
+                    key={label}
+                    className={`text-[11px] font-mono uppercase tracking-wider transition-colors ${
+                      step === i + 1 ? "text-orange" : "text-text-muted"
+                    }`}
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
             </div>
 
             <Form {...form}>
