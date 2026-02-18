@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { useForm, Control, Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Check, ChevronRight, Eye, EyeOff, Loader2 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 import {
   Form,
@@ -30,19 +29,15 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 // Schema Definitions
-const step1Schema = z
-  .object({
-    firstName: z.string().min(1, "Required"),
-    lastName: z.string().min(1, "Required"),
-    email: z.string().email("Invalid email address"),
-    phone: z.string().min(7, "Invalid phone number"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string().min(8, "Required"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+
+const step1Schema = z.object({
+  firstName: z.string().min(1, "Required"),
+  lastName: z.string().min(1, "Required"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(7, "Invalid phone number"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string().min(8, "Required"),
+});
 
 const step2Schema = z.object({
   restaurantName: z.string().min(1, "Required"),
@@ -60,10 +55,13 @@ const step3Schema = z.object({
 });
 
 // Combined schema for form type
-const signupSchema = z.intersection(
-  z.intersection(step1Schema, step2Schema),
-  step3Schema,
-);
+const signupSchema = step1Schema
+  .merge(step2Schema)
+  .merge(step3Schema)
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
@@ -75,7 +73,9 @@ export default function SignupPage() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const form = useForm<SignupFormValues>({
-    resolver: zodResolver(signupSchema),
+    resolver: zodResolver(
+      signupSchema,
+    ) as unknown as Resolver<SignupFormValues>,
     mode: "onChange",
     defaultValues: {
       firstName: "",
@@ -166,7 +166,7 @@ export default function SignupPage() {
 
   return (
     <main className="min-h-screen bg-black text-white flex justify-center">
-      <div className="w-full max-w-[1400px] grid grid-cols-1 md:grid-cols-2">
+      <div className="w-full max-w-350 grid grid-cols-1 md:grid-cols-2">
         <Link
           href="/"
           className="fixed top-6 right-8 z-50 flex items-center gap-2 text-[13px] text-text-muted hover:text-white transition-colors no-underline"
@@ -175,12 +175,12 @@ export default function SignupPage() {
         </Link>
 
         {/* LEFT PANEL */}
-        <div className="hidden md:flex relative flex-col justify-between p-12 overflow-hidden bg-surface border-r border-border h-screen sticky top-0">
+        <div className="hidden md:flex relative flex-col justify-between p-12 overflow-hidden bg-surface border-r border-border h-screen  top-0">
           {/* Grid background */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-size-[60px_60px] pointer-events-none" />
 
           {/* Orange glow */}
-          <div className="absolute -top-[100px] -right-[100px] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(255,118,34,0.12),transparent_60%)] pointer-events-none" />
+          <div className="absolute -top-25 -right-25 w-125 h-125 bg-[radial-gradient(circle,rgba(255,118,34,0.12),transparent_60%)] pointer-events-none" />
 
           <Link
             href="/"
@@ -204,7 +204,7 @@ export default function SignupPage() {
               <br />
               HASSLE.
             </h2>
-            <p className="max-w-[400px] mb-8 text-[14px] font-light leading-relaxed text-text-muted">
+            <p className="max-w-100 mb-8 text-[14px] font-light leading-relaxed text-text-muted">
               Join 48+ restaurants already growing with Food. Manage orders in
               real-time, reach new customers, and get paid directly.
             </p>
@@ -224,7 +224,7 @@ export default function SignupPage() {
                   key={i}
                   className="flex items-center gap-3 text-[14px] text-text-dim"
                 >
-                  <div className="w-7 h-7 bg-orange/10 border border-orange/20 rounded-[8px] flex items-center justify-center text-[14px] shrink-0">
+                  <div className="w-7 h-7 bg-orange/10 border border-orange/20 rounded-lg flex items-center justify-center text-[14px] shrink-0">
                     {item.icon}
                   </div>
                   {item.text}
@@ -240,7 +240,7 @@ export default function SignupPage() {
 
         {/* RIGHT PANEL */}
         <div className="flex flex-col items-center pt-16 pb-12 px-6 md:px-12 w-full">
-          <div className="w-full max-w-[460px]">
+          <div className="w-full max-w-115">
             {/* Header */}
             <div className="mb-10">
               <h1 className="mb-2 text-[42px] font-bebas tracking-[1px]">
@@ -274,7 +274,7 @@ export default function SignupPage() {
                   </div>
                   {s < 3 && (
                     <div
-                      className={`w-[60px] md:w-[100px] h-[1px] transition-colors duration-300 ${
+                      className={`w-15 md:w-25 h-px transition-colors duration-300 ${
                         step > s ? "bg-green-500/40" : "bg-border"
                       }`}
                     />
@@ -311,7 +311,9 @@ export default function SignupPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
-                      control={form.control}
+                      control={
+                        form.control as unknown as Control<SignupFormValues>
+                      }
                       name="firstName"
                       render={({ field }) => (
                         <FormItem>
@@ -330,7 +332,9 @@ export default function SignupPage() {
                       )}
                     />
                     <FormField
-                      control={form.control}
+                      control={
+                        form.control as unknown as Control<SignupFormValues>
+                      }
                       name="lastName"
                       render={({ field }) => (
                         <FormItem>
@@ -351,7 +355,9 @@ export default function SignupPage() {
                   </div>
 
                   <FormField
-                    control={form.control}
+                    control={
+                      form.control as unknown as Control<SignupFormValues>
+                    }
                     name="email"
                     render={({ field }) => (
                       <FormItem className="mt-4">
@@ -371,7 +377,9 @@ export default function SignupPage() {
                   />
 
                   <FormField
-                    control={form.control}
+                    control={
+                      form.control as unknown as Control<SignupFormValues>
+                    }
                     name="phone"
                     render={({ field }) => (
                       <FormItem className="mt-4">
@@ -391,7 +399,9 @@ export default function SignupPage() {
                   />
 
                   <FormField
-                    control={form.control}
+                    control={
+                      form.control as unknown as Control<SignupFormValues>
+                    }
                     name="password"
                     render={({ field }) => (
                       <FormItem className="mt-4">
@@ -428,7 +438,9 @@ export default function SignupPage() {
                   />
 
                   <FormField
-                    control={form.control}
+                    control={
+                      form.control as unknown as Control<SignupFormValues>
+                    }
                     name="confirmPassword"
                     render={({ field }) => (
                       <FormItem className="mt-4">
@@ -467,7 +479,7 @@ export default function SignupPage() {
                     <Button
                       type="button"
                       onClick={nextStep}
-                      className="w-full h-[54px] text-[15px] font-bold tracking-[0.5px] bg-orange hover:bg-[#e86a1e] rounded-[10px] flex items-center justify-center gap-2"
+                      className="w-full h-13.5 text-[15px] font-bold tracking-[0.5px] bg-orange hover:bg-[#e86a1e] rounded-[10px] flex items-center justify-center gap-2"
                     >
                       Continue <ChevronRight size={18} />
                     </Button>
@@ -483,7 +495,9 @@ export default function SignupPage() {
                   </div>
 
                   <FormField
-                    control={form.control}
+                    control={
+                      form.control as unknown as Control<SignupFormValues>
+                    }
                     name="restaurantName"
                     render={({ field }) => (
                       <FormItem>
@@ -503,7 +517,9 @@ export default function SignupPage() {
                   />
 
                   <FormField
-                    control={form.control}
+                    control={
+                      form.control as unknown as Control<SignupFormValues>
+                    }
                     name="cuisineType"
                     render={({ field }) => (
                       <FormItem className="mt-4">
@@ -545,7 +561,9 @@ export default function SignupPage() {
                   />
 
                   <FormField
-                    control={form.control}
+                    control={
+                      form.control as unknown as Control<SignupFormValues>
+                    }
                     name="restaurantAddress"
                     render={({ field }) => (
                       <FormItem className="mt-4">
@@ -566,7 +584,9 @@ export default function SignupPage() {
 
                   <div className="grid grid-cols-2 gap-4 mt-4">
                     <FormField
-                      control={form.control}
+                      control={
+                        form.control as unknown as Control<SignupFormValues>
+                      }
                       name="city"
                       render={({ field }) => (
                         <FormItem>
@@ -604,7 +624,9 @@ export default function SignupPage() {
                       )}
                     />
                     <FormField
-                      control={form.control}
+                      control={
+                        form.control as unknown as Control<SignupFormValues>
+                      }
                       name="deliveryFee"
                       render={({ field }) => (
                         <FormItem>
@@ -627,7 +649,9 @@ export default function SignupPage() {
 
                   <div className="grid grid-cols-2 gap-4 mt-4">
                     <FormField
-                      control={form.control}
+                      control={
+                        form.control as unknown as Control<SignupFormValues>
+                      }
                       name="openingTime"
                       render={({ field }) => (
                         <FormItem>
@@ -645,7 +669,9 @@ export default function SignupPage() {
                       )}
                     />
                     <FormField
-                      control={form.control}
+                      control={
+                        form.control as unknown as Control<SignupFormValues>
+                      }
                       name="closingTime"
                       render={({ field }) => (
                         <FormItem>
@@ -665,7 +691,9 @@ export default function SignupPage() {
                   </div>
 
                   <FormField
-                    control={form.control}
+                    control={
+                      form.control as unknown as Control<SignupFormValues>
+                    }
                     name="description"
                     render={({ field }) => (
                       <FormItem className="mt-4">
@@ -676,7 +704,7 @@ export default function SignupPage() {
                           <Textarea
                             placeholder="Tell customers what makes your food special..."
                             {...field}
-                            className="bg-surface border-border focus:border-orange/50 rounded-[10px] min-h-[80px]"
+                            className="bg-surface border-border focus:border-orange/50 rounded-[10px] min-h-20"
                           />
                         </FormControl>
                         <FormDescription className="text-xs font-light mt-1.5">
@@ -692,14 +720,14 @@ export default function SignupPage() {
                       type="button"
                       variant="outline"
                       onClick={prevStep}
-                      className="flex-1 h-[54px] border-border bg-transparent hover:bg-white/5 hover:text-white rounded-[10px]"
+                      className="flex-1 h-13.5 border-border bg-transparent hover:bg-white/5 hover:text-white rounded-[10px]"
                     >
                       ← Back
                     </Button>
                     <Button
                       type="button"
                       onClick={nextStep}
-                      className="flex-[2] h-[54px] text-[15px] font-bold tracking-[0.5px] bg-orange hover:bg-[#e86a1e] rounded-[10px] flex items-center justify-center gap-2"
+                      className="flex-2 h-13.5 text-[15px] font-bold tracking-[0.5px] bg-orange hover:bg-[#e86a1e] rounded-[10px] flex items-center justify-center gap-2"
                     >
                       Continue <ChevronRight size={18} />
                     </Button>
@@ -715,7 +743,7 @@ export default function SignupPage() {
                   </div>
 
                   {/* Summary */}
-                  <div className="bg-surface border border-border rounded-[12px] p-6 mb-6">
+                  <div className="bg-surface border border-border rounded-xl p-6 mb-6">
                     <div className="mb-4 pb-4 border-b border-border">
                       <div className="text-[12px] text-text-muted font-mono mb-1">
                         ACCOUNT
@@ -741,7 +769,7 @@ export default function SignupPage() {
                   </div>
 
                   {/* What happens next */}
-                  <div className="bg-orange/5 border border-orange/15 rounded-[12px] p-5 mb-6">
+                  <div className="bg-orange/5 border border-orange/15 rounded-xl p-5 mb-6">
                     <div className="text-[12px] text-orange font-mono tracking-[1px] mb-3">
                       WHAT HAPPENS NEXT
                     </div>
@@ -762,7 +790,9 @@ export default function SignupPage() {
                   </div>
 
                   <FormField
-                    control={form.control}
+                    control={
+                      form.control as unknown as Control<SignupFormValues>
+                    }
                     name="agreeTerms"
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-start space-x-3 space-y-0 mb-6">
@@ -803,14 +833,14 @@ export default function SignupPage() {
                       type="button"
                       variant="outline"
                       onClick={prevStep}
-                      className="flex-1 h-[54px] border-border bg-transparent hover:bg-white/5 hover:text-white rounded-[10px]"
+                      className="flex-1 h-13.5 border-border bg-transparent hover:bg-white/5 hover:text-white rounded-[10px]"
                     >
                       ← Back
                     </Button>
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="flex-[2] h-[54px] text-[15px] font-bold tracking-[0.5px] bg-orange hover:bg-[#e86a1e] rounded-[10px]"
+                      className="flex-2 h-13.5 text-[15px] font-bold tracking-[0.5px] bg-orange hover:bg-[#e86a1e] rounded-[10px]"
                     >
                       {loading ? (
                         <Loader2 className="w-5 h-5 animate-spin" />

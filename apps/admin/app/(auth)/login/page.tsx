@@ -53,7 +53,7 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-black text-white flex justify-center">
-      <div className="w-full max-w-[1400px] grid grid-cols-1 md:grid-cols-2">
+      <div className="w-full max-w-350 grid grid-cols-1 md:grid-cols-2">
         <Link
           href="/"
           className="fixed top-6 right-8 z-50 flex items-center gap-2 text-[13px] text-text-muted hover:text-white transition-colors no-underline"
@@ -64,10 +64,10 @@ export default function LoginPage() {
         {/* LEFT PANEL */}
         <div className="hidden md:flex relative flex-col justify-between p-12 overflow-hidden bg-surface border-r border-border">
           {/* Grid background */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-size-[60px_60px] pointer-events-none" />
 
           {/* Orange glow */}
-          <div className="absolute -bottom-[100px] -left-[100px] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(255,118,34,0.15),transparent_60%)] pointer-events-none" />
+          <div className="absolute -bottom-25 -left-25 w-125 h-125 bg-[radial-gradient(circle,rgba(255,118,34,0.15),transparent_60%)] pointer-events-none" />
 
           <Link
             href="/"
@@ -89,7 +89,7 @@ export default function LoginPage() {
               <br />
               AWAIT.
             </h2>
-            <p className="max-w-[340px] mb-10 text-[15px] font-light leading-relaxed text-text-muted">
+            <p className="max-w-85 mb-10 text-[15px] font-light leading-relaxed text-text-muted">
               Manage your restaurant, track real-time orders, and grow your
               delivery revenue — all in one dashboard.
             </p>
@@ -123,7 +123,7 @@ export default function LoginPage() {
               ].map((stat, i) => (
                 <div
                   key={i}
-                  className="p-4 border rounded-xl bg-white/[0.03] border-border"
+                  className="p-4 border rounded-xl bg-white/3 border-border"
                 >
                   <div className="font-bebas text-[28px] text-orange leading-none flex items-center gap-1">
                     {stat.prefix}
@@ -149,7 +149,7 @@ export default function LoginPage() {
 
         {/* RIGHT PANEL */}
         <div className="flex flex-col items-center justify-center p-6 md:p-12">
-          <div className="w-full max-w-[400px]">
+          <div className="w-full max-w-100">
             <div className="mb-10">
               <h1 className="mb-2 text-[42px] font-bebas tracking-[1px]">
                 SIGN IN
@@ -254,7 +254,7 @@ export default function LoginPage() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full h-[54px] text-[15px] font-bold tracking-[0.5px] bg-orange hover:bg-[#e86a1e] hover:shadow-[0_12px_24px_rgba(255,118,34,0.25)] hover:-translate-y-0.5 transition-all duration-250 rounded-[10px]"
+                  className="w-full h-13.5 text-[15px] font-bold tracking-[0.5px] bg-orange hover:bg-[#e86a1e] hover:shadow-[0_12px_24px_rgba(255,118,34,0.25)] hover:-translate-y-0.5 transition-all duration-250 rounded-[10px]"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
