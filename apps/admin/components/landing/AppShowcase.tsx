@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Reveal } from "./Reveal";
 import { cn } from "@/lib/utils";
 
@@ -12,21 +13,25 @@ export function AppShowcase() {
       icon: "🏠",
       title: "Home & Discovery",
       desc: "Browse restaurants by category, search for dishes, see what's nearby and open right now.",
+      image: "/app-screen-1.jpeg",
     },
     {
       icon: "🍕",
       title: "Restaurant & Menu",
       desc: "Full menu with photos, descriptions, and ratings. Add to cart in one tap.",
+      image: "/app-screen-2.jpeg",
     },
     {
       icon: "🛒",
       title: "Cart & Checkout",
       desc: "Review your order, pick your address and payment method, place it in seconds.",
+      image: "/cart.jpeg",
     },
     {
       icon: "📦",
       title: "Order Tracking",
       desc: "Real-time push notifications at every stage — from kitchen to your door.",
+      image: "/app-screen-4.jpeg",
     },
   ];
 
@@ -34,48 +39,50 @@ export function AppShowcase() {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveTab((prev) => (prev + 1) % tabs.length);
-    }, 3000);
+    }, 4000); // Slower interval for better viewing
     return () => clearInterval(interval);
   }, [tabs.length]);
 
   return (
-    <section className="py-32 px-12 overflow-hidden">
-      <div className="grid grid-cols-1 gap-20 items-center max-w-7xl mx-auto lg:grid-cols-[1fr_1.4fr]">
+    <section className="py-24 px-6 md:px-12 overflow-hidden bg-background">
+      <div className="grid grid-cols-1 gap-16 items-center max-w-7xl mx-auto lg:grid-cols-[1fr_1.2fr]">
         {/* Left: Content + Tabs */}
         <div>
           <Reveal>
             <div className="mb-4 text-xs font-mono tracking-[3px] text-orange uppercase">
               — The App
             </div>
-            <h2 className="mb-2 text-[clamp(48px,6vw,80px)] font-bebas leading-[0.95] tracking-[1px]">
+            <h2 className="mb-6 text-[clamp(40px,5vw,64px)] font-bebas leading-[0.95] tracking-[1px] text-text">
               SEE IT
               <br />
               IN ACTION
             </h2>
           </Reveal>
-          <Reveal delay={0.2}>
-            <p className="mb-10 text-[15px] font-light leading-relaxed text-text-muted">
+          <Reveal delay={0.1}>
+            <p className="mb-10 text-[15px] md:text-base font-light leading-relaxed text-text-muted">
               Everything you need to order food, track delivery, and manage your
               preferences — in one beautifully simple app.
             </p>
           </Reveal>
 
-          <div className="flex flex-col gap-1 mt-10">
+          <div className="flex flex-col gap-3">
             {tabs.map((tab, index) => (
               <Reveal key={index} delay={0.2 + index * 0.1}>
                 <button
                   onClick={() => setActiveTab(index)}
                   className={cn(
-                    "flex items-start w-full gap-4 p-5 text-left transition-all duration-300 border border-transparent rounded-xl bg-transparent hover:bg-surface hover:border-border",
-                    activeTab === index && "bg-surface border-orange/25",
+                    "group flex items-start w-full gap-4 p-4 text-left transition-all duration-300 border rounded-2xl",
+                    activeTab === index
+                      ? "bg-surface border-orange/40 shadow-lg shadow-orange/5"
+                      : "bg-transparent border-transparent hover:bg-surface/50 hover:border-border/50",
                   )}
                 >
                   <div
                     className={cn(
-                      "flex items-center justify-center w-10 h-10 text-lg transition-all border rounded-lg shrink-0",
+                      "flex items-center justify-center w-12 h-12 text-xl transition-all border rounded-xl shrink-0",
                       activeTab === index
-                        ? "bg-orange/15 border-orange/35"
-                        : "bg-orange/10 border-orange/20",
+                        ? "bg-orange text-white border-orange shadow-md shadow-orange/20"
+                        : "bg-surface text-text-muted border-border group-hover:border-orange/30 group-hover:text-orange",
                     )}
                   >
                     {tab.icon}
@@ -83,13 +90,22 @@ export function AppShowcase() {
                   <div>
                     <div
                       className={cn(
-                        "mb-1 text-[13px] font-semibold transition-colors",
-                        activeTab === index ? "text-text" : "text-text-dim",
+                        "mb-1 text-sm font-bold transition-colors",
+                        activeTab === index
+                          ? "text-text"
+                          : "text-text-dim group-hover:text-text",
                       )}
                     >
                       {tab.title}
                     </div>
-                    <div className="text-[13px] font-light leading-snug text-text-muted">
+                    <div
+                      className={cn(
+                        "text-xs md:text-[13px] font-light leading-relaxed",
+                        activeTab === index
+                          ? "text-text-muted"
+                          : "text-text-subtle",
+                      )}
+                    >
                       {tab.desc}
                     </div>
                   </div>
@@ -101,72 +117,68 @@ export function AppShowcase() {
 
         {/* Right: Phone Mockup */}
         <Reveal
-          delay={0.1}
-          className="relative flex items-center justify-center"
+          delay={0.2}
+          className="relative flex items-center justify-center pt-10 lg:pt-0"
         >
-          {/* Glow behind phone */}
-          <div className="absolute w-[340px] h-[340px] bg-[radial-gradient(circle,rgba(255,118,34,0.18),transparent_65%)] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+          {/* Decorative Glow */}
+          <div className="absolute w-[500px] h-[500px] bg-orange/5 rounded-full blur-3xl -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
           {/* Floating Badges */}
-          <div className="absolute top-[15%] -right-5 z-20 flex items-center gap-2 p-3.5 bg-surface border border-border rounded-xl shadow-2xl animate-[float_4s_ease-in-out_infinite]">
-            <div className="text-lg">⭐</div>
-            <div>
-              <div className="text-[10px] font-mono text-text-muted uppercase tracking-[0.5px]">
-                Avg Rating
+          <div className="absolute top-[10%] -right-4 md:right-0 z-30 animate-[float_5s_ease-in-out_infinite]">
+            <div className="flex items-center gap-3 p-3 pl-4 bg-surface/90 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl">
+              <div className="text-xl">⭐</div>
+              <div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
+                  Rating
+                </div>
+                <div className="text-sm font-bold text-text">4.9 / 5.0</div>
               </div>
-              <div className="text-[13px] font-semibold text-text">
-                4.8 / 5.0
-              </div>
-            </div>
-          </div>
-          <div className="absolute bottom-[25%] -left-6 z-20 flex items-center gap-2 p-3.5 bg-surface border border-border rounded-xl shadow-2xl animate-[float_4s_ease-in-out_infinite] animation-delay-[1.5s]">
-            <div className="text-lg">🚀</div>
-            <div>
-              <div className="text-[10px] font-mono text-text-muted uppercase tracking-[0.5px]">
-                Avg Delivery
-              </div>
-              <div className="text-[13px] font-semibold text-text">28 mins</div>
-            </div>
-          </div>
-          <div className="absolute bottom-[10%] -right-4 z-20 flex items-center gap-2 p-3.5 bg-surface border border-border rounded-xl shadow-2xl animate-[float_4s_ease-in-out_infinite] animation-delay-[0.8s]">
-            <div className="text-lg">✅</div>
-            <div>
-              <div className="text-[10px] font-mono text-text-muted uppercase tracking-[0.5px]">
-                Orders Today
-              </div>
-              <div className="text-[13px] font-semibold text-text">142</div>
             </div>
           </div>
 
-          <div className="relative z-10 w-[280px]">
+          <div className="absolute bottom-[20%] -left-8 md:-left-4 z-30 animate-[float_6s_ease-in-out_infinite] animation-delay-[1s]">
+            <div className="flex items-center gap-3 p-3 pl-4 bg-surface/90 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl">
+              <div className="text-xl">🚀</div>
+              <div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
+                  Speed
+                </div>
+                <div className="text-sm font-bold text-text">~24 mins</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative z-10 w-[280px] md:w-[320px]">
             {/* Phone Frame */}
-            <div className="relative p-3 bg-[#141414] border-2 border-[#2a2a2a] rounded-[44px] shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_40px_80px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.06)]">
-              {/* Notch */}
-              <div className="absolute top-3 left-1/2 -translate-x-1/2 w-20 h-6 bg-[#141414] rounded-b-2xl z-20 border border-t-0 border-[#1f1f1f]" />
+            <div className="relative aspect-[9/19] bg-black rounded-[48px] border-[8px] border-[#1a1a1a] shadow-2xl overflow-hidden ring-1 ring-white/10">
+              {/* Dynamic Island / Notch */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-7 bg-[#1a1a1a] rounded-b-2xl z-20" />
 
-              {/* Screen */}
-              <div className="relative overflow-hidden aspect-[9/19.5] bg-surface-2 rounded-[34px]">
+              {/* Screen Content */}
+              <div className="relative w-full h-full bg-surface-2">
                 {tabs.map((tab, index) => (
                   <div
                     key={index}
                     className={cn(
-                      "absolute inset-0 flex flex-col items-center justify-center gap-3 p-8 transition-opacity duration-350",
+                      "absolute inset-0 w-full h-full transition-all duration-500 ease-in-out transform",
                       activeTab === index
-                        ? "opacity-100"
-                        : "opacity-0 pointer-events-none",
+                        ? "opacity-100 translate-x-0 scale-100"
+                        : "opacity-0 translate-x-8 scale-95 pointer-events-none",
                     )}
                   >
-                    {/* Placeholder for screenshot */}
-                    <div className="text-[40px]">{tab.icon}</div>
-                    <div className="px-2.5 py-1 text-[11px] font-mono text-orange bg-orange/10 border border-orange/20 rounded-full tracking-[0.5px]">
-                      SCREENSHOT {index + 1}
-                    </div>
-                    <div className="text-[13px] font-light text-center text-text-muted leading-relaxed">
-                      {tab.title} Screen
-                      <br />
-                      <span className="text-[11px] opacity-60">
-                        Replace with app screenshot
-                      </span>
+                    {/* 
+                      Note: We use unoptimized images for local development if needed, 
+                      or normal optimized ones. Using 'fill' and 'cover' for best fit.
+                    */}
+                    <div className="relative w-full h-full bg-surface-2 flex items-center justify-center text-text-muted">
+                      <Image
+                        src={tab.image}
+                        alt={`${tab.title} Screen`}
+                        fill
+                        className="object-cover object-top"
+                        priority={index === 0}
+                      />
+                      {/* Fallback text if image missing (Image component handles errors but this is for dev clarity if src is empty) */}
                     </div>
                   </div>
                 ))}
