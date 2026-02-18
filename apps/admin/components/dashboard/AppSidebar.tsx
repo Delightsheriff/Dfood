@@ -3,14 +3,14 @@
 import {
   LayoutDashboard,
   LineChart,
-  LogOut,
-  Settings,
   ShoppingBag,
   Store,
   User,
   Users,
   UtensilsCrossed,
-  DollarSign, // Kept this as it is used in adminLinks
+  DollarSign,
+  Settings,
+  LogOut,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import * as React from "react";
@@ -98,17 +98,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       asChild
                       isActive={isActive}
                       tooltip={link.label}
+                      className="data-[active=true]:bg-orange/10 data-[active=true]:text-orange transition-colors hover:bg-surface-2 hover:text-orange"
                     >
-                      <Link
-                        href={link.href}
-                        className="text-text hover:text-orange"
-                      >
+                      <Link href={link.href}>
                         <link.icon className={cn(isActive && "text-orange")} />
-                        <span
-                          className={cn(
-                            isActive && "font-semibold text-orange",
-                          )}
-                        >
+                        <span className={cn(isActive && "font-bold")}>
                           {link.label}
                         </span>
                         {link.badge && (

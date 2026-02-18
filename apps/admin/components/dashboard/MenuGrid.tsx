@@ -91,7 +91,7 @@ export function MenuGrid() {
               key={item.id}
               className="group overflow-hidden rounded-xl border border-border bg-black/20 hover:border-orange/50 hover:shadow-md transition-all cursor-pointer"
             >
-              <div className="flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-amber-100 to-orange-100 text-6xl">
+              <div className="flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-orange/20 to-amber-500/20 text-6xl">
                 {item.icon}
               </div>
               <div className="p-4">

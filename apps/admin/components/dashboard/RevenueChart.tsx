@@ -71,7 +71,7 @@ export function RevenueChart() {
                   border: "1px solid #333",
                   borderRadius: "8px",
                 }}
-                itemStyle={{ color: "#fff" }}
+                itemStyle={{ color: "#f0ede8" }}
                 labelStyle={{ color: "#999" }}
               />
               <Area
