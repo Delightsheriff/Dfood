@@ -1,19 +1,9 @@
 "use client";
 
-import {
-  LayoutDashboard,
-  LineChart,
-  ShoppingBag,
-  Store,
-  User,
-  Users,
-  UtensilsCrossed,
-  DollarSign,
-  Settings,
-  LogOut,
-} from "lucide-react";
+import { UtensilsCrossed, Settings, LogOut, User } from "lucide-react";
 import { usePathname } from "next/navigation";
 import * as React from "react";
+import { signOut } from "next-auth/react";
 
 import {
   Sidebar,
@@ -40,27 +30,34 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useDashboardRole } from "./DashboardRoleContext";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { clearTokenCache } from "@/lib/api-client";
+import { navigationLinks } from "@/types/links";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { isVendor } = useDashboardRole();
+  const { role, user, isLoading } = useDashboardRole();
   const pathname = usePathname();
 
-  const adminLinks = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/orders", label: "Orders", icon: ShoppingBag, badge: "12" },
-    { href: "/restaurants", label: "Restaurants", icon: Store },
-    { href: "/users", label: "Users", icon: Users },
-    { href: "/financials", label: "Financials", icon: DollarSign },
-  ];
+  // Filter links based on current role
+  const visibleLinks = navigationLinks.filter((link) =>
+    link.roles.includes(role),
+  );
 
-  const vendorLinks = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/orders", label: "Orders", icon: ShoppingBag, badge: "5" },
-    { href: "/menu", label: "Menu", icon: UtensilsCrossed },
-    { href: "/analytics", label: "Analytics", icon: LineChart },
-  ];
+  const handleLogout = async () => {
+    clearTokenCache(); // Clear axios token cache
+    await signOut({ callbackUrl: "/login" });
+  };
 
-  const links = isVendor ? vendorLinks : adminLinks;
+  // Get user initials
+  const userInitials =
+    user?.name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase() || "U";
+
+  if (isLoading) {
+    return null; // Or a skeleton loader
+  }
 
   return (
     <Sidebar collapsible="icon" {...props} className="border-border">
@@ -73,11 +70,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <UtensilsCrossed className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-bold text-orange">
-                    Food Admin
-                  </span>
+                  <span className="truncate font-bold text-orange">FOOD</span>
                   <span className="truncate text-xs text-muted-foreground">
-                    {isVendor ? "Vendor Portal" : "Admin Portal"}
+                    {role === "vendor" ? "Vendor Portal" : "Admin Portal"}
                   </span>
                 </div>
               </Link>
@@ -85,12 +80,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
       <SidebarContent className="overflow-hidden">
         <SidebarGroup>
           <SidebarGroupLabel>Platform</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {links.map((link) => {
+              {visibleLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <SidebarMenuItem key={link.href}>
@@ -102,11 +98,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     >
                       <Link href={link.href}>
                         <link.icon className={cn(isActive && "text-orange")} />
-                        <span className={cn(isActive && "font-bold ")}>
+                        <span className={cn(isActive && "font-bold")}>
                           {link.label}
                         </span>
                         {link.badge && (
-                          <span className="ml-auto flex h-8 w-8 items-center justify-center rounded-full bg-orange text-[10px] font-bold text-white">
+                          <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-orange text-[10px] font-bold text-white">
                             {link.badge}
                           </span>
                         )}
@@ -137,6 +133,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -147,20 +144,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage
-                      src="/avatars/01.png"
-                      alt={isVendor ? "Vendor" : "Admin"}
-                    />
+                    <AvatarImage src="" alt={user?.name || "User"} />
                     <AvatarFallback className="rounded-lg bg-orange/10 text-orange font-bold font-mono">
-                      {isVendor ? "VN" : "AD"}
+                      {userInitials}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">
-                      {isVendor ? "Restaurant Owner" : "Admin User"}
+                      {user?.name || "User"}
                     </span>
                     <span className="truncate text-xs text-muted-foreground">
-                      {isVendor ? "vendor@food.com" : "admin@food.com"}
+                      {user?.email || ""}
                     </span>
                   </div>
                   <User className="ml-auto size-4" />
@@ -172,16 +166,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  Account
+                <DropdownMenuItem asChild>
+                  <Link href="/profile" className="cursor-pointer">
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  Settings
+                <DropdownMenuItem asChild>
+                  <Link href="/settings" className="cursor-pointer">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-border" />
-                <DropdownMenuItem className="text-red-500 focus:text-red-500 focus:bg-red-500/10">
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="text-red-500 focus:text-red-500 focus:bg-red-500/10 cursor-pointer"
+                >
                   <LogOut className="mr-2 h-4 w-4" />
                   Log out
                 </DropdownMenuItem>
