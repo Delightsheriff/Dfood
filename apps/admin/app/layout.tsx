@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bebas_Neue, DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/Providers/Providers";
+import { Toaster } from "@/components/ui/sonner";
 
 const bebasNeue = Bebas_Neue({
   weight: "400",
@@ -37,6 +38,7 @@ export default function RootLayout({
         className={`${bebasNeue.variable} ${dmSans.variable} ${dmMono.variable} antialiased bg-background text-foreground`}
       >
         <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );

@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm, Control, Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Check, ChevronRight, Eye, EyeOff, Loader2 } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 import {
   Form,
@@ -20,9 +22,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 
 // Schema Definitions
-
 const step1Schema = z.object({
   firstName: z.string().min(1, "First name required"),
   lastName: z.string().min(1, "Last name required"),
@@ -50,6 +52,7 @@ const signupSchema = step1Schema.merge(step2Schema).merge(step3Schema);
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -108,12 +111,71 @@ export default function SignupPage() {
 
   const onSubmit = async (data: SignupFormValues) => {
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Signup Data:", data);
+
+    try {
+      // Call vendor signup endpoint
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/vendor/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            phone: data.phone,
+            password: data.password,
+            restaurantName: data.restaurantName,
+            restaurantAddress: data.restaurantAddress,
+            deliveryFee: data.deliveryFee,
+            openingTime: data.openingTime,
+            closingTime: data.closingTime,
+            description: data.description || undefined,
+          }),
+        },
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to create account");
+      }
+
+      // Auto sign in with the credentials after successful signup
+      const signInResult = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (signInResult?.error) {
+        // Signup succeeded but signin failed - rare case
+        toast.success("Account Created", {
+          description: "Please sign in with your credentials.",
+        });
+        router.push("/login");
+      } else {
+        // Success - show success state then redirect
+        setIsSuccess(true);
+
+        // Redirect after 2 seconds
+        setTimeout(() => {
+          router.push("/vendor/dashboard");
+        }, 2000);
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An error occurred. Please try again.";
+      toast.error("Signup Failed", {
+        description: errorMessage,
+      });
+    } finally {
       setLoading(false);
-      setIsSuccess(true);
-    }, 1500);
+    }
   };
 
   if (isSuccess) {
@@ -124,20 +186,15 @@ export default function SignupPage() {
             🎉
           </div>
           <h2 className="mb-4 text-[36px] font-bebas tracking-[1px]">
-            APPLICATION SENT!
+            ACCOUNT CREATED!
           </h2>
           <p className="mb-8 text-[15px] font-light leading-relaxed text-text-muted">
-            We&apos;ve received your application and will review it within 24
-            hours. Check your email at{" "}
-            <strong className="text-white">{getValues("email")}</strong> for
-            next steps.
+            Your vendor account has been created successfully. Redirecting you
+            to the dashboard...
           </p>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-7 py-3.5 bg-orange text-white rounded-[10px] font-semibold text-[15px] hover:bg-[#e86a1e] transition-all"
-          >
-            Back to Home →
-          </Link>
+          <div className="flex items-center justify-center">
+            <Loader2 className="w-6 h-6 animate-spin text-orange" />
+          </div>
         </div>
       </main>
     );
@@ -154,7 +211,7 @@ export default function SignupPage() {
         </Link>
 
         {/* LEFT PANEL */}
-        <div className="hidden md:flex relative flex-col justify-between p-12 overflow-hidden bg-surface border-r border-border h-screen  top-0">
+        <div className="hidden md:flex relative flex-col justify-between p-12 overflow-hidden bg-surface border-r border-border h-screen top-0">
           {/* Grid background */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-size-[60px_60px] pointer-events-none" />
 
@@ -349,6 +406,8 @@ export default function SignupPage() {
                         <FormControl>
                           <Input
                             placeholder="you@restaurant.com"
+                            type="email"
+                            autoComplete="email"
                             {...field}
                             className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px]"
                           />
@@ -371,6 +430,8 @@ export default function SignupPage() {
                         <FormControl>
                           <Input
                             placeholder="+234 800 000 0000"
+                            type="tel"
+                            autoComplete="tel"
                             {...field}
                             className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px]"
                           />
@@ -395,6 +456,7 @@ export default function SignupPage() {
                             <Input
                               type={showPassword ? "text" : "password"}
                               placeholder="Min. 8 characters"
+                              autoComplete="new-password"
                               {...field}
                               className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px] pr-10"
                             />
@@ -496,6 +558,7 @@ export default function SignupPage() {
                           <Input
                             type="number"
                             placeholder="e.g. 500"
+                            min="0"
                             {...field}
                             className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px]"
                           />
@@ -677,8 +740,8 @@ export default function SignupPage() {
                     </div>
                     <div className="flex flex-col gap-2">
                       {[
-                        "We review your application (within 24 hours)",
-                        "You receive an email with your dashboard access",
+                        "Your account will be created instantly",
+                        "You'll be redirected to your dashboard",
                         "Upload your full menu and go live",
                       ].map((item, i) => (
                         <div
@@ -735,6 +798,7 @@ export default function SignupPage() {
                       type="button"
                       variant="outline"
                       onClick={prevStep}
+                      disabled={loading}
                       className="flex-1 h-13.5 border-border bg-transparent hover:bg-white/5 hover:text-white rounded-[10px]"
                     >
                       ← Back
@@ -754,6 +818,16 @@ export default function SignupPage() {
                 </div>
               </form>
             </Form>
+
+            <div className="text-center mt-6 text-[13px] text-text-muted">
+              Already a partner?{" "}
+              <Link
+                href="/login"
+                className="text-orange hover:underline font-medium"
+              >
+                Sign in →
+              </Link>
+            </div>
           </div>
         </div>
       </div>

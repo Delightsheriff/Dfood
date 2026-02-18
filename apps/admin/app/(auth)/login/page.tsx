@@ -7,6 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import CountUp from "@/components/ui/CountUp";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -29,6 +32,7 @@ const formSchema = z.object({
 });
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -42,13 +46,36 @@ export default function LoginPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Form Data:", values);
+
+    try {
+      const result = await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        toast.error("Login Failed", {
+          description: "Invalid email or password. Please try again.",
+        });
+      } else {
+        toast.success("Login Successful", {
+          description: "Welcome back!",
+        });
+
+        // Redirect to dashboard
+        router.push("/vendor/dashboard");
+        router.refresh();
+      }
+    } catch {
+      toast.error("An error occurred", {
+        description: "Something went wrong. Please try again.",
+      });
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   }
 
   return (
