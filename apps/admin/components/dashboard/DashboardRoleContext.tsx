@@ -1,14 +1,21 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, ReactNode } from "react";
+import { useSession } from "next-auth/react";
 
 type Role = "admin" | "vendor";
 
 interface DashboardRoleContextType {
   role: Role;
-  setRole: (role: Role) => void;
   isVendor: boolean;
   isAdmin: boolean;
+  isLoading: boolean;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+  } | null;
 }
 
 const DashboardRoleContext = createContext<
@@ -16,13 +23,19 @@ const DashboardRoleContext = createContext<
 >(undefined);
 
 export function DashboardRoleProvider({ children }: { children: ReactNode }) {
-  const [role, setRole] = useState<Role>("admin");
+  const { data: session, status } = useSession();
+
+  const isLoading = status === "loading";
+  const user = session?.user ?? null;
+  const role = (user?.role as Role) ?? "vendor"; // Default to vendor
 
   const isVendor = role === "vendor";
   const isAdmin = role === "admin";
 
   return (
-    <DashboardRoleContext.Provider value={{ role, setRole, isVendor, isAdmin }}>
+    <DashboardRoleContext.Provider
+      value={{ role, isVendor, isAdmin, isLoading, user }}
+    >
       {children}
     </DashboardRoleContext.Provider>
   );
