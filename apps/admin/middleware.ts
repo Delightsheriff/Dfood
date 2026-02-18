@@ -1,50 +1,79 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export function middleware(request: NextRequest) {
-  // 1. Get the path
-  const path = request.nextUrl.pathname;
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
-  // 2. Define protected routes
-  const isPublicPath = path === "/login" || path === "/signup";
+  // Get the token from the request
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
 
-  // 3. Get the token/role from the cookies (Mock logic)
-  // In a real app, you would verify the JWT token
-  const token = request.cookies.get("token")?.value || "";
-  const role = request.cookies.get("role")?.value || ""; // 'admin' | 'vendor'
+  // Public routes that don't require authentication
+  const isPublicRoute =
+    pathname === "/" ||
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api/auth");
 
-  // 4. Redirect logic
-  if (isPublicPath && token) {
-    // If user is already logged in and tries to access login/signup, redirect to their dashboard
-    if (role === "admin") {
-      return NextResponse.redirect(
-        new URL("/admin/dashboard", request.nextUrl),
-      );
-    } else if (role === "vendor") {
-      return NextResponse.redirect(
-        new URL("/vendor/dashboard", request.nextUrl),
-      );
+  // If not authenticated and trying to access protected route
+  if (!token && !isPublicRoute) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // If authenticated and trying to access auth pages, redirect based on role
+  if (token && (pathname === "/login" || pathname === "/signup")) {
+    const dashboardUrl =
+      token.role === "admin" ? "/admin/dashboard" : "/vendor/dashboard";
+    return NextResponse.redirect(new URL(dashboardUrl, request.url));
+  }
+
+  // Role-based access control
+  if (token) {
+    // Admins trying to access vendor routes
+    if (pathname.startsWith("/vendor") && token.role === "admin") {
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
     }
-  }
 
-  if (!isPublicPath && !token) {
-    // If accessing a protected route without a token, redirect to login
-    return NextResponse.redirect(new URL("/login", request.nextUrl));
-  }
+    // Vendors trying to access admin routes
+    if (pathname.startsWith("/admin") && token.role === "vendor") {
+      return NextResponse.redirect(new URL("/vendor/dashboard", request.url));
+    }
 
-  // Role based protection
-  if (path.startsWith("/admin") && role !== "admin") {
-    return NextResponse.redirect(new URL("/login", request.nextUrl));
-  }
+    // Customers trying to access dashboard routes
+    if (
+      (pathname.startsWith("/admin") || pathname.startsWith("/vendor")) &&
+      token.role === "customer"
+    ) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
 
-  if (path.startsWith("/vendor") && role !== "vendor") {
-    return NextResponse.redirect(new URL("/login", request.nextUrl));
+    // Redirect from root /admin or /vendor to their dashboard
+    if (pathname === "/admin" && token.role === "admin") {
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    }
+    if (pathname === "/vendor" && token.role === "vendor") {
+      return NextResponse.redirect(new URL("/vendor/dashboard", request.url));
+    }
   }
 
   return NextResponse.next();
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/login", "/signup", "/admin/:path*", "/vendor/:path*"],
+  matcher: [
+    /*
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public files (public folder)
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };
