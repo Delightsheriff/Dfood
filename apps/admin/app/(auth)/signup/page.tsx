@@ -18,36 +18,26 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // Schema Definitions
 
 const step1Schema = z.object({
-  firstName: z.string().min(1, "Required"),
-  lastName: z.string().min(1, "Required"),
+  firstName: z.string().min(1, "First name required"),
+  lastName: z.string().min(1, "Last name required"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().min(7, "Invalid phone number"),
+  phone: z.string().min(10, "Invalid phone number"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string().min(8, "Required"),
 });
 
 const step2Schema = z.object({
-  restaurantName: z.string().min(1, "Required"),
-  cuisineType: z.string().min(1, "Select cuisine type"),
-  restaurantAddress: z.string().min(1, "Required"),
-  city: z.string().min(1, "Select city"),
-  deliveryFee: z.coerce.number().min(0, "Invalid fee"),
-  openingTime: z.string(),
-  closingTime: z.string(),
-  description: z.string().max(200).optional(),
+  restaurantName: z.string().min(2, "Restaurant name required").max(100),
+  restaurantAddress: z.string().min(10, "Full address required"),
+  deliveryFee: z.coerce.number().min(0, "Delivery fee must be 0 or more"),
+  openingTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format (HH:MM)"),
+  closingTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format (HH:MM)"),
+  description: z.string().max(500).optional(),
 });
 
 const step3Schema = z.object({
@@ -55,13 +45,7 @@ const step3Schema = z.object({
 });
 
 // Combined schema for form type
-const signupSchema = step1Schema
-  .merge(step2Schema)
-  .merge(step3Schema)
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+const signupSchema = step1Schema.merge(step2Schema).merge(step3Schema);
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
@@ -69,7 +53,6 @@ export default function SignupPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const form = useForm<SignupFormValues>({
@@ -83,11 +66,8 @@ export default function SignupPage() {
       email: "",
       phone: "",
       password: "",
-      confirmPassword: "",
       restaurantName: "",
-      cuisineType: "",
       restaurantAddress: "",
-      city: "",
       deliveryFee: 0,
       openingTime: "09:00",
       closingTime: "22:00",
@@ -107,15 +87,14 @@ export default function SignupPage() {
         "email",
         "phone",
         "password",
-        "confirmPassword",
       ];
     } else if (step === 2) {
       fieldsToValidate = [
         "restaurantName",
-        "cuisineType",
         "restaurantAddress",
-        "city",
         "deliveryFee",
+        "openingTime",
+        "closingTime",
       ];
     }
 
@@ -440,44 +419,6 @@ export default function SignupPage() {
                     )}
                   />
 
-                  <FormField
-                    control={
-                      form.control as unknown as Control<SignupFormValues>
-                    }
-                    name="confirmPassword"
-                    render={({ field }) => (
-                      <FormItem className="mt-4">
-                        <FormLabel className="text-[12px] font-semibold tracking-[1px] uppercase text-text-muted font-mono">
-                          Confirm Password
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              type={showConfirmPassword ? "text" : "password"}
-                              placeholder="Repeat your password"
-                              {...field}
-                              className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px] pr-10"
-                            />
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setShowConfirmPassword(!showConfirmPassword)
-                              }
-                              className="absolute -translate-y-1/2 right-3 top-1/2 text-text-muted hover:text-white"
-                            >
-                              {showConfirmPassword ? (
-                                <EyeOff size={16} />
-                              ) : (
-                                <Eye size={16} />
-                              )}
-                            </button>
-                          </div>
-                        </FormControl>
-                        <FormMessage className="text-xs font-normal" />
-                      </FormItem>
-                    )}
-                  />
-
                   <div className="mt-8">
                     <Button
                       type="button"
@@ -523,50 +464,6 @@ export default function SignupPage() {
                     control={
                       form.control as unknown as Control<SignupFormValues>
                     }
-                    name="cuisineType"
-                    render={({ field }) => (
-                      <FormItem className="mt-4">
-                        <FormLabel className="text-[12px] font-semibold tracking-[1px] uppercase text-text-muted font-mono">
-                          Cuisine Type
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px]">
-                              <SelectValue placeholder="Select cuisine type" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="bg-surface border-border text-text">
-                            {[
-                              "Nigerian",
-                              "Continental",
-                              "Chinese",
-                              "Italian",
-                              "Burgers & Fast Food",
-                              "Pizza",
-                              "Seafood",
-                              "Grills & BBQ",
-                              "Healthy & Salads",
-                              "Bakery & Desserts",
-                              "Other",
-                            ].map((type) => (
-                              <SelectItem key={type} value={type.toLowerCase()}>
-                                {type}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage className="text-xs font-normal" />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={
-                      form.control as unknown as Control<SignupFormValues>
-                    }
                     name="restaurantAddress"
                     render={({ field }) => (
                       <FormItem className="mt-4">
@@ -585,70 +482,28 @@ export default function SignupPage() {
                     )}
                   />
 
-                  <div className="grid grid-cols-2 gap-4 mt-4">
-                    <FormField
-                      control={
-                        form.control as unknown as Control<SignupFormValues>
-                      }
-                      name="city"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[12px] font-semibold tracking-[1px] uppercase text-text-muted font-mono">
-                            City
-                          </FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px]">
-                                <SelectValue placeholder="Select City" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="bg-surface border-border text-text">
-                              {[
-                                "Lagos",
-                                "Abuja",
-                                "Port Harcourt",
-                                "Ibadan",
-                                "Kano",
-                              ].map((city) => (
-                                <SelectItem
-                                  key={city}
-                                  value={city.toLowerCase()}
-                                >
-                                  {city}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage className="text-xs font-normal" />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={
-                        form.control as unknown as Control<SignupFormValues>
-                      }
-                      name="deliveryFee"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[12px] font-semibold tracking-[1px] uppercase text-text-muted font-mono">
-                            Delivery Fee (₦)
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              placeholder="e.g. 500"
-                              {...field}
-                              className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px]"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-xs font-normal" />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                  <FormField
+                    control={
+                      form.control as unknown as Control<SignupFormValues>
+                    }
+                    name="deliveryFee"
+                    render={({ field }) => (
+                      <FormItem className="mt-4">
+                        <FormLabel className="text-[12px] font-semibold tracking-[1px] uppercase text-text-muted font-mono">
+                          Delivery Fee (₦)
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="e.g. 500"
+                            {...field}
+                            className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px]"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs font-normal" />
+                      </FormItem>
+                    )}
+                  />
 
                   <div className="grid grid-cols-2 gap-4 mt-4">
                     <FormField
@@ -656,40 +511,84 @@ export default function SignupPage() {
                         form.control as unknown as Control<SignupFormValues>
                       }
                       name="openingTime"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[12px] font-semibold tracking-[1px] uppercase text-text-muted font-mono">
-                            Opening Time
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="time"
-                              {...field}
-                              className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px]"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
+                      render={({ field }) => {
+                        const hour = parseInt(
+                          field.value?.split(":")[0] ?? "9",
+                        );
+                        const period = hour < 12 ? "AM" : "PM";
+                        const display =
+                          hour === 0
+                            ? "12"
+                            : hour > 12
+                              ? `${hour - 12}`
+                              : `${hour}`;
+                        return (
+                          <FormItem>
+                            <FormLabel className="text-[12px] font-semibold tracking-[1px] uppercase text-text-muted font-mono">
+                              Opening Time
+                            </FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Input
+                                  type="time"
+                                  {...field}
+                                  onClick={(e) =>
+                                    (
+                                      e.target as HTMLInputElement
+                                    ).showPicker?.()
+                                  }
+                                  className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px] pr-14 cursor-pointer"
+                                />
+                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-mono font-semibold pointer-events-none text-orange">
+                                  {display} {period}
+                                </span>
+                              </div>
+                            </FormControl>
+                          </FormItem>
+                        );
+                      }}
                     />
                     <FormField
                       control={
                         form.control as unknown as Control<SignupFormValues>
                       }
                       name="closingTime"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[12px] font-semibold tracking-[1px] uppercase text-text-muted font-mono">
-                            Closing Time
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="time"
-                              {...field}
-                              className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px]"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
+                      render={({ field }) => {
+                        const hour = parseInt(
+                          field.value?.split(":")[0] ?? "22",
+                        );
+                        const period = hour < 12 ? "AM" : "PM";
+                        const display =
+                          hour === 0
+                            ? "12"
+                            : hour > 12
+                              ? `${hour - 12}`
+                              : `${hour}`;
+                        return (
+                          <FormItem>
+                            <FormLabel className="text-[12px] font-semibold tracking-[1px] uppercase text-text-muted font-mono">
+                              Closing Time
+                            </FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Input
+                                  type="time"
+                                  {...field}
+                                  onClick={(e) =>
+                                    (
+                                      e.target as HTMLInputElement
+                                    ).showPicker?.()
+                                  }
+                                  className="bg-surface border-border focus:border-orange/50 h-11 rounded-[10px] pr-14 cursor-pointer"
+                                />
+                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-mono font-semibold pointer-events-none text-orange">
+                                  {display} {period}
+                                </span>
+                              </div>
+                            </FormControl>
+                          </FormItem>
+                        );
+                      }}
                     />
                   </div>
 
@@ -766,7 +665,7 @@ export default function SignupPage() {
                         {getValues("restaurantName")}
                       </div>
                       <div className="text-[14px] text-text-muted">
-                        {getValues("restaurantAddress")}, {getValues("city")}
+                        {getValues("restaurantAddress")}
                       </div>
                     </div>
                   </div>
