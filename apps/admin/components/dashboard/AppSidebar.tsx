@@ -63,7 +63,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const links = isVendor ? vendorLinks : adminLinks;
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props} className="border-border">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -85,7 +85,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="overflow-hidden">
         <SidebarGroup>
           <SidebarGroupLabel>Platform</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -102,11 +102,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     >
                       <Link href={link.href}>
                         <link.icon className={cn(isActive && "text-orange")} />
-                        <span className={cn(isActive && "font-bold")}>
+                        <span className={cn(isActive && "font-bold ")}>
                           {link.label}
                         </span>
                         {link.badge && (
-                          <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-orange text-[10px] font-bold text-white">
+                          <span className="ml-auto flex h-8 w-8 items-center justify-center rounded-full bg-orange text-[10px] font-bold text-white">
                             {link.badge}
                           </span>
                         )}
