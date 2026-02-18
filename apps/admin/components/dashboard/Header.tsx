@@ -1,11 +1,12 @@
 "use client";
 
-import { Search, Store, ShieldCheck } from "lucide-react";
+import { Store, ShieldCheck } from "lucide-react";
 import { useDashboardRole } from "./DashboardRoleContext";
 import { cn } from "@/lib/utils";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { NotificationsPopover } from "./NotificationsPopover";
 import { ProfileDropdown } from "./ProfileDropdown";
+import { SearchDialog } from "./SearchDialog";
 
 export function Header() {
   const { role, setRole } = useDashboardRole();
@@ -46,17 +47,14 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="relative hidden w-64 md:block">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <input
-            type="search"
-            placeholder="Search..."
-            className="w-full rounded-lg bg-black/10 pl-8 md:w-[200px] lg:w-[320px] h-9 text-sm border border-border text-text focus:outline-none focus:ring-1 focus:ring-orange/50 transition-all"
-          />
+        <div className="hidden md:block">
+          <SearchDialog />
         </div>
 
-        <NotificationsPopover />
-        <ProfileDropdown />
+        <div className="flex items-center gap-2">
+          <NotificationsPopover />
+          <ProfileDropdown />
+        </div>
       </div>
     </header>
   );
