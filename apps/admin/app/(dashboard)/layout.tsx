@@ -1,4 +1,7 @@
 import React from "react";
+import { DashboardRoleProvider } from "@/components/dashboard/DashboardRoleContext";
+import { Sidebar } from "@/components/dashboard/Sidebar";
+import { Header } from "@/components/dashboard/Header";
 
 export default function DashboardLayout({
   children,
@@ -6,23 +9,16 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar placeholder - this would likely be dynamic based on role */}
-      <aside className="w-64 bg-white shadow-md hidden md:block">
-        <div className="p-4 font-bold text-xl">Dashboard</div>
-        <nav className="mt-4">
-          <ul className="space-y-2 p-4">
-            <li>
-              <a href="#" className="block hover:bg-gray-100 p-2 rounded">
-                Overview
-              </a>
-            </li>
-            {/* Links would be conditional based on role */}
-          </ul>
-        </nav>
-      </aside>
-
-      <main className="flex-1 overflow-y-auto p-8">{children}</main>
-    </div>
+    <DashboardRoleProvider>
+      <div className="flex h-screen bg-black text-text font-sans">
+        <Sidebar />
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <Header />
+          <main className="flex-1 overflow-y-auto bg-black p-8">
+            {children}
+          </main>
+        </div>
+      </div>
+    </DashboardRoleProvider>
   );
 }
