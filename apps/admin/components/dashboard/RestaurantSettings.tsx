@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Loader2, Save, Trash2, Upload, ImageIcon, X } from "lucide-react";
@@ -65,11 +65,11 @@ export function RestaurantSettings() {
   const restaurant = response?.data?.restaurant;
 
   const form = useForm<RestaurantFormValues>({
-    resolver: zodResolver(restaurantSchema) as any,
+    resolver: zodResolver(restaurantSchema) as Resolver<RestaurantFormValues>,
     defaultValues: {
       name: "",
-      description: "",
-      address: "",
+      description: undefined,
+      address: undefined,
       deliveryFee: 0,
       openingTime: "09:00",
       closingTime: "22:00",
@@ -81,8 +81,8 @@ export function RestaurantSettings() {
     if (restaurant) {
       form.reset({
         name: restaurant.name,
-        description: restaurant.description || "",
-        address: restaurant.address || "",
+        description: restaurant.description,
+        address: restaurant.address,
         deliveryFee: restaurant.deliveryFee,
         openingTime: restaurant.openingTime,
         closingTime: restaurant.closingTime,
@@ -173,7 +173,7 @@ export function RestaurantSettings() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
-                  control={form.control as any}
+                  control={form.control}
                   name="name"
                   render={({ field }) => (
                     <FormItem>
@@ -193,7 +193,7 @@ export function RestaurantSettings() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
-                    control={form.control as any}
+                    control={form.control}
                     name="openingTime"
                     render={({ field }) => (
                       <FormItem>
@@ -212,7 +212,7 @@ export function RestaurantSettings() {
                     )}
                   />
                   <FormField
-                    control={form.control as any}
+                    control={form.control}
                     name="closingTime"
                     render={({ field }) => (
                       <FormItem>
@@ -234,7 +234,7 @@ export function RestaurantSettings() {
               </div>
 
               <FormField
-                control={form.control as any}
+                control={form.control}
                 name="address"
                 render={({ field }) => (
                   <FormItem>
@@ -276,7 +276,7 @@ export function RestaurantSettings() {
               </div>
 
               <FormField
-                control={form.control as any}
+                control={form.control}
                 name="description"
                 render={({ field }) => (
                   <FormItem>

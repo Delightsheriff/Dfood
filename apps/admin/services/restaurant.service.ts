@@ -1,5 +1,5 @@
 import apiClient from "@/lib/api-client";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, isAxiosError } from "axios";
 
 /**
  * Restaurant Types
@@ -87,9 +87,9 @@ export const restaurantApi = {
         "/restaurants/my/restaurant",
       );
       return response.data;
-    } catch (error: any) {
-      if (error.response?.status === 404) {
-        return null;
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 404) {
+        return null; // Return null if not found
       }
       throw error;
     }

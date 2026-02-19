@@ -5,6 +5,11 @@ import {
   CreateRestaurantRequest,
 } from "@/services/restaurant.service";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
+
+interface ApiErrorResponse {
+  message: string;
+}
 
 export const useMyRestaurant = () => {
   return useQuery({
@@ -43,10 +48,13 @@ export const useCreateRestaurant = () => {
       queryClient.invalidateQueries({ queryKey: ["my-restaurant"] });
       queryClient.invalidateQueries({ queryKey: ["restaurant-completion"] });
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message || "Failed to create restaurant",
-      );
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      // Use logic to extract error message safely if possible, or keep as any but explicit
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to create restaurant";
+      toast.error(message);
     },
   });
 };
@@ -62,10 +70,12 @@ export const useUpdateRestaurant = () => {
       queryClient.invalidateQueries({ queryKey: ["my-restaurant"] });
       queryClient.invalidateQueries({ queryKey: ["restaurant-completion"] });
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message || "Failed to update restaurant",
-      );
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update restaurant";
+      toast.error(message);
     },
   });
 };
@@ -81,8 +91,12 @@ export const useDeleteRestaurantImage = () => {
       queryClient.invalidateQueries({ queryKey: ["my-restaurant"] });
       queryClient.invalidateQueries({ queryKey: ["restaurant-completion"] });
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to delete image");
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to delete image";
+      toast.error(message);
     },
   });
 };

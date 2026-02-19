@@ -103,11 +103,22 @@ export function RestaurantList() {
               <TableBody>
                 {filteredRestaurants.length === 0 ? (
                   <TableRow>
-                    <TableCell
-                      colSpan={5}
-                      className="h-24 text-center text-text-muted"
-                    >
-                      No restaurants found.
+                    <TableCell colSpan={5} className="h-64 text-center">
+                      <div className="flex flex-col items-center justify-center space-y-3">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-hover">
+                          <Store className="h-6 w-6 text-text-muted" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="font-medium text-text">
+                            No restaurants found
+                          </p>
+                          <p className="text-sm text-text-muted">
+                            {searchTerm
+                              ? "Try adjusting your search terms"
+                              : "No restaurants have been registered yet"}
+                          </p>
+                        </div>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -186,7 +197,13 @@ export function RestaurantList() {
                               Copy ID
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                (window.location.href = `/restaurants/${restaurant._id}`)
+                              }
+                            >
+                              View Details
+                            </DropdownMenuItem>
                             <DropdownMenuItem className="text-red-500 focus:text-red-500">
                               Delete
                             </DropdownMenuItem>
