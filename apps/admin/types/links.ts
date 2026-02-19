@@ -1,6 +1,7 @@
 import {
   DollarSign,
   LayoutDashboard,
+  Layers,
   LineChart,
   ShoppingBag,
   Store,
@@ -35,6 +36,12 @@ export const navigationLinks: NavLink[] = [
     href: "/restaurants",
     label: "Restaurants",
     icon: Store,
+    roles: ["admin"], // Admin only
+  },
+  {
+    href: "/categories",
+    label: "Categories",
+    icon: Layers,
     roles: ["admin"], // Admin only
   },
   {
