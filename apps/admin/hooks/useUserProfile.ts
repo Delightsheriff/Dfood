@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   userProfileApi,
   UpdateUserProfileRequest,
+  ChangePasswordRequest,
 } from "@/services/user-profile.service";
 
 import { toast } from "sonner";
@@ -22,7 +23,8 @@ export function useUserProfile() {
     queryKey: userProfileKeys.profile(),
     queryFn: async () => {
       const response = await userProfileApi.getProfile();
-      return response.data.user;
+      console.log("response: ", response);
+      return response.data.profile;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
@@ -39,7 +41,10 @@ export function useUpdateUserProfile() {
       userProfileApi.updateProfile(data),
     onSuccess: (response) => {
       // Update cache
-      queryClient.setQueryData(userProfileKeys.profile(), response.data.user);
+      queryClient.setQueryData(
+        userProfileKeys.profile(),
+        response.data.profile,
+      );
 
       toast.success("Profile updated successfully.");
     },
@@ -81,6 +86,30 @@ export function useDeleteProfileImage() {
     },
     onError: () => {
       toast.error("Failed to delete profile picture.");
+    },
+  });
+}
+
+/**
+ * Change password
+ */
+import { AxiosError } from "axios";
+import { ErrorResponse } from "@/types/response";
+
+/**
+ * Change password
+ */
+export function useChangePassword() {
+  return useMutation({
+    mutationFn: (data: ChangePasswordRequest) =>
+      userProfileApi.changePassword(data),
+    onSuccess: () => {
+      toast.success("Password changed successfully.");
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      toast.error(
+        error.response?.data?.message || "Failed to change password.",
+      );
     },
   });
 }

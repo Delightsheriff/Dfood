@@ -1,8 +1,10 @@
 "use client";
 
 import { PageShell } from "@/components/dashboard/PageShell";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useDashboardRole } from "@/components/dashboard/DashboardRoleContext";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ProfileSettings } from "@/components/dashboard/ProfileSettings";
+import { RestaurantSettings } from "@/components/dashboard/RestaurantSettings";
 
 export default function SettingsPage() {
   const { role } = useDashboardRole();
@@ -10,55 +12,34 @@ export default function SettingsPage() {
 
   return (
     <PageShell title={isVendor ? "Restaurant Settings" : "Global Settings"}>
-      <div className="max-w-2xl space-y-6">
-        <Card className="bg-surface border-border">
-          <CardHeader>
-            <CardTitle className="text-text">Profile</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-text-muted mb-1">
-                Name
-              </label>
-              <input
-                type="text"
-                className="w-full rounded-md border border-border bg-black/20 p-2 text-text"
-                defaultValue={isVendor ? "John Vendor" : "Admin User"}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-text-muted mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                className="w-full rounded-md border border-border bg-black/20 p-2 text-text"
-                defaultValue="user@example.com"
-              />
-            </div>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="profile" className="w-full max-w-4xl">
+        <TabsList className="grid w-full grid-cols-2 lg:w-[400px] mb-8 bg-surface border border-border">
+          <TabsTrigger
+            value="profile"
+            className="data-[state=active]:bg-orange data-[state=active]:text-white text-text-muted"
+          >
+            Profile
+          </TabsTrigger>
+          {isVendor && (
+            <TabsTrigger
+              value="restaurant"
+              className="data-[state=active]:bg-orange data-[state=active]:text-white text-text-muted"
+            >
+              Restaurant
+            </TabsTrigger>
+          )}
+        </TabsList>
 
-        <Card className="bg-surface border-border">
-          <CardHeader>
-            <CardTitle className="text-text">Preferences</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between py-2">
-              <span className="text-text">Email Notifications</span>
-              <div className="h-6 w-10 rounded-full bg-orange relative cursor-pointer">
-                <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-white" />
-              </div>
-            </div>
-            <div className="flex items-center justify-between py-2">
-              <span className="text-text">Dark Mode</span>
-              <div className="h-6 w-10 rounded-full bg-orange relative cursor-pointer">
-                <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-white" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+        <TabsContent value="profile" className="space-y-6">
+          <ProfileSettings />
+        </TabsContent>
+
+        {isVendor && (
+          <TabsContent value="restaurant">
+            <RestaurantSettings />
+          </TabsContent>
+        )}
+      </Tabs>
     </PageShell>
   );
 }

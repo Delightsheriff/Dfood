@@ -5,11 +5,11 @@ import { AxiosResponse } from "axios";
  * User Profile Types
  */
 export interface UserProfile {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   phone?: string;
-  profilePicture?: string;
+  profileImage?: string;
   role: "admin" | "vendor" | "customer";
   createdAt: string;
   updatedAt: string;
@@ -18,7 +18,7 @@ export interface UserProfile {
 export interface UpdateUserProfileRequest {
   name?: string;
   phone?: string;
-  profilePicture?: string; // Base64 or URL after upload
+  profileImage?: string; // Base64 or URL after upload
 }
 
 export interface ChangePasswordRequest {
@@ -30,7 +30,7 @@ export interface UserProfileResponse {
   success: boolean;
   message: string;
   data: {
-    user: UserProfile;
+    profile: UserProfile;
   };
 }
 
@@ -44,6 +44,7 @@ export const userProfileApi = {
   async getProfile(): Promise<UserProfileResponse> {
     const response: AxiosResponse<UserProfileResponse> =
       await apiClient.get("/profile");
+    console.log("response service: ", response);
     return response.data;
   },
 
@@ -86,6 +87,19 @@ export const userProfileApi = {
   async deleteProfileImage(): Promise<UserProfileResponse> {
     const response: AxiosResponse<UserProfileResponse> =
       await apiClient.delete("/profile/image");
+    return response.data;
+  },
+
+  /**
+   * Change password
+   */
+  async changePassword(
+    data: ChangePasswordRequest,
+  ): Promise<UserProfileResponse> {
+    const response: AxiosResponse<UserProfileResponse> = await apiClient.post(
+      "/auth/change-password",
+      data,
+    );
     return response.data;
   },
 };
