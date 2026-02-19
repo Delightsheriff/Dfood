@@ -1,9 +1,8 @@
 "use client";
 
-import { UtensilsCrossed, Settings, LogOut, User } from "lucide-react";
+import { UtensilsCrossed, User, Settings } from "lucide-react";
 import { usePathname } from "next/navigation";
 import * as React from "react";
-import { signOut } from "next-auth/react";
 
 import {
   Sidebar,
@@ -19,19 +18,13 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useDashboardRole } from "./DashboardRoleContext";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { clearTokenCache } from "@/lib/api-client";
 import { navigationLinks } from "@/types/links";
+import { ProfileDropdown } from "./ProfileDropdown";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { role, user, isLoading } = useDashboardRole();
@@ -41,11 +34,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const visibleLinks = navigationLinks.filter((link) =>
     link.roles.includes(role),
   );
-
-  const handleLogout = async () => {
-    clearTokenCache(); // Clear axios token cache
-    await signOut({ callbackUrl: "/login" });
-  };
 
   // Get user initials
   const userInitials =
@@ -137,57 +125,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                >
-                  <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src="" alt={user?.name || "User"} />
-                    <AvatarFallback className="rounded-lg bg-orange/10 text-orange font-bold font-mono">
-                      {userInitials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">
-                      {user?.name || "User"}
-                    </span>
-                    <span className="truncate text-xs text-muted-foreground">
-                      {user?.email || ""}
-                    </span>
-                  </div>
-                  <User className="ml-auto size-4" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg bg-surface border-border text-text"
-                side="bottom"
-                align="end"
-                sideOffset={4}
+            <ProfileDropdown>
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <DropdownMenuItem asChild>
-                  <Link href="/profile" className="cursor-pointer">
-                    <User className="mr-2 h-4 w-4" />
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/settings" className="cursor-pointer">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-border" />
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="text-red-500 focus:text-red-500 focus:bg-red-500/10 cursor-pointer"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage
+                    src={user?.image || ""}
+                    alt={user?.name || "User"}
+                  />
+                  <AvatarFallback className="rounded-lg bg-orange/10 text-orange font-bold font-mono">
+                    {userInitials}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">
+                    {user?.name || "User"}
+                  </span>
+                  <span className="truncate text-xs text-muted-foreground">
+                    {user?.email || ""}
+                  </span>
+                </div>
+                <User className="ml-auto size-4" />
+              </SidebarMenuButton>
+            </ProfileDropdown>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

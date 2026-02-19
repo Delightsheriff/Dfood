@@ -2,7 +2,6 @@
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { NotificationsPopover } from "./NotificationsPopover";
-import { ProfileDropdown } from "./ProfileDropdown";
 import { SearchDialog } from "./SearchDialog";
 
 export function Header() {
@@ -19,7 +18,6 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <NotificationsPopover />
-          <ProfileDropdown />
         </div>
       </div>
     </header>
