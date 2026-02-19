@@ -1,8 +1,12 @@
+"use client";
+
+import { CategoryList } from "@/components/dashboard/CategoryList";
+import { PageShell } from "@/components/dashboard/PageShell";
+
 export default function CategoriesPage() {
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold">Categories Management</h1>
-      <p className="mt-4">Manage food categories</p>
-    </div>
+    <PageShell title="Categories">
+      <CategoryList />
+    </PageShell>
   );
 }
