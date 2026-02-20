@@ -54,7 +54,7 @@ export function RestaurantList() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
+      <div className="flex justify-center items-center min-h-100">
         <Loader2 className="h-8 w-8 animate-spin text-orange" />
       </div>
     );
@@ -95,7 +95,7 @@ export function RestaurantList() {
             <Table>
               <TableHeader>
                 <TableRow className="border-border hover:bg-surface-hover">
-                  <TableHead className="w-[80px]">Image</TableHead>
+                  <TableHead className="w-20">Image</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Rating</TableHead>

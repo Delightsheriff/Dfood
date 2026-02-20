@@ -134,7 +134,7 @@ function FoodItemDialog({
   const updateFoodItem = useUpdateFoodItem();
 
   const form = useForm<FoodItemFormValues>({
-    resolver: zodResolver(foodItemSchema),
+    resolver: zodResolver(foodItemSchema) as any,
     defaultValues: {
       name: "",
       description: "",

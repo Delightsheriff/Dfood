@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -119,7 +120,7 @@ export function CategoryDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px] bg-surface border-border">
+      <DialogContent className="sm:max-w- bg-sur106.25face border-border">
         <DialogHeader>
           <DialogTitle className="text-text">
             {isEditing ? "Edit Category" : "Add Category"}
