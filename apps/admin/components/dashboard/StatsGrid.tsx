@@ -1,25 +1,72 @@
 "use client";
 
 import { useDashboardRole } from "./DashboardRoleContext";
+import { useOrderStats } from "@/hooks/useOrders";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   DollarSign,
   ShoppingBag,
   Store,
   Activity,
-  LineChart,
-  UtensilsCrossed,
+  TrendingUp,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+function formatCurrency(amount: number): string {
+  if (!amount || Number.isNaN(amount)) return "₦0";
+  if (amount >= 1_000_000)
+    return `₦${(amount / 1_000_000).toFixed(1).replace(/\.0$/, "")}M`;
+  if (amount >= 1_000)
+    return `₦${(amount / 1_000).toFixed(1).replace(/\.0$/, "")}K`;
+  return `₦${amount.toLocaleString()}`;
+}
+
 export function StatsGrid() {
   const { isVendor } = useDashboardRole();
+  const { data: stats, isLoading } = useOrderStats({ isVendor });
 
-  const adminStats = [
+  if (isLoading) {
+    return (
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {[...Array(4)].map((_, i) => (
+          <Card key={i} className="border-border bg-surface shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-8 w-8 rounded-lg" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-7 w-16 mb-1" />
+              <Skeleton className="h-3 w-24" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
+  if (!stats) return null;
+
+  type StatCard = {
+    label: string;
+    value: string;
+    change: string;
+    trend: "up" | "down" | "neutral";
+    icon: React.ComponentType<{ className?: string }>;
+    color: string;
+    bgColor: string;
+  };
+
+  const pendingCount = stats.statusBreakdown.pending ?? 0;
+  const preparingCount = stats.statusBreakdown.preparing ?? 0;
+  const activeOrders = pendingCount + preparingCount;
+
+  const cards: StatCard[] = [
     {
       label: "Total Revenue",
-      value: "₦842K",
-      change: "↗ 12.5% from last week",
+      value: formatCurrency(stats.revenue.total),
+      change: `${formatCurrency(stats.revenue.today)} today`,
       trend: "up",
       icon: DollarSign,
       color: "text-orange",
@@ -27,79 +74,74 @@ export function StatsGrid() {
     },
     {
       label: "Orders",
-      value: "142",
-      change: "↗ 8.2% from last week",
+      value: stats.orders.total.toLocaleString(),
+      change: `${stats.orders.today} today · ${stats.orders.thisMonth} this month`,
       trend: "up",
       icon: ShoppingBag,
       color: "text-blue-500",
       bgColor: "bg-blue-500/10",
     },
     {
-      label: "Restaurants",
-      value: "48",
-      change: "↗ 3 new this week",
-      trend: "up",
-      icon: Store,
+      label: "Active Orders",
+      value: activeOrders.toLocaleString(),
+      change: `${pendingCount} pending · ${preparingCount} preparing`,
+      trend: "neutral",
+      icon: TrendingUp,
       color: "text-purple-500",
       bgColor: "bg-purple-500/10",
     },
     {
       label: "Avg Order Value",
-      value: "₦4.8K",
-      change: "↘ 2.1% from last week",
-      trend: "down",
+      value:
+        stats.orders.total > 0
+          ? formatCurrency(stats.revenue.total / stats.orders.total)
+          : "₦0",
+      change: `${stats.orders.thisWeek} orders this week`,
+      trend: "up",
       icon: Activity,
       color: "text-green-500",
       bgColor: "bg-green-500/10",
     },
   ];
 
-  const vendorStats = [
-    {
-      label: "Total Revenue",
-      value: "₦124K",
-      change: "↗ 12.5% from last week",
+  // Admin-only: show top restaurant or total restaurants
+  if (!isVendor && stats.topRestaurants && stats.topRestaurants.length > 0) {
+    const top = stats.topRestaurants[0];
+    cards.push({
+      label: "Top Restaurant",
+      value: top.restaurantName,
+      change: `${top.orderCount} orders · ${formatCurrency(top.revenue)}`,
       trend: "up",
-      icon: DollarSign,
-      color: "text-orange",
-      bgColor: "bg-orange/10",
-    },
-    {
-      label: "Orders",
-      value: "38",
-      change: "↗ 8.2% from last week",
-      trend: "up",
-      icon: ShoppingBag,
-      color: "text-blue-500",
-      bgColor: "bg-blue-500/10",
-    },
-    {
-      label: "Menu Items",
-      value: "24",
-      change: "↗ 3 new this week",
-      trend: "up",
-      icon: UtensilsCrossed,
-      color: "text-purple-500",
-      bgColor: "bg-purple-500/10",
-    },
-    {
-      label: "Avg Order Value",
-      value: "₦3.2K",
-      change: "↘ 2.1% from last week",
-      trend: "down",
-      icon: LineChart,
-      color: "text-green-500",
-      bgColor: "bg-green-500/10",
-    },
-  ];
+      icon: Store,
+      color: "text-emerald-500",
+      bgColor: "bg-emerald-500/10",
+    });
+  }
 
-  const stats = isVendor ? vendorStats : adminStats;
+  if (!isVendor) {
+    cards.push({
+      label: "Monthly Revenue",
+      value: formatCurrency(stats.revenue.thisMonth ?? 0),
+      change: `${formatCurrency(stats.revenue.thisWeek ?? 0)} this week`,
+      trend: "up",
+      icon: Users,
+      color: "text-cyan-500",
+      bgColor: "bg-cyan-500/10",
+    });
+  }
+
+  const gridCols =
+    cards.length <= 4
+      ? "grid-cols-2 lg:grid-cols-4"
+      : cards.length === 5
+        ? "grid-cols-2 lg:grid-cols-5"
+        : "grid-cols-2 lg:grid-cols-3 xl:grid-cols-6";
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {stats.map((stat, index) => (
+    <div className={cn("grid gap-4", gridCols)}>
+      {cards.map((stat) => (
         <Card
-          key={index}
+          key={stat.label}
           className="border-border bg-surface shadow-sm hover:shadow-md transition-all duration-200"
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -111,17 +153,10 @@ export function StatsGrid() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-text mb-1">
+            <div className="text-2xl font-bold text-text mb-1 truncate">
               {stat.value}
             </div>
-            <p
-              className={cn(
-                "text-xs font-semibold flex items-center gap-1",
-                stat.trend === "up" ? "text-green-500" : "text-red-500",
-              )}
-            >
-              {stat.change}
-            </p>
+            <p className="text-xs text-text-muted truncate">{stat.change}</p>
           </CardContent>
         </Card>
       ))}

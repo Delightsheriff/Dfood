@@ -1,6 +1,5 @@
 "use client";
 
-import { useDashboardRole } from "./DashboardRoleContext";
 import {
   Area,
   AreaChart,
@@ -11,33 +10,71 @@ import {
   YAxis,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export function RevenueChart() {
-  const { isVendor } = useDashboardRole();
+type DataPoint = { name: string; total: number };
 
-  const data = [
-    { name: "Mon", total: 1200 },
-    { name: "Tue", total: 2100 },
-    { name: "Wed", total: 1800 },
-    { name: "Thu", total: 2400 },
-    { name: "Fri", total: 3200 },
-    { name: "Sat", total: 3800 },
-    { name: "Sun", total: 4200 },
-  ];
+interface RevenueChartProps {
+  title?: string;
+  data?: DataPoint[];
+  isLoading?: boolean;
+  height?: number;
+  className?: string;
+}
+
+export function RevenueChart({
+  title = "Revenue Overview",
+  data,
+  isLoading = false,
+  height = 280,
+  className,
+}: RevenueChartProps) {
+  if (isLoading) {
+    return (
+      <Card
+        className={`col-span-4 border-border bg-surface md:col-span-3 ${className ?? ""}`}
+      >
+        <CardHeader>
+          <Skeleton className="h-5 w-40" />
+        </CardHeader>
+        <CardContent className="pl-2">
+          <Skeleton className="w-full" style={{ height }} />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!data || data.length === 0) {
+    return (
+      <Card
+        className={`col-span-4 border-border bg-surface md:col-span-3 ${className ?? ""}`}
+      >
+        <CardHeader>
+          <CardTitle className="text-base font-bold text-text">
+            {title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div
+            className="flex items-center justify-center text-text-muted text-sm"
+            style={{ height }}
+          >
+            No revenue data available yet
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <Card className="col-span-4 border-border bg-surface md:col-span-3">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-base font-bold text-text">
-          {isVendor ? "Sales Overview" : "Revenue Overview"}
-        </CardTitle>
-        <button className="flex items-center text-xs font-semibold text-orange hover:opacity-80 transition-opacity">
-          View Report <ArrowRight className="ml-1 h-3 w-3" />
-        </button>
+    <Card
+      className={`col-span-4 border-border bg-surface md:col-span-3 ${className ?? ""}`}
+    >
+      <CardHeader>
+        <CardTitle className="text-base font-bold text-text">{title}</CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
-        <div className="h-[280px] w-full">
+        <div className="w-full" style={{ height }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={data}>
               <defs>
@@ -58,7 +95,7 @@ export function RevenueChart() {
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value) => `₦${value}`}
+                tickFormatter={(value) => `₦${(value / 1000).toFixed(0)}K`}
               />
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -73,6 +110,10 @@ export function RevenueChart() {
                 }}
                 itemStyle={{ color: "#f0ede8" }}
                 labelStyle={{ color: "#999" }}
+                formatter={(value: number) => [
+                  `₦${value.toLocaleString()}`,
+                  "Revenue",
+                ]}
               />
               <Area
                 type="monotone"

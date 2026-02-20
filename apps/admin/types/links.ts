@@ -13,7 +13,6 @@ export type NavLink = {
   href: string;
   label: string;
   icon: React.ElementType;
-  badge?: string;
   roles: ("admin" | "vendor")[]; // Which roles can see this link
 };
 
@@ -29,7 +28,6 @@ export const navigationLinks: NavLink[] = [
     href: "/orders",
     label: "Orders",
     icon: ShoppingBag,
-    badge: "12", // This should come from real data
     roles: ["admin", "vendor"],
   },
   {
