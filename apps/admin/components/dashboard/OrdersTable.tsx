@@ -179,7 +179,7 @@ export function OrdersTable() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <Avatar className="h-8 w-8 bg-gradient-to-br from-blue-500 to-purple-500">
+                      <Avatar className="h-8 w-8 bg-linear-to-br from-blue-500 to-purple-500">
                         <AvatarFallback className="bg-transparent text-white text-xs font-bold">
                           {order.initials}
                         </AvatarFallback>
