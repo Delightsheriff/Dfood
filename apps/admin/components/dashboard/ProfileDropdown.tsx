@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, Settings, User } from "lucide-react";
+import { LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -14,15 +14,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useDashboardRole } from "./DashboardRoleContext";
 import { signOut } from "next-auth/react";
-import { clearTokenCache } from "@/lib/api-client";
 
 export function ProfileDropdown({ children }: { children?: React.ReactNode }) {
   const { isVendor, user } = useDashboardRole();
-
-  const handleLogout = async () => {
-    clearTokenCache(); // Clear axios token cache
-    await signOut({ callbackUrl: "/login" });
-  };
 
   const userInitials =
     user?.name
@@ -63,15 +57,6 @@ export function ProfileDropdown({ children }: { children?: React.ReactNode }) {
         <DropdownMenuSeparator className="bg-border" />
         <DropdownMenuItem asChild>
           <Link
-            href="/profile"
-            className="cursor-pointer focus:bg-surface-2 focus:text-text"
-          >
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link
             href="/settings"
             className="cursor-pointer focus:bg-surface-2 focus:text-text"
           >
@@ -81,7 +66,7 @@ export function ProfileDropdown({ children }: { children?: React.ReactNode }) {
         </DropdownMenuItem>
         <DropdownMenuSeparator className="bg-border" />
         <DropdownMenuItem
-          onClick={handleLogout}
+          onClick={() => signOut({ callbackUrl: "/login" })}
           className="cursor-pointer text-red-500 hover:bg-red-500/10 hover:text-red-500 focus:bg-red-500/10 focus:text-red-500"
         >
           <LogOut className="mr-2 h-4 w-4" />

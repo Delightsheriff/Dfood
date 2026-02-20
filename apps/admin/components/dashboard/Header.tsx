@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Search, Menu } from "lucide-react";
+import { Bell, Search, Menu, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import {
@@ -20,6 +20,7 @@ import {
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
@@ -35,10 +36,6 @@ export function Header() {
       .map((n) => n[0])
       .join("")
       .toUpperCase() || "U";
-
-  const handleLogout = () => {
-    router.push("/auth/signin");
-  };
 
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-border bg-surface px-4 shadow-sm">
@@ -139,27 +136,23 @@ export function Header() {
               className="text-text hover:bg-surface-2 cursor-pointer"
               onClick={() => router.push("/settings")}
             >
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-text hover:bg-surface-2 cursor-pointer"
-              onClick={() => router.push("/settings")}
-            >
-              Settings
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border" />
             <DropdownMenuItem
-              className="text-red-500 hover:bg-red-50 cursor-pointer"
-              onClick={handleLogout}
+              className="cursor-pointer text-red-500 hover:bg-red-500/10 hover:text-red-500 focus:bg-red-500/10 focus:text-red-500"
+              onClick={() => signOut({ callbackUrl: "/login" })}
             >
-              Log out
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
       <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-        <DialogContent className="sm:max-w-[500px] bg-surface border-border p-0 gap-0">
+        <DialogContent className="sm:max-w-125 bg-surface border-border p-0 gap-0">
           <div className="flex items-center border-b border-border px-4">
             <Search className="mr-2 h-5 w-5 text-text-muted" />
             <Input

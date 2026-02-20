@@ -28,8 +28,7 @@ export async function middleware(request: NextRequest) {
 
   // If authenticated and trying to access auth pages, redirect based on role
   if (token && (pathname === "/login" || pathname === "/signup")) {
-    const dashboardUrl =
-      token.role === "admin" ? "/admin/dashboard" : "/vendor/dashboard";
+    const dashboardUrl = token.role === "admin" ? "/dashboard" : "/dashboard";
     return NextResponse.redirect(new URL(dashboardUrl, request.url));
   }
 
@@ -37,12 +36,12 @@ export async function middleware(request: NextRequest) {
   if (token) {
     // Admins trying to access vendor routes
     if (pathname.startsWith("/vendor") && token.role === "admin") {
-      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
     // Vendors trying to access admin routes
     if (pathname.startsWith("/admin") && token.role === "vendor") {
-      return NextResponse.redirect(new URL("/vendor/dashboard", request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
     // Customers trying to access dashboard routes
@@ -55,10 +54,10 @@ export async function middleware(request: NextRequest) {
 
     // Redirect from root /admin or /vendor to their dashboard
     if (pathname === "/admin" && token.role === "admin") {
-      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
     if (pathname === "/vendor" && token.role === "vendor") {
-      return NextResponse.redirect(new URL("/vendor/dashboard", request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
 

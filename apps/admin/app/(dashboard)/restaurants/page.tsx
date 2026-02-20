@@ -1,6 +1,5 @@
 "use client";
 
-import { useDashboardRole } from "@/components/dashboard/DashboardRoleContext";
 import { RestaurantList } from "@/components/dashboard/RestaurantList";
 import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
