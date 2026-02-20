@@ -44,7 +44,6 @@ export const userProfileApi = {
   async getProfile(): Promise<UserProfileResponse> {
     const response: AxiosResponse<UserProfileResponse> =
       await apiClient.get("/profile");
-    console.log("response service: ", response);
     return response.data;
   },
 
@@ -66,7 +65,7 @@ export const userProfileApi = {
    */
   async uploadProfilePicture(file: File): Promise<{ url: string }> {
     const formData = new FormData();
-    formData.append("profilePicture", file);
+    formData.append("image", file);
 
     const response: AxiosResponse<{
       success: boolean;

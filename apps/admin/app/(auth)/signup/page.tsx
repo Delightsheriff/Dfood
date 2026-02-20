@@ -162,7 +162,7 @@ export default function SignupPage() {
 
         // Redirect after 2 seconds
         setTimeout(() => {
-          router.push("/vendor/dashboard");
+          router.push("/dashboard");
         }, 2000);
       }
     } catch (error) {

@@ -23,7 +23,6 @@ export function useUserProfile() {
     queryKey: userProfileKeys.profile(),
     queryFn: async () => {
       const response = await userProfileApi.getProfile();
-      console.log("response: ", response);
       return response.data.profile;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -62,13 +61,9 @@ export function useUploadProfilePicture() {
 
   return useMutation({
     mutationFn: (file: File) => userProfileApi.uploadProfilePicture(file),
-    onSuccess: (data) => {
-      // Invalidate profile to refetch with new picture
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userProfileKeys.profile() });
-
       toast.success("Profile picture uploaded successfully.");
-
-      return data.url;
     },
     onError: () => {
       toast.error("Failed to upload profile picture.");

@@ -66,7 +66,7 @@ export default function LoginPage() {
         });
 
         // Redirect to dashboard
-        router.push("/vendor/dashboard");
+        router.push("/dashboard");
         router.refresh();
       }
     } catch {
