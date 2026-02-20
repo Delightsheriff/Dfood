@@ -17,7 +17,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Pencil, Trash2, Layers } from "lucide-react";
+import { MoreHorizontal, Pencil, Trash2, Layers, Eye } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CategoryDialog } from "./CategoryDialog";
 import { DeleteCategoryDialog } from "./DeleteCategoryDialog";
@@ -26,6 +27,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useCategories } from "@/hooks/useCategory";
 
 export function CategoryList() {
+  const router = useRouter();
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [deletingCategory, setDeletingCategory] = useState<Category | null>(
     null,
@@ -70,9 +72,7 @@ export function CategoryList() {
           <Table>
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
-                <TableHead className="w-[100px] text-text-muted">
-                  Image
-                </TableHead>
+                <TableHead className="w-25 text-text-muted">Image</TableHead>
                 <TableHead className="text-text-muted">Name</TableHead>
                 <TableHead className="text-right text-text-muted">
                   Actions
@@ -127,6 +127,15 @@ export function CategoryList() {
                           align="end"
                           className="bg-surface border-border"
                         >
+                          <DropdownMenuItem
+                            onClick={() =>
+                              router.push(`/categories/${category._id}`)
+                            }
+                            className="text-text hover:bg-surface-2 focus:bg-surface-2 cursor-pointer"
+                          >
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
+                          </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => setEditingCategory(category)}
                             className="text-text hover:bg-surface-2 focus:bg-surface-2 cursor-pointer"

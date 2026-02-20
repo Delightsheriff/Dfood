@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useAllRestaurants } from "@/hooks/useRestaurant";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -39,6 +40,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function RestaurantList() {
+  const router = useRouter();
   const { data: response, isLoading, isError } = useAllRestaurants();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -199,8 +201,9 @@ export function RestaurantList() {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               onClick={() =>
-                                (window.location.href = `/restaurants/${restaurant._id}`)
+                                router.push(`/restaurants/${restaurant._id}`)
                               }
+                              className="cursor-pointer"
                             >
                               View Details
                             </DropdownMenuItem>
