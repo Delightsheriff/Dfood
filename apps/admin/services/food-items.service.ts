@@ -87,6 +87,7 @@ export const foodItemsApi = {
     const response: AxiosResponse<FoodItemsResponse> = await apiClient.get(
       "/food-items/my/items",
     );
+
     return response.data;
   },
 

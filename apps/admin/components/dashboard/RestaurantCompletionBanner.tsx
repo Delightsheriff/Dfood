@@ -39,7 +39,7 @@ export function RestaurantCompletionBanner() {
       </button>
 
       <div className="flex items-start gap-3 pr-8">
-        <div className="flex-shrink-0 mt-0.5">
+        <div className="shrink-0 mt-0.5">
           <div className="w-8 h-8 rounded-full bg-orange/20 flex items-center justify-center">
             <AlertCircle className="h-4 w-4 text-orange" />
           </div>
