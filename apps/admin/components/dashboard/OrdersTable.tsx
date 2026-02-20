@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useDashboardRole } from "./DashboardRoleContext";
 import { useOrders, useUpdateOrderStatus } from "@/hooks/useOrders";
 import { Order } from "@/services/orders.service";
@@ -23,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Package, Loader2 } from "lucide-react";
+import { Package, Loader2, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const STATUS_TABS = [
@@ -37,6 +38,7 @@ const STATUS_TABS = [
 ] as const;
 
 export function OrdersTable() {
+  const router = useRouter();
   const { isVendor } = useDashboardRole();
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const {
@@ -148,7 +150,7 @@ export function OrdersTable() {
                   <TH>Payment</TH>
                   <TH>Status</TH>
                   <TH>Time</TH>
-                  {isVendor && <TH className="text-right pr-4">Action</TH>}
+                  <TH className="text-right pr-4">Action</TH>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -252,10 +254,11 @@ export function OrdersTable() {
                         </span>
                       </TableCell>
 
-                      {/* Action (vendor only, always last) */}
-                      {isVendor && (
-                        <TableCell className="pr-4 text-right">
-                          {allowedStatuses.length > 0 ? (
+                      {/* Action column */}
+                      <TableCell className="pr-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          {/* Vendor status update */}
+                          {isVendor && allowedStatuses.length > 0 && (
                             <Select
                               onValueChange={(value) =>
                                 handleStatusChange(
@@ -265,7 +268,7 @@ export function OrdersTable() {
                               }
                               disabled={isUpdating}
                             >
-                              <SelectTrigger className="h-8 text-xs bg-surface-2 border-border/60 w-36 ml-auto">
+                              <SelectTrigger className="h-8 text-xs bg-surface-2 border-border/60 w-36">
                                 {isUpdating ? (
                                   <Loader2 className="h-3 w-3 animate-spin" />
                                 ) : (
@@ -280,13 +283,17 @@ export function OrdersTable() {
                                 ))}
                               </SelectContent>
                             </Select>
-                          ) : (
-                            <span className="text-xs text-text-muted/50">
-                              —
-                            </span>
                           )}
-                        </TableCell>
-                      )}
+                          {/* View details button */}
+                          <button
+                            onClick={() => router.push(`/orders/${order._id}`)}
+                            className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-border/60 bg-surface-2 hover:bg-surface-2/80 text-text-muted hover:text-text transition-colors"
+                            title="View order details"
+                          >
+                            <Eye className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -487,7 +494,10 @@ function OrdersTableSkeleton({ isVendor }: { isVendor: boolean }) {
           <Skeleton className="h-6 w-14 rounded-full" />
           <Skeleton className="h-6 w-20 rounded-full" />
           <Skeleton className="h-4 w-12" />
-          {isVendor && <Skeleton className="h-8 w-32 rounded-md" />}
+          <div className="flex items-center gap-2">
+            {isVendor && <Skeleton className="h-8 w-32 rounded-md" />}
+            <Skeleton className="h-8 w-8 rounded-md" />
+          </div>
         </div>
       ))}
     </div>

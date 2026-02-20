@@ -8,6 +8,8 @@ export const orderKeys = {
   all: ["orders"] as const,
   list: (role: "vendor" | "admin", filters?: OrdersFilters) =>
     [...orderKeys.all, role, filters] as const,
+  detail: (role: "vendor" | "admin", id: string) =>
+    [...orderKeys.all, role, "detail", id] as const,
   stats: (role: "vendor" | "admin") => ["order-stats", role] as const,
 };
 
@@ -25,6 +27,25 @@ export const useOrders = ({ isVendor, filters }: OrdersQueryParams) => {
         : await ordersApi.getAdminOrders(filters);
       return response.data.orders;
     },
+  });
+};
+
+export const useOrder = ({
+  isVendor,
+  id,
+}: {
+  isVendor: boolean;
+  id: string;
+}) => {
+  return useQuery({
+    queryKey: orderKeys.detail(isVendor ? "vendor" : "admin", id),
+    queryFn: async () => {
+      const response = isVendor
+        ? await ordersApi.getVendorOrder(id)
+        : await ordersApi.getAdminOrder(id);
+      return response.data.order;
+    },
+    enabled: !!id,
   });
 };
 
