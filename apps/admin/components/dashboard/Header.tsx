@@ -21,8 +21,7 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { SearchDialog } from "@/components/dashboard/SearchDialog";
 
 export function Header() {
   const { toggleSidebar } = useSidebar();
@@ -151,20 +150,7 @@ export function Header() {
         </DropdownMenu>
       </div>
 
-      <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-        <DialogContent className="sm:max-w-125 bg-surface border-border p-0 gap-0">
-          <div className="flex items-center border-b border-border px-4">
-            <Search className="mr-2 h-5 w-5 text-text-muted" />
-            <Input
-              placeholder="Type a command or search..."
-              className="flex-1 border-none bg-transparent py-4 text-base shadow-none focus-visible:ring-0 placeholder:text-text-dim text-text"
-            />
-          </div>
-          <div className="p-4 text-center text-sm text-text-muted">
-            No results found.
-          </div>
-        </DialogContent>
-      </Dialog>
+      <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
     </header>
   );
 }
