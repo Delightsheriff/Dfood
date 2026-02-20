@@ -1,11 +1,12 @@
 "use client";
 
+import { PageShell } from "@/components/dashboard/PageShell";
 import { OrdersTable } from "@/components/dashboard/OrdersTable";
 
 export default function OrdersPage() {
   return (
-    <div className="space-y-6">
+    <PageShell title="Orders">
       <OrdersTable />
-    </div>
+    </PageShell>
   );
 }

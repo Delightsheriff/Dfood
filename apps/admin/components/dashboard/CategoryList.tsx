@@ -50,8 +50,8 @@ export function CategoryList() {
 
   if (error) {
     return (
-      <div className="p-4 text-red-500 bg-red-50 rounded-md">
-        Failed to load categories
+      <div className="rounded-xl border border-border bg-surface p-12 text-center">
+        <p className="text-red-500">Failed to load categories.</p>
       </div>
     );
   }
@@ -145,7 +145,7 @@ export function CategoryList() {
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => setDeletingCategory(category)}
-                            className="text-red-500 hover:bg-red-50 focus:bg-red-50 cursor-pointer"
+                            className="text-red-500 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-500 cursor-pointer"
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
                             Delete

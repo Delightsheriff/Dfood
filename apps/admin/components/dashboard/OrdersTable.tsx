@@ -30,19 +30,19 @@ export function OrdersTable() {
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800 hover:bg-yellow-100";
+        return "bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/10";
       case "confirmed":
-        return "bg-blue-100 text-blue-800 hover:bg-blue-100";
+        return "bg-blue-500/10 text-blue-500 hover:bg-blue-500/10";
       case "preparing":
-        return "bg-indigo-100 text-indigo-800 hover:bg-indigo-100";
+        return "bg-indigo-500/10 text-indigo-500 hover:bg-indigo-500/10";
       case "out for delivery":
-        return "bg-purple-100 text-purple-800 hover:bg-purple-100";
+        return "bg-purple-500/10 text-purple-500 hover:bg-purple-500/10";
       case "delivered":
-        return "bg-green-100 text-green-800 hover:bg-green-100";
+        return "bg-green-500/10 text-green-500 hover:bg-green-500/10";
       case "cancelled":
-        return "bg-red-100 text-red-800 hover:bg-red-100";
+        return "bg-red-500/10 text-red-500 hover:bg-red-500/10";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-500/10 text-gray-400";
     }
   };
 
@@ -146,26 +146,14 @@ export function OrdersTable() {
           <Table>
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
-                <TableHead className="text-xs uppercase tracking-wider font-mono text-text-muted">
-                  Order ID
-                </TableHead>
-                <TableHead className="text-xs uppercase tracking-wider font-mono text-text-muted">
-                  Customer
-                </TableHead>
+                <TableHead className="text-text-muted">Order ID</TableHead>
+                <TableHead className="text-text-muted">Customer</TableHead>
                 {!isVendor && (
-                  <TableHead className="text-xs uppercase tracking-wider font-mono text-text-muted">
-                    Restaurant
-                  </TableHead>
+                  <TableHead className="text-text-muted">Restaurant</TableHead>
                 )}
-                <TableHead className="text-xs uppercase tracking-wider font-mono text-text-muted">
-                  Total
-                </TableHead>
-                <TableHead className="text-xs uppercase tracking-wider font-mono text-text-muted">
-                  Status
-                </TableHead>
-                <TableHead className="text-xs uppercase tracking-wider font-mono text-text-muted">
-                  Time
-                </TableHead>
+                <TableHead className="text-text-muted">Total</TableHead>
+                <TableHead className="text-text-muted">Status</TableHead>
+                <TableHead className="text-text-muted">Time</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
