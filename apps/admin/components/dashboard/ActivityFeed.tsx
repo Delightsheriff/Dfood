@@ -12,9 +12,10 @@ import {
   Truck,
   XCircle,
   ChefHat,
+  ArrowRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ArrowRight } from "lucide-react";
+import { formatCurrency, timeAgo, formatStatusLabel } from "@/lib/format";
 import Link from "next/link";
 
 const STATUS_META: Record<
@@ -41,35 +42,9 @@ const STATUS_META: Record<
   cancelled: { icon: XCircle, color: "text-red-500", bg: "bg-red-500/10" },
 };
 
-function formatCurrency(amount: number): string {
-  if (!amount || Number.isNaN(amount)) return "₦0";
-  return new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-function timeAgo(date: string): string {
-  const now = new Date();
-  const then = new Date(date);
-  const seconds = Math.floor((now.getTime() - then.getTime()) / 1000);
-  if (seconds < 60) return "just now";
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
-}
-
 function getCustomerName(customerId: string | OrderCustomer): string {
   if (typeof customerId === "string") return "Customer";
   return customerId.name || "Customer";
-}
-
-function formatStatus(status: Order["status"]): string {
-  return status.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 export function ActivityFeed() {
@@ -153,7 +128,7 @@ export function ActivityFeed() {
                     </p>
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className={cn("text-xs font-medium", meta.color)}>
-                        {formatStatus(order.status)}
+                        {formatStatusLabel(order.status)}
                       </span>
                       <span className="text-text-dim text-xs">·</span>
                       <span className="text-xs text-text-muted font-mono">

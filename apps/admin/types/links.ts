@@ -1,5 +1,4 @@
 import {
-  DollarSign,
   LayoutDashboard,
   Layers,
   LineChart,
@@ -46,12 +45,6 @@ export const navigationLinks: NavLink[] = [
     href: "/users",
     label: "Users",
     icon: Users,
-    roles: ["admin"], // Admin only
-  },
-  {
-    href: "/financials",
-    label: "Financials",
-    icon: DollarSign,
     roles: ["admin"], // Admin only
   },
   {

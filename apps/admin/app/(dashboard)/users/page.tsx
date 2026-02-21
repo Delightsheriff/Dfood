@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,6 +22,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { formatDate, getInitials } from "@/lib/format";
+import { StatCard } from "@/components/dashboard/StatCard";
+import { StatCardGrid } from "@/components/dashboard/StatCardGrid";
+import { EmptyState } from "@/components/dashboard/EmptyState";
 import {
   Users,
   ShoppingBag,
@@ -70,46 +73,6 @@ function getRoleBadge(role: UserRole) {
     >
       {label}
     </Badge>
-  );
-}
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-NG", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
-
-function getInitials(name?: string) {
-  return (
-    name
-      ?.split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase() || "U"
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Stats skeleton                                                     */
-/* ------------------------------------------------------------------ */
-function StatsSkeleton() {
-  return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <Card key={i} className="border-border bg-surface">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-8 w-8 rounded-lg" />
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="h-8 w-16 mb-1" />
-            <Skeleton className="h-3 w-28" />
-          </CardContent>
-        </Card>
-      ))}
-    </div>
   );
 }
 
@@ -234,7 +197,6 @@ export default function UsersPage() {
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
 
-  // Build API filters — debounce search at the network-level via query key
   const filters = useMemo(
     () => ({
       ...(roleFilter !== "all" && { role: roleFilter }),
@@ -283,34 +245,14 @@ export default function UsersPage() {
   return (
     <PageShell title="Users">
       {/* ---- STATS ---- */}
-      {statsLoading ? (
-        <StatsSkeleton />
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {statCards.map((stat, i) => (
-            <Card
-              key={i}
-              className="border-border bg-surface shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-text-muted font-mono uppercase tracking-wider">
-                  {stat.label}
-                </CardTitle>
-                <div className={cn("rounded-lg p-2", stat.bgColor)}>
-                  <stat.icon className={cn("h-4 w-4", stat.color)} />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-text">{stat.value}</div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+      <StatCardGrid isLoading={statsLoading} skeletonCount={4} columns={4}>
+        {statCards.map((stat) => (
+          <StatCard key={stat.label} {...stat} />
+        ))}
+      </StatCardGrid>
 
       {/* ---- FILTERS ---- */}
       <div className="flex flex-col sm:flex-row gap-3">
-        {/* Search */}
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
           <Input
@@ -321,7 +263,6 @@ export default function UsersPage() {
           />
         </div>
 
-        {/* Role filter pills */}
         <div className="flex items-center gap-1.5 flex-wrap">
           {ROLE_FILTERS.map((f) => (
             <Button
@@ -346,23 +287,21 @@ export default function UsersPage() {
       {usersLoading ? (
         <TableSkeleton />
       ) : users.length === 0 ? (
-        <div className="rounded-xl border border-border bg-surface flex flex-col items-center justify-center py-16 text-center">
-          <Users className="h-10 w-10 text-text-dim mb-3" />
-          <p className="text-text-muted text-sm">No users found.</p>
-          {(search || roleFilter !== "all") && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="mt-2 text-orange hover:text-orange/80"
-              onClick={() => {
-                setSearch("");
-                setRoleFilter("all");
-              }}
-            >
-              Clear filters
-            </Button>
-          )}
-        </div>
+        <EmptyState
+          icon={Users}
+          message="No users found."
+          action={
+            search || roleFilter !== "all"
+              ? {
+                  label: "Clear filters",
+                  onClick: () => {
+                    setSearch("");
+                    setRoleFilter("all");
+                  },
+                }
+              : undefined
+          }
+        />
       ) : (
         <div className="rounded-xl border border-border bg-surface overflow-hidden">
           <Table>
