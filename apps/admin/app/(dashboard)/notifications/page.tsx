@@ -2,26 +2,56 @@
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { NotificationList } from "@/components/dashboard/notifications/NotificationList";
-
-// TODO: Replace with real data fetching via a useNotifications hook
-const MOCK_NOTIFICATIONS = [
-  { title: "New Order #1234", time: "2 mins ago", read: false },
-  { title: "Payment Received", time: "1 hour ago", read: true },
-  { title: "New User Registered", time: "3 hours ago", read: true },
-  { title: "System Update", time: "1 day ago", read: true },
-];
+import {
+  useNotifications,
+  useMarkAsRead,
+  useMarkAllAsRead,
+  useDeleteNotification,
+} from "@/hooks/useNotifications";
+import { Button } from "@/components/ui/button";
+import { CheckCheck, Loader2 } from "lucide-react";
 
 export default function NotificationsPage() {
+  const { data: notifications, isLoading } = useNotifications();
+  const markAsRead = useMarkAsRead();
+  const markAllAsRead = useMarkAllAsRead();
+  const deleteNotification = useDeleteNotification();
+
+  const hasUnread = notifications?.some((n) => !n.read);
+
   return (
     <PageShell
       title="Notifications"
       action={
-        <button className="text-sm text-text-muted hover:text-text">
-          Mark all as read
-        </button>
+        hasUnread ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-sm text-text-muted hover:text-text"
+            onClick={() => markAllAsRead.mutate()}
+            disabled={markAllAsRead.isPending}
+          >
+            {markAllAsRead.isPending ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <CheckCheck className="mr-2 h-4 w-4" />
+            )}
+            Mark all as read
+          </Button>
+        ) : null
       }
     >
-      <NotificationList notifications={MOCK_NOTIFICATIONS} />
+      {isLoading ? (
+        <div className="flex items-center justify-center py-16">
+          <Loader2 className="h-8 w-8 animate-spin text-text-muted" />
+        </div>
+      ) : (
+        <NotificationList
+          notifications={notifications ?? []}
+          onMarkAsRead={(id) => markAsRead.mutate(id)}
+          onDelete={(id) => deleteNotification.mutate(id)}
+        />
+      )}
     </PageShell>
   );
 }

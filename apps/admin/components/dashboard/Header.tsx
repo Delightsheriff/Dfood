@@ -1,13 +1,8 @@
 "use client";
 
-import { Bell, Search, Menu, Settings, LogOut } from "lucide-react";
+import { Search, Menu, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -22,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { SearchDialog } from "@/components/dashboard/SearchDialog";
+import { NotificationsPopover } from "@/components/dashboard/NotificationsPopover";
 
 export function Header() {
   const { toggleSidebar } = useSidebar();
@@ -59,50 +55,7 @@ export function Header() {
           <Search className="h-5 w-5" />
         </Button>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative text-text hover:bg-surface-2"
-            >
-              <Bell className="h-5 w-5" />
-              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-orange" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80 bg-surface border-border" align="end">
-            <div className="grid gap-4">
-              <div className="space-y-2">
-                <h4 className="font-medium leading-none text-text">
-                  Notifications
-                </h4>
-                <p className="text-sm text-text-muted">
-                  You have 3 unread messages.
-                </p>
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center gap-4 rounded-md border border-border p-3 hover:bg-surface-2 transition-colors cursor-pointer">
-                  <Bell className="mt-px h-5 w-5 text-orange" />
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none text-text">
-                      New Order Received
-                    </p>
-                    <p className="text-xs text-text-muted">2 mins ago</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 rounded-md border border-border p-3 hover:bg-surface-2 transition-colors cursor-pointer">
-                  <Bell className="mt-px h-5 w-5 text-orange" />
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none text-text">
-                      System Update
-                    </p>
-                    <p className="text-xs text-text-muted">1 hour ago</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+        <NotificationsPopover />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
