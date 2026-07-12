@@ -17,6 +17,21 @@ importers:
 
   apps/admin:
     dependencies:
+      '@dfood/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@dfood/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      '@dfood/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@dfood/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@dfood/validation':
+        specifier: workspace:*
+        version: link:../../packages/validation
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.4.0(react-hook-form@7.81.0(react@19.2.3))
@@ -108,6 +123,18 @@ importers:
 
   apps/api:
     dependencies:
+      '@dfood/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@dfood/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@dfood/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@dfood/validation':
+        specifier: workspace:*
+        version: link:../../packages/validation
       '@types/bcrypt':
         specifier: ^6.0.0
         version: 6.0.0
@@ -211,6 +238,21 @@ importers:
 
   apps/mobile:
     dependencies:
+      '@dfood/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@dfood/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      '@dfood/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@dfood/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@dfood/validation':
+        specifier: workspace:*
+        version: link:../../packages/validation
       '@expo-google-fonts/sen':
         specifier: ^0.4.2
         version: 0.4.2

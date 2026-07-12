@@ -16,6 +16,10 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@dfood/shared": "workspace:*",
+    "@dfood/types": "workspace:*",
+    "@dfood/validation": "workspace:*",
+    "@dfood/config": "workspace:*",
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",

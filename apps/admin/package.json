@@ -9,6 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@dfood/sdk": "workspace:*",
+    "@dfood/shared": "workspace:*",
+    "@dfood/types": "workspace:*",
+    "@dfood/validation": "workspace:*",
+    "@dfood/config": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-query-devtools": "^5.91.3",
