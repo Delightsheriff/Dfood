@@ -15,4 +15,14 @@ export const createOrderSchema = z.object({
   customerNotes: z.string().max(500).optional(),
 });
 
+export const updateStatusSchema = z.object({
+  status: z.enum([
+    "confirmed",
+    "preparing",
+    "out_for_delivery",
+    "delivered",
+    "cancelled",
+  ]),
+});
+
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;

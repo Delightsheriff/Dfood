@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { categoryService } from "./categoryService";
 import { asyncHandler } from "../../utils/asyncHandler";
-import { createCategorySchema, updateCategorySchema } from "./category";
 import { ValidationError } from "../../types/errors";
+import { sendSuccess } from "../../utils/response";
 
 export const createCategory = asyncHandler(
   async (req: Request, res: Response) => {
@@ -10,13 +10,9 @@ export const createCategory = asyncHandler(
       throw new ValidationError("Category image is required");
     }
 
-    const data = createCategorySchema.parse(req.body);
-    const category = await categoryService.create(data, req.file.buffer);
+    const category = await categoryService.create(req.body, req.file.buffer);
 
-    res.status(201).json({
-      success: true,
-      data: { category },
-    });
+    sendSuccess(res, { category }, undefined, 201);
   },
 );
 
@@ -24,10 +20,7 @@ export const getAllCategories = asyncHandler(
   async (_req: Request, res: Response) => {
     const categories = await categoryService.getAll();
 
-    res.status(200).json({
-      success: true,
-      data: { categories },
-    });
+    sendSuccess(res, { categories });
   },
 );
 
@@ -35,26 +28,19 @@ export const getCategoryById = asyncHandler(
   async (req: Request, res: Response) => {
     const category = await categoryService.getById(req.params.id as string);
 
-    res.status(200).json({
-      success: true,
-      data: { category },
-    });
+    sendSuccess(res, { category });
   },
 );
 
 export const updateCategory = asyncHandler(
   async (req: Request, res: Response) => {
-    const data = updateCategorySchema.parse(req.body);
     const category = await categoryService.update(
       req.params.id as string,
-      data,
+      req.body,
       req.file?.buffer,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { category },
-    });
+    sendSuccess(res, { category });
   },
 );
 
@@ -62,9 +48,6 @@ export const deleteCategory = asyncHandler(
   async (req: Request, res: Response) => {
     await categoryService.delete(req.params.id as string);
 
-    res.status(200).json({
-      success: true,
-      message: "Category deleted successfully",
-    });
+    sendSuccess(res, undefined, "Category deleted successfully");
   },
 );

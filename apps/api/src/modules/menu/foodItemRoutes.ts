@@ -13,6 +13,8 @@ import { protect, restrictTo } from "../../middleware/auth";
 import { uploadMultiple } from "../../middleware/upload";
 import { UserRole } from "../../types/auth";
 import { requireCompleteProfile } from "../../middleware/profileCompletion";
+import { validate } from "../../middleware/validate";
+import { createFoodItemSchema, updateFoodItemSchema } from "./foodItem";
 
 const router = Router();
 
@@ -28,6 +30,7 @@ router.post(
   restrictTo(UserRole.VENDOR),
   requireCompleteProfile,
   uploadMultiple,
+  validate(createFoodItemSchema),
   createFoodItem,
 );
 
@@ -45,6 +48,7 @@ router.patch(
   restrictTo(UserRole.VENDOR),
   requireCompleteProfile,
   uploadMultiple,
+  validate(updateFoodItemSchema),
   updateFoodItem,
 );
 

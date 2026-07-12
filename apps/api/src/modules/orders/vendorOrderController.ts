@@ -1,17 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { vendorOrderService } from "./vendorOrderService";
-import { z } from "zod";
-
-const updateStatusSchema = z.object({
-  status: z.enum([
-    "confirmed",
-    "preparing",
-    "out_for_delivery",
-    "delivered",
-    "cancelled",
-  ]),
-});
+import { sendSuccess } from "../../utils/response";
 
 export const getRestaurantOrders = asyncHandler(
   async (req: Request, res: Response) => {
@@ -27,10 +17,7 @@ export const getRestaurantOrders = asyncHandler(
       filters,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { orders },
-    });
+    sendSuccess(res, { orders });
   },
 );
 
@@ -41,16 +28,13 @@ export const getVendorOrderById = asyncHandler(
       req.params.id as string,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { order },
-    });
+    sendSuccess(res, { order });
   },
 );
 
 export const updateOrderStatus = asyncHandler(
   async (req: Request, res: Response) => {
-    const { status } = updateStatusSchema.parse(req.body);
+    const { status } = req.body;
 
     const order = await vendorOrderService.updateOrderStatus(
       req.user!._id.toString(),
@@ -58,11 +42,7 @@ export const updateOrderStatus = asyncHandler(
       status,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { order },
-      message: "Order status updated successfully",
-    });
+    sendSuccess(res, { order }, "Order status updated successfully");
   },
 );
 
@@ -72,9 +52,6 @@ export const getVendorOrderStats = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: stats,
-    });
+    sendSuccess(res, stats);
   },
 );

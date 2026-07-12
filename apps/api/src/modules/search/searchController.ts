@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { searchService } from "./searchService";
 import { asyncHandler } from "../../utils/asyncHandler";
+import { sendSuccess } from "../../utils/response";
 import { ValidationError } from "../../types/errors";
 
 export const search = asyncHandler(async (req: Request, res: Response) => {
@@ -12,8 +13,5 @@ export const search = asyncHandler(async (req: Request, res: Response) => {
 
   const results = await searchService.search(query);
 
-  res.status(200).json({
-    success: true,
-    data: results,
-  });
+  sendSuccess(res, results);
 });

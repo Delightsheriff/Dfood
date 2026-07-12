@@ -11,6 +11,11 @@ import {
 } from "./restaurantController";
 import { protect, restrictTo } from "../../middleware/auth";
 import { uploadMultiple } from "../../middleware/upload";
+import { validate } from "../../middleware/validate";
+import {
+  createRestaurantSchema,
+  updateRestaurantSchema,
+} from "./restaurant";
 import { UserRole } from "../../types/auth";
 
 const router = Router();
@@ -20,7 +25,13 @@ router.get("/", getAllRestaurants);
 router.get("/:id", getRestaurantById);
 
 // Protected routes - any authenticated user can create (becomes vendor)
-router.post("/", protect, uploadMultiple, createRestaurant);
+router.post(
+  "/",
+  protect,
+  uploadMultiple,
+  validate(createRestaurantSchema),
+  createRestaurant,
+);
 
 router.get(
   "/my/profile-status",
@@ -42,6 +53,7 @@ router.patch(
   protect,
   restrictTo(UserRole.VENDOR),
   uploadMultiple,
+  validate(updateRestaurantSchema),
   updateRestaurant,
 );
 

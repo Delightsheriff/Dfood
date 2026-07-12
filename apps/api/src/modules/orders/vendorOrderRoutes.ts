@@ -6,6 +6,8 @@ import {
   getVendorOrderStats,
 } from "./vendorOrderController";
 import { protect, restrictTo } from "../../middleware/auth";
+import { validate } from "../../middleware/validate";
+import { updateStatusSchema } from "./order";
 import { UserRole } from "../../types/auth";
 
 const router = Router();
@@ -18,6 +20,7 @@ router.patch(
   "/:id/status",
   protect,
   restrictTo(UserRole.VENDOR),
+  validate(updateStatusSchema),
   updateOrderStatus,
 );
 

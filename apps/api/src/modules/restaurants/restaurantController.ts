@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import { restaurantService } from "./restaurantService";
 import { asyncHandler } from "../../utils/asyncHandler";
-import {
-  createRestaurantSchema,
-  updateRestaurantSchema,
-} from "./restaurant";
+import { sendSuccess } from "../../utils/response";
 import { ValidationError } from "../../types/errors";
 import Restaurant from "../../models/Restaurant";
 
@@ -16,7 +13,7 @@ export const createRestaurant = asyncHandler(
       throw new ValidationError("At least one restaurant image is required");
     }
 
-    const data = createRestaurantSchema.parse(req.body);
+    const data = req.body;
     const imageBuffers = files.map((f) => f.buffer);
 
     const restaurant = await restaurantService.create(
@@ -25,11 +22,12 @@ export const createRestaurant = asyncHandler(
       imageBuffers,
     );
 
-    res.status(201).json({
-      success: true,
-      data: { restaurant },
-      message: "Restaurant created successfully. You are now a vendor!",
-    });
+    sendSuccess(
+      res,
+      { restaurant },
+      "Restaurant created successfully. You are now a vendor!",
+      201,
+    );
   },
 );
 
@@ -37,10 +35,7 @@ export const getRestaurantById = asyncHandler(
   async (req: Request, res: Response) => {
     const restaurant = await restaurantService.getById(req.params.id as string);
 
-    res.status(200).json({
-      success: true,
-      data: { restaurant },
-    });
+    sendSuccess(res, { restaurant });
   },
 );
 
@@ -50,10 +45,7 @@ export const getMyRestaurant = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: { restaurant },
-    });
+    sendSuccess(res, { restaurant });
   },
 );
 
@@ -64,17 +56,14 @@ export const getAllRestaurants = asyncHandler(
       isOpen: isOpen || undefined,
     });
 
-    res.status(200).json({
-      success: true,
-      data: { restaurants },
-    });
+    sendSuccess(res, { restaurants });
   },
 );
 
 export const updateRestaurant = asyncHandler(
   async (req: Request, res: Response) => {
     const files = req.files as Express.Multer.File[] | undefined;
-    const data = updateRestaurantSchema.parse(req.body);
+    const data = req.body;
     const imageBuffers = files?.map((f) => f.buffer);
 
     const restaurant = await restaurantService.update(
@@ -84,10 +73,7 @@ export const updateRestaurant = asyncHandler(
       imageBuffers,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { restaurant },
-    });
+    sendSuccess(res, { restaurant });
   },
 );
 
@@ -105,10 +91,7 @@ export const deleteRestaurantImage = asyncHandler(
       imageUrl,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { restaurant },
-    });
+    sendSuccess(res, { restaurant });
   },
 );
 
@@ -119,10 +102,7 @@ export const deleteRestaurant = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Restaurant deleted successfully",
-    });
+    sendSuccess(res, {}, "Restaurant deleted successfully");
   },
 );
 
@@ -131,13 +111,10 @@ export const getProfileStatus = asyncHandler(
     const restaurant = await Restaurant.findOne({ ownerId: req.user!._id });
 
     if (!restaurant) {
-      return res.status(200).json({
-        success: true,
-        data: {
-          hasRestaurant: false,
-          isProfileComplete: false,
-          missingFields: ["restaurant"],
-        },
+      return sendSuccess(res, {
+        hasRestaurant: false,
+        isProfileComplete: false,
+        missingFields: ["restaurant"],
       });
     }
 
@@ -146,19 +123,16 @@ export const getProfileStatus = asyncHandler(
     if (!restaurant.address) missingFields.push("address");
     if (!restaurant.description) missingFields.push("description");
 
-    return res.status(200).json({
-      success: true,
-      data: {
-        hasRestaurant: true,
-        isProfileComplete: restaurant.isProfileComplete,
-        missingFields,
-        restaurant: {
-          id: restaurant._id,
-          name: restaurant.name,
-          images: restaurant.images,
-          address: restaurant.address,
-          description: restaurant.description,
-        },
+    return sendSuccess(res, {
+      hasRestaurant: true,
+      isProfileComplete: restaurant.isProfileComplete,
+      missingFields,
+      restaurant: {
+        id: restaurant._id,
+        name: restaurant.name,
+        images: restaurant.images,
+        address: restaurant.address,
+        description: restaurant.description,
       },
     });
   },

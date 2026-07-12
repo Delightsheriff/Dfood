@@ -1,30 +1,24 @@
 import { Request, Response } from "express";
 import { profileService } from "./profileService";
 import { asyncHandler } from "../../utils/asyncHandler";
-import { updateProfileSchema } from "./profile";
+import { sendSuccess } from "../../utils/response";
 import { ValidationError } from "../../types/errors";
 
 export const getProfile = asyncHandler(async (req: Request, res: Response) => {
   const profile = await profileService.getProfile(req.user!._id.toString());
 
-  res.status(200).json({
-    success: true,
-    data: { profile },
-  });
+  sendSuccess(res, { profile });
 });
 
 export const updateProfile = asyncHandler(
   async (req: Request, res: Response) => {
-    const data = updateProfileSchema.parse(req.body);
+    const data = req.body;
     const profile = await profileService.updateProfile(
       req.user!._id.toString(),
       data,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { profile },
-    });
+    sendSuccess(res, { profile });
   },
 );
 
@@ -39,10 +33,7 @@ export const updateProfileImage = asyncHandler(
       req.file.buffer,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { profile },
-    });
+    sendSuccess(res, { profile });
   },
 );
 
@@ -52,9 +43,6 @@ export const deleteProfileImage = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: { profile },
-    });
+    sendSuccess(res, { profile });
   },
 );

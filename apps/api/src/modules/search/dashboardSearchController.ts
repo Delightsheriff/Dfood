@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { dashboardSearchService } from "./dashboardSearchService";
+import { sendSuccess } from "../../utils/response";
 import { ValidationError } from "../../types/errors";
 import { UserRole } from "../../types/auth";
 
@@ -16,22 +17,16 @@ export const dashboardSearch = asyncHandler(
     let results;
 
     if (userRole === UserRole.ADMIN) {
-      // Admin can search everything
       results = await dashboardSearchService.adminSearch(query);
     } else if (userRole === UserRole.VENDOR) {
-      // Vendor can only search their own data
       results = await dashboardSearchService.vendorSearch(
         req.user!._id.toString(),
         query,
       );
     } else {
-      // Customers shouldn't access this endpoint
       throw new ValidationError("Unauthorized");
     }
 
-    res.status(200).json({
-      success: true,
-      data: results,
-    });
+    sendSuccess(res, results);
   },
 );

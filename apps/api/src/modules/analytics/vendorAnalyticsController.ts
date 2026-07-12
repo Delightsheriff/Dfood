@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { vendorAnalyticsService } from "./vendorAnalyticsService";
 import { ValidationError } from "../../types/errors";
+import { sendSuccess } from "../../utils/response";
 
 export const getVendorAnalytics = asyncHandler(
   async (req: Request, res: Response) => {
@@ -36,15 +37,12 @@ export const getVendorAnalytics = asyncHandler(
       end,
     );
 
-    res.status(200).json({
-      success: true,
-      data: {
-        period: {
-          startDate: start,
-          endDate: end,
-        },
-        analytics,
+    sendSuccess(res, {
+      period: {
+        startDate: start,
+        endDate: end,
       },
+      analytics,
     });
   },
 );

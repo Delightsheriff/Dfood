@@ -1,20 +1,16 @@
 import { Request, Response } from "express";
 import { paymentMethodService } from "./paymentMethodService";
 import { asyncHandler } from "../../utils/asyncHandler";
-import { addCardSchema } from "./payment";
+import { sendSuccess } from "../../utils/response";
 
 export const addCard = asyncHandler(async (req: Request, res: Response) => {
-  const data = addCardSchema.parse(req.body);
+  const data = req.body;
   const paymentMethod = await paymentMethodService.addCard(
     req.user!._id.toString(),
     data,
   );
 
-  res.status(201).json({
-    success: true,
-    data: { paymentMethod },
-    message: "Card added successfully",
-  });
+  sendSuccess(res, { paymentMethod }, "Card added successfully", 201);
 });
 
 export const getAllPaymentMethods = asyncHandler(
@@ -23,10 +19,7 @@ export const getAllPaymentMethods = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: { paymentMethods },
-    });
+    sendSuccess(res, { paymentMethods });
   },
 );
 
@@ -37,10 +30,7 @@ export const setDefaultPaymentMethod = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: { paymentMethod },
-    });
+    sendSuccess(res, { paymentMethod });
   },
 );
 
@@ -51,10 +41,7 @@ export const deletePaymentMethod = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Payment method deleted successfully",
-    });
+    sendSuccess(res, {}, "Payment method deleted successfully");
   },
 );
 
@@ -64,9 +51,6 @@ export const getDefaultPaymentMethod = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: { paymentMethod },
-    });
+    sendSuccess(res, { paymentMethod });
   },
 );

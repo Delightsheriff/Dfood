@@ -1,17 +1,13 @@
 import { Request, Response } from "express";
 import { addressService } from "./addressService";
 import { asyncHandler } from "../../utils/asyncHandler";
-import { createAddressSchema, updateAddressSchema } from "./address";
+import { sendSuccess } from "../../utils/response";
 
 export const createAddress = asyncHandler(
   async (req: Request, res: Response) => {
-    const data = createAddressSchema.parse(req.body);
-    const address = await addressService.create(req.user!._id.toString(), data);
+    const address = await addressService.create(req.user!._id.toString(), req.body);
 
-    res.status(201).json({
-      success: true,
-      data: { address },
-    });
+    sendSuccess(res, { address }, undefined, 201);
   },
 );
 
@@ -19,10 +15,7 @@ export const getAllAddresses = asyncHandler(
   async (req: Request, res: Response) => {
     const addresses = await addressService.getAll(req.user!._id.toString());
 
-    res.status(200).json({
-      success: true,
-      data: { addresses },
-    });
+    sendSuccess(res, { addresses });
   },
 );
 
@@ -33,26 +26,19 @@ export const getAddressById = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: { address },
-    });
+    sendSuccess(res, { address });
   },
 );
 
 export const updateAddress = asyncHandler(
   async (req: Request, res: Response) => {
-    const data = updateAddressSchema.parse(req.body);
     const address = await addressService.update(
       req.params.id as string,
       req.user!._id.toString(),
-      data,
+      req.body,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { address },
-    });
+    sendSuccess(res, { address });
   },
 );
 
@@ -63,10 +49,7 @@ export const setDefaultAddress = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: { address },
-    });
+    sendSuccess(res, { address });
   },
 );
 
@@ -77,10 +60,7 @@ export const deleteAddress = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Address deleted successfully",
-    });
+    sendSuccess(res, undefined, "Address deleted successfully");
   },
 );
 
@@ -88,9 +68,6 @@ export const getDefaultAddress = asyncHandler(
   async (req: Request, res: Response) => {
     const address = await addressService.getDefault(req.user!._id.toString());
 
-    res.status(200).json({
-      success: true,
-      data: { address },
-    });
+    sendSuccess(res, { address });
   },
 );

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { favoriteService } from "./favoriteService";
 import { asyncHandler } from "../../utils/asyncHandler";
+import { sendSuccess } from "../../utils/response";
 
 export const addFavorite = asyncHandler(async (req: Request, res: Response) => {
   await favoriteService.addFavorite(
@@ -8,10 +9,7 @@ export const addFavorite = asyncHandler(async (req: Request, res: Response) => {
     req.params.foodItemId as string,
   );
 
-  res.status(201).json({
-    success: true,
-    message: "Food item added to favorites",
-  });
+  sendSuccess(res, undefined, "Food item added to favorites", 201);
 });
 
 export const removeFavorite = asyncHandler(
@@ -21,10 +19,7 @@ export const removeFavorite = asyncHandler(
       req.params.foodItemId as string,
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Food item removed from favorites",
-    });
+    sendSuccess(res, undefined, "Food item removed from favorites");
   },
 );
 
@@ -34,10 +29,7 @@ export const getFavorites = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: { favorites },
-    });
+    sendSuccess(res, { favorites });
   },
 );
 
@@ -48,9 +40,6 @@ export const checkIsFavorite = asyncHandler(
       req.params.foodItemId as string,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { isFavorite },
-    });
+    sendSuccess(res, { isFavorite });
   },
 );

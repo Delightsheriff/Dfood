@@ -1,18 +1,12 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { vendorAuthService } from "./vendorAuthService";
-import { vendorSignupSchema } from "./vendorAuthTypes";
+import { sendSuccess } from "../../utils/response";
 
 export const vendorSignup = asyncHandler(
   async (req: Request, res: Response) => {
-    const data = vendorSignupSchema.parse(req.body);
+    const result = await vendorAuthService.createVendorWithRestaurant(req.body);
 
-    const result = await vendorAuthService.createVendorWithRestaurant(data);
-
-    res.status(201).json({
-      success: true,
-      data: result,
-      message: "Vendor account created successfully",
-    });
+    sendSuccess(res, result, "Vendor account created successfully", 201);
   },
 );

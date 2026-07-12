@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { adminUserService } from "./adminUserService";
+import { sendSuccess } from "../../utils/response";
 import { NotFoundError } from "../../types/errors";
 
 export const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
@@ -11,10 +12,7 @@ export const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
     search: search as string,
   });
 
-  res.status(200).json({
-    success: true,
-    data: { users },
-  });
+  sendSuccess(res, { users });
 });
 
 export const getUserById = asyncHandler(async (req: Request, res: Response) => {
@@ -24,19 +22,13 @@ export const getUserById = asyncHandler(async (req: Request, res: Response) => {
     throw new NotFoundError("User not found");
   }
 
-  res.status(200).json({
-    success: true,
-    data: { user },
-  });
+  sendSuccess(res, { user });
 });
 
 export const getUserStats = asyncHandler(
   async (_req: Request, res: Response) => {
     const stats = await adminUserService.getUserStats();
 
-    res.status(200).json({
-      success: true,
-      data: stats,
-    });
+    sendSuccess(res, stats);
   },
 );

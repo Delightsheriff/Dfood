@@ -7,11 +7,13 @@ import {
   getDefaultPaymentMethod,
 } from "./paymentMethodController";
 import { protect } from "../../middleware/auth";
+import { validate } from "../../middleware/validate";
+import { addCardSchema } from "./payment";
 
 const router = Router();
 
 // All routes require authentication
-router.post("/card", protect, addCard);
+router.post("/card", protect, validate(addCardSchema), addCard);
 router.get("/", protect, getAllPaymentMethods);
 router.get("/default", protect, getDefaultPaymentMethod);
 router.patch("/:id/default", protect, setDefaultPaymentMethod);

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { notificationService } from "./notificationService";
+import { sendSuccess } from "../../utils/response";
 
 export const getNotifications = asyncHandler(
   async (req: Request, res: Response) => {
@@ -14,10 +15,7 @@ export const getNotifications = asyncHandler(
       },
     );
 
-    res.status(200).json({
-      success: true,
-      data: { notifications },
-    });
+    sendSuccess(res, { notifications });
   },
 );
 
@@ -27,10 +25,7 @@ export const getUnreadCount = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: { count },
-    });
+    sendSuccess(res, { count });
   },
 );
 
@@ -40,20 +35,14 @@ export const markAsRead = asyncHandler(async (req: Request, res: Response) => {
     req.user!._id.toString(),
   );
 
-  res.status(200).json({
-    success: true,
-    data: { notification },
-  });
+  sendSuccess(res, { notification });
 });
 
 export const markAllAsRead = asyncHandler(
   async (req: Request, res: Response) => {
     await notificationService.markAllAsRead(req.user!._id.toString());
 
-    res.status(200).json({
-      success: true,
-      message: "All notifications marked as read",
-    });
+    sendSuccess(res, undefined, "All notifications marked as read");
   },
 );
 
@@ -64,9 +53,6 @@ export const deleteNotification = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Notification deleted",
-    });
+    sendSuccess(res, undefined, "Notification deleted");
   },
 );

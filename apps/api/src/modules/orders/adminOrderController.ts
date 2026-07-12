@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { adminOrderService } from "./adminOrderService";
+import { sendSuccess } from "../../utils/response";
 
 export const getAllOrders = asyncHandler(
   async (req: Request, res: Response) => {
@@ -14,10 +15,7 @@ export const getAllOrders = asyncHandler(
 
     const orders = await adminOrderService.getAllOrders(filters);
 
-    res.status(200).json({
-      success: true,
-      data: { orders },
-    });
+    sendSuccess(res, { orders });
   },
 );
 
@@ -25,10 +23,7 @@ export const getAdminOrderById = asyncHandler(
   async (req: Request, res: Response) => {
     const order = await adminOrderService.getOrderById(req.params.id as string);
 
-    res.status(200).json({
-      success: true,
-      data: { order },
-    });
+    sendSuccess(res, { order });
   },
 );
 
@@ -36,9 +31,6 @@ export const getAdminOrderStats = asyncHandler(
   async (_req: Request, res: Response) => {
     const stats = await adminOrderService.getOrderStats();
 
-    res.status(200).json({
-      success: true,
-      data: stats,
-    });
+    sendSuccess(res, stats);
   },
 );

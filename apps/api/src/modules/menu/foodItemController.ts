@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { foodItemService } from "./foodItemService";
 import { asyncHandler } from "../../utils/asyncHandler";
-import { createFoodItemSchema, updateFoodItemSchema } from "./foodItem";
 import { ValidationError } from "../../types/errors";
+import { sendSuccess } from "../../utils/response";
 
 export const createFoodItem = asyncHandler(
   async (req: Request, res: Response) => {
@@ -13,19 +13,15 @@ export const createFoodItem = asyncHandler(
       throw new ValidationError("At least one food image is required");
     }
 
-    const data = createFoodItemSchema.parse(req.body);
     const imageBuffers = files.map((f) => f.buffer);
 
     const foodItem = await foodItemService.create(
       req.user!._id.toString(),
-      data,
+      req.body,
       imageBuffers,
     );
 
-    res.status(201).json({
-      success: true,
-      data: { foodItem },
-    });
+    sendSuccess(res, { foodItem }, undefined, 201);
   },
 );
 
@@ -33,10 +29,7 @@ export const getFoodItemById = asyncHandler(
   async (req: Request, res: Response) => {
     const foodItem = await foodItemService.getById(req.params.id as string);
 
-    res.status(200).json({
-      success: true,
-      data: { foodItem },
-    });
+    sendSuccess(res, { foodItem });
   },
 );
 
@@ -46,10 +39,7 @@ export const getMyFoodItems = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: { foodItems },
-    });
+    sendSuccess(res, { foodItems });
   },
 );
 
@@ -59,10 +49,7 @@ export const getFoodItemsByRestaurant = asyncHandler(
       req.params.restaurantId as string,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { foodItems },
-    });
+    sendSuccess(res, { foodItems });
   },
 );
 
@@ -72,30 +59,23 @@ export const getFoodItemsByCategory = asyncHandler(
       req.params.categoryId as string,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { foodItems },
-    });
+    sendSuccess(res, { foodItems });
   },
 );
 
 export const updateFoodItem = asyncHandler(
   async (req: Request, res: Response) => {
     const files = req.files as Express.Multer.File[] | undefined;
-    const data = updateFoodItemSchema.parse(req.body);
     const imageBuffers = files?.map((f) => f.buffer);
 
     const foodItem = await foodItemService.update(
       req.params.id as string,
       req.user!._id.toString(),
-      data,
+      req.body,
       imageBuffers,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { foodItem },
-    });
+    sendSuccess(res, { foodItem });
   },
 );
 
@@ -113,10 +93,7 @@ export const deleteFoodItemImage = asyncHandler(
       imageUrl,
     );
 
-    res.status(200).json({
-      success: true,
-      data: { foodItem },
-    });
+    sendSuccess(res, { foodItem });
   },
 );
 
@@ -127,9 +104,6 @@ export const deleteFoodItem = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Food item deleted successfully",
-    });
+    sendSuccess(res, undefined, "Food item deleted successfully");
   },
 );

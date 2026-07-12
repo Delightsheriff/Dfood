@@ -1,17 +1,13 @@
 import { Request, Response } from "express";
 import { orderService } from "./orderService";
 import { asyncHandler } from "../../utils/asyncHandler";
-import { createOrderSchema } from "./order";
+import { sendSuccess } from "../../utils/response";
 
 export const createOrder = asyncHandler(async (req: Request, res: Response) => {
-  const data = createOrderSchema.parse(req.body);
+  const data = req.body;
   const order = await orderService.create(req.user!._id.toString(), data);
 
-  res.status(201).json({
-    success: true,
-    data: { order },
-    message: "Order placed successfully",
-  });
+  sendSuccess(res, { order }, "Order placed successfully", 201);
 });
 
 export const getOrderById = asyncHandler(
@@ -21,20 +17,14 @@ export const getOrderById = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: { order },
-    });
+    sendSuccess(res, { order });
   },
 );
 
 export const getMyOrders = asyncHandler(async (req: Request, res: Response) => {
   const orders = await orderService.getMyOrders(req.user!._id.toString());
 
-  res.status(200).json({
-    success: true,
-    data: { orders },
-  });
+  sendSuccess(res, { orders });
 });
 
 export const cancelOrder = asyncHandler(async (req: Request, res: Response) => {
@@ -43,11 +33,7 @@ export const cancelOrder = asyncHandler(async (req: Request, res: Response) => {
     req.user!._id.toString(),
   );
 
-  res.status(200).json({
-    success: true,
-    data: { order },
-    message: "Order cancelled successfully",
-  });
+  sendSuccess(res, { order }, "Order cancelled successfully");
 });
 
 export const getOrderByNumber = asyncHandler(
@@ -57,9 +43,6 @@ export const getOrderByNumber = asyncHandler(
       req.user!._id.toString(),
     );
 
-    res.status(200).json({
-      success: true,
-      data: { order },
-    });
+    sendSuccess(res, { order });
   },
 );

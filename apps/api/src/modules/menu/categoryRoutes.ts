@@ -9,6 +9,8 @@ import {
 import { protect, restrictTo } from "../../middleware/auth";
 import { uploadSingle } from "../../middleware/upload";
 import { UserRole } from "../../types/auth";
+import { validate } from "../../middleware/validate";
+import { createCategorySchema, updateCategorySchema } from "./category";
 
 const router = Router();
 
@@ -22,6 +24,7 @@ router.post(
   protect,
   restrictTo(UserRole.ADMIN),
   uploadSingle,
+  validate(createCategorySchema),
   createCategory,
 );
 
@@ -30,6 +33,7 @@ router.patch(
   protect,
   restrictTo(UserRole.ADMIN),
   uploadSingle,
+  validate(updateCategorySchema),
   updateCategory,
 );
 
