@@ -208,7 +208,7 @@ For each app:
 | Phase | Status | Date completed |
 |-------|--------|----------------|
 | 1 — Migrate repos | ✅ Complete | 2026-07-12 |
-| 2 — Strip cruft | ⏳ Pending | — |
+| 2 — Strip cruft | ✅ Complete | 2026-07-12 |
 | 3 — Monorepo infra | ⏳ Pending | — |
 | 4 — Shared packages | ⏳ Pending | — |
 | 5 — Get building | ⏳ Pending | — |
