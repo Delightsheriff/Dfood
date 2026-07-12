@@ -41,6 +41,10 @@ Thumbs.db
 coverage/
 *.lcov
 
+# Firebase
+google-services.json
+GoogleService-Info.plist
+
 # Misc
 .cache/
 .parcel-cache/
