@@ -193,17 +193,23 @@ For each package, create:
 ### Steps
 For each app:
 1. Update its `package.json` to:
-   - Add workspace deps: `@dfood/types`, `@dfood/shared`, `@dfood/validation`, etc. (as needed)
-   - Remove deps that are now hoisted or in shared packages
-2. Update its `tsconfig.json` to extend `../../tsconfig.base.json`
-3. Update import paths if we move shared code
-4. Wire up `turbo.json` so the app's `build` depends on the right packages
-5. Test `pnpm dev` runs from the root
+   - [x] Rename to `@dfood/*` convention
+   - [x] Add workspace deps: `@dfood/types`, `@dfood/shared`, `@dfood/validation`, etc. (as needed)
+   - [ ] Remove deps that are now hoisted or in shared packages
+2. [x] Update its `tsconfig.json` to extend `../../tsconfig.base.json` ✅ (admin + api already do; mobile extends expo/tsconfig.base — correct for RN)
+3. [ ] Update import paths if we move shared code
+4. [ ] Wire up `turbo.json` so the app's `build` depends on the right packages
+5. [ ] Test `pnpm dev` runs from the root
+
+### Known build issues (pre-existing, not migration-caused)
+- **@dfood/api** — 8 TypeScript errors (strict mode catching `undefined`, `override` modifier)
+- **@dfood/admin** — missing `@radix-ui/react-dialog` (was a transitive dep via `radix-ui` metapackage; pnpm hoisting differs from npm)
+- **@dfood/mobile** — not yet tested (requires expo/native toolchain)
 
 ### Done when
 - [x] `pnpm install` works
-- [x] `pnpm turbo run build` builds all apps + packages
-- [x] `pnpm dev` runs all dev servers in parallel
+- [ ] `pnpm turbo run build` builds all apps + packages
+- [ ] `pnpm dev` runs all dev servers in parallel
 
 ---
 
@@ -237,7 +243,7 @@ For each app:
 | 2 — Strip cruft | ✅ Complete | 2026-07-12 |
 | 3 — Monorepo infra | ✅ Complete | 2026-07-12 |
 | 4 — Shared packages | ✅ Complete | 2026-07-12 |
-| 5 — Get building | ⏳ Pending | — |
+| 5 — Get building | ⏳ In progress | 2026-07-12 |
 | 6 — Push & cleanup | ⏳ Pending | — |
 
 **Phase 1 result:** 272 commits (132 api + 90 mobile + 46 admin + 4 merge/init). 3 histories merged, all files under `apps/<name>/`.
