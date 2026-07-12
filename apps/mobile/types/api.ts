@@ -1,46 +1,26 @@
-import { UserRole } from "./auth";
+import type {
+  Category,
+  Restaurant,
+  FoodItem,
+  Order,
+  OrderItem,
+  Address,
+  PaymentMethod,
+} from "@dfood/types";
 
-export type Category = {
-  _id: string;
-  name: string;
-  image: string;
-  createdAt: string;
-  updatedAt: string;
+export type {
+  Category,
+  Restaurant,
+  FoodItem,
+  Order,
+  OrderItem,
+  Address,
+  PaymentMethod,
 };
 
-export type Restaurant = {
-  _id: string;
-  name: string;
-  description?: string;
-  address?: string;
-  deliveryFee: number;
-  openingTime: string;
-  closingTime: string;
-  isOpen?: boolean;
-  status?: string; // "Open" | "Closed"
-  images: string[];
-  owner: string;
-  rating: number;
-  totalReviews: number;
-  createdAt: string;
-  updatedAt: string;
-};
+import { type UserRole } from "./auth";
 
-export type FoodItem = {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-  images: string[];
-  calories?: number;
-  restaurantId: string | Restaurant;
-  categories?: string[];
-  categoryIds?: string[];
-  rating: number;
-  totalReviews: number;
-  createdAt: string;
-  updatedAt: string;
-};
+// ── Mobile-specific types not in @dfood/types ─────────────────────
 
 export type SearchRestaurant = {
   _id: string;
@@ -68,6 +48,7 @@ export type SearchFoodItem = FoodItem & {
     status: "Open" | "Closed";
   };
 };
+
 export type UserProfile = {
   id: string;
   name: string;
@@ -96,22 +77,6 @@ export type FavoriteItem = {
   createdAt: string;
 };
 
-export type Address = {
-  _id: string;
-  userId: string;
-  label: string;
-  street: string;
-  city: string;
-  state: string;
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
-  isDefault: boolean;
-  createdAt: string;
-  updatedAt: string;
-};
-
 export type AddressesResponse = {
   success: true;
   data: {
@@ -136,65 +101,26 @@ export type CreateAddressRequest = {
     lng: number;
   };
 };
-export type PaymentMethod = {
-  _id: string;
-  userId?: string;
-  type: "card" | "cash";
-  cardLast4?: string;
-  cardBrand?: string;
-  cardExpMonth?: string;
-  cardExpYear?: string;
-  bank?: string;
-  isDefault: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-};
-export type OrderItem = {
-  foodItemId: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  subtotal: number;
+
+export type UpdateAddressRequest = Partial<CreateAddressRequest>;
+
+export type PaymentMethodsResponse = {
+  success: true;
+  data: {
+    paymentMethods: PaymentMethod[];
+  };
 };
 
-export type Order = {
-  _id: string;
-  orderNumber: string;
-  customerId: string;
-  restaurantId: {
-    _id: string;
-    name: string;
-    images: string[];
-    address?: string;
-    phone?: string;
+export type PaymentMethodResponse = {
+  success: true;
+  data: {
+    paymentMethod: PaymentMethod;
   };
-  items: OrderItem[];
-  deliveryAddress: {
-    street: string;
-    city: string;
-    state: string;
-    coordinates: {
-      lat: number;
-      lng: number;
-    };
-  };
-  paymentMethod: "cash" | "card";
-  paymentStatus: "pending" | "paid" | "failed" | "refunded";
-  paystackReference?: string;
-  subtotal: number;
-  deliveryFee: number;
-  total: number;
-  status:
-    | "pending"
-    | "confirmed"
-    | "preparing"
-    | "out_for_delivery"
-    | "delivered"
-    | "cancelled";
-  customerNotes?: string;
-  createdAt: string;
-  updatedAt: string;
+  message?: string;
+};
+
+export type AddCardRequest = {
+  reference: string;
 };
 
 export type CreateOrderRequest = {
@@ -223,27 +149,6 @@ export type OrdersResponse = {
   };
 };
 
-export type PaymentMethodsResponse = {
-  success: true;
-  data: {
-    paymentMethods: PaymentMethod[];
-  };
-};
-
-export type PaymentMethodResponse = {
-  success: true;
-  data: {
-    paymentMethod: PaymentMethod;
-  };
-  message?: string;
-};
-
-export type AddCardRequest = {
-  reference: string;
-};
-
-export type UpdateAddressRequest = Partial<CreateAddressRequest>;
-
 export type FavoritesResponse = {
   success: true;
   data: {
@@ -270,7 +175,6 @@ export type UpdateProfileRequest = {
   phone?: string;
 };
 
-// API response types
 export type CategoriesResponse = {
   success: true;
   data: {

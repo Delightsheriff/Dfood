@@ -1,3 +1,7 @@
+export type { ErrorResponse } from "@dfood/types";
+
+// ── Types not yet in @dfood/types ─────────────────────────────────
+
 export enum UserRole {
   CUSTOMER = "customer",
   VENDOR = "vendor",
@@ -35,12 +39,6 @@ export type AuthResponse = {
     user: User;
     token: string;
   };
-};
-
-export type ErrorResponse = {
-  success: false;
-  message: string;
-  errors?: string[];
 };
 
 export type ForgotPasswordRequest = {

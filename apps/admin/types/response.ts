@@ -1,5 +1,1 @@
-export type ErrorResponse = {
-  success: false;
-  message: string;
-  errors?: string[];
-};
+export type { ErrorResponse } from "@dfood/types";

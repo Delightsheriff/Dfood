@@ -1,10 +1,12 @@
 import apiClient from "@/lib/api-client";
 import { AxiosResponse } from "axios";
 
+import type { UserRole } from "@dfood/types";
+
 /**
  * User Types
  */
-export type UserRole = "customer" | "vendor" | "admin";
+export type { UserRole };
 
 export interface AdminUser {
   _id: string;

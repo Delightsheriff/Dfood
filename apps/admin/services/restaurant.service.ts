@@ -1,27 +1,8 @@
 import apiClient from "@/lib/api-client";
+import type { Restaurant } from "@dfood/types";
 import { AxiosResponse, isAxiosError } from "axios";
 
-/**
- * Restaurant Types
- */
-export interface Restaurant {
-  _id: string;
-  ownerId: string;
-  name: string;
-  description?: string;
-  images: string[];
-  address?: string;
-  deliveryFee: number;
-  openingTime: string;
-  closingTime: string;
-  tags: string[];
-  rating: number;
-  totalReviews: number;
-  isProfileComplete: boolean;
-  status?: "Open" | "Closed";
-  createdAt: string;
-  updatedAt: string;
-}
+export type { Restaurant };
 
 export interface CreateRestaurantRequest {
   name: string;

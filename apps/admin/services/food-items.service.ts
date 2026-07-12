@@ -1,36 +1,8 @@
 import apiClient from "@/lib/api-client";
+import type { FoodItem } from "@dfood/types";
 import { AxiosResponse } from "axios";
 
-/**
- * Food Item Types
- */
-export interface FoodItem {
-  _id: string;
-  restaurantId:
-    | string
-    | {
-        _id: string;
-        name: string;
-        images: string[];
-        address?: string;
-        deliveryFee?: number;
-        openingTime?: string;
-        closingTime?: string;
-        rating?: number;
-        totalReviews?: number;
-        status?: string;
-      };
-  name: string;
-  description: string;
-  images: string[];
-  price: number;
-  categoryIds: string[];
-  calories?: number;
-  rating: number;
-  totalReviews: number;
-  createdAt: string;
-  updatedAt: string;
-}
+export type { FoodItem };
 
 export interface FoodItemResponse {
   success: true;
