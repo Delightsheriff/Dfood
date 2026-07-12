@@ -13,7 +13,7 @@ import {
 import { protect, restrictTo } from "../../middleware/auth";
 import { authLimiter, forgotPasswordLimiter } from "../../middleware/rateLimiter";
 import { UserRole } from "./authTypes";
-// import { redisClient } from "../config/redis";
+// import { redisClient } from "../../config/redis";
 
 const router = Router();
 
