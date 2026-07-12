@@ -1,0 +1,32 @@
+{
+  "cli": {
+    "version": ">= 18.0.4",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://food-api-7h3o.onrender.com/api",
+        "EXPO_PUBLIC_PAYSTACK_KEY": "pk_test_c3cd4b1837755affacf8327a302f4a028b611237"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://food-api-7h3o.onrender.com/api",
+        "EXPO_PUBLIC_PAYSTACK_KEY": "pk_live_your_production_key_here"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
