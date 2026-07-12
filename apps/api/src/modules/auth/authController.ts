@@ -1,26 +1,16 @@
 import { Request, Response } from "express";
 import { AuthService } from "./authService";
 import { asyncHandler } from "../../utils/asyncHandler";
-import {
-  signupSchema,
-  signinSchema,
-  forgotPasswordSchema,
-  verifyOTPSchema,
-  resetPasswordSchema,
-} from "./authTypes";
+import { sendSuccess } from "../../utils/response";
 import { UnauthorizedError } from "../../types/errors";
 import { env } from "../../config/env";
 
 const authService = new AuthService();
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
-  const data = signupSchema.parse(req.body);
-  const { user, token } = await authService.signup(data);
+  const { user, token } = await authService.signup(req.body);
 
-  res.status(201).json({
-    success: true,
-    data: { user, token },
-  });
+  sendSuccess(res, { user, token }, undefined, 201);
 });
 
 export const createAdmin = asyncHandler(async (req: Request, res: Response) => {
@@ -28,14 +18,9 @@ export const createAdmin = asyncHandler(async (req: Request, res: Response) => {
     throw new UnauthorizedError("Authentication required");
   }
 
-  const data = signupSchema.parse(req.body);
-  const { user } = await authService.createAdmin(data, req.user._id.toString());
+  const { user } = await authService.createAdmin(req.body, req.user._id.toString());
 
-  res.status(201).json({
-    success: true,
-    data: { user },
-    message: "Admin account created successfully",
-  });
+  sendSuccess(res, { user }, "Admin account created successfully", 201);
 });
 
 export const googleCallback = asyncHandler(
@@ -53,36 +38,23 @@ export const googleCallback = asyncHandler(
 );
 
 export const signin = asyncHandler(async (req: Request, res: Response) => {
-  const data = signinSchema.parse(req.body);
-  const { user, token } = await authService.signin(data);
+  const { user, token } = await authService.signin(req.body);
 
-  res.status(200).json({
-    success: true,
-    data: { user, token },
-  });
+  sendSuccess(res, { user, token });
 });
 
 export const forgotPassword = asyncHandler(
   async (req: Request, res: Response) => {
-    const data = forgotPasswordSchema.parse(req.body);
-    await authService.forgotPassword(data);
+    await authService.forgotPassword(req.body);
 
-    res.status(200).json({
-      success: true,
-      message: "If email exists, OTP has been sent",
-    });
+    sendSuccess(res, null, "If email exists, OTP has been sent");
   },
 );
 
 export const verifyOTP = asyncHandler(async (req: Request, res: Response) => {
-  const data = verifyOTPSchema.parse(req.body);
-  const { resetToken } = await authService.verifyOTP(data);
+  const { resetToken } = await authService.verifyOTP(req.body);
 
-  res.status(200).json({
-    success: true,
-    data: { resetToken },
-    message: "OTP verified successfully",
-  });
+  sendSuccess(res, { resetToken }, "OTP verified successfully");
 });
 
 export const resetPassword = asyncHandler(
@@ -96,13 +68,9 @@ export const resetPassword = asyncHandler(
     const resetToken = authHeader.split(" ")[1]!;
     const userId = await authService.validateResetToken(resetToken);
 
-    const data = resetPasswordSchema.parse(req.body);
-    await authService.resetPassword(userId, data);
+    await authService.resetPassword(userId, req.body);
 
-    res.status(200).json({
-      success: true,
-      message: "Password reset successful",
-    });
+    sendSuccess(res, null, "Password reset successful");
   },
 );
 
@@ -111,15 +79,12 @@ export const getSession = asyncHandler(async (req: Request, res: Response) => {
     throw new UnauthorizedError("Authentication required");
   }
 
-  res.status(200).json({
-    success: true,
-    data: {
-      user: {
-        id: req.user._id.toString(),
-        name: req.user.name,
-        email: req.user.email,
-        role: req.user.role,
-      },
+  sendSuccess(res, {
+    user: {
+      id: req.user._id.toString(),
+      name: req.user.name,
+      email: req.user.email,
+      role: req.user.role,
     },
   });
 });

@@ -11,18 +11,25 @@ import {
   getSession,
 } from "./authController";
 import { protect, restrictTo } from "../../middleware/auth";
+import { validate } from "../../middleware/validate";
 import { authLimiter, forgotPasswordLimiter } from "../../middleware/rateLimiter";
+import {
+  signupSchema,
+  signinSchema,
+  forgotPasswordSchema,
+  verifyOTPSchema,
+  resetPasswordSchema,
+} from "./authTypes";
 import { UserRole } from "./authTypes";
-// import { redisClient } from "../../config/redis";
 
 const router = Router();
 
 // Public routes
-router.post("/signup", authLimiter, signup);
-router.post("/signin", authLimiter, signin);
-router.post("/forgot-password", forgotPasswordLimiter, forgotPassword);
-router.post("/verify-otp", authLimiter, verifyOTP);
-router.post("/reset-password", authLimiter, resetPassword);
+router.post("/signup", authLimiter, validate(signupSchema), signup);
+router.post("/signin", authLimiter, validate(signinSchema), signin);
+router.post("/forgot-password", forgotPasswordLimiter, validate(forgotPasswordSchema), forgotPassword);
+router.post("/verify-otp", authLimiter, validate(verifyOTPSchema), verifyOTP);
+router.post("/reset-password", authLimiter, validate(resetPasswordSchema), resetPassword);
 
 // Google OAuth
 router.get(
@@ -51,17 +58,6 @@ router.get("/google/failure", (_req, res) => {
 
 // Protected routes
 router.get("/session", protect, getSession);
-router.post("/admin/create", protect, restrictTo(UserRole.ADMIN), createAdmin);
-
-// router.get("/debug/flush", async (req, res) => {
-//   const client = redisClient.getClient();
-//   if (client) {
-//     await client.flushdb();
-//     const keys = await client.keys("*");
-//     res.json({ flushed: true, remainingKeys: keys });
-//   } else {
-//     res.json({ error: "No client" });
-//   }
-// });
+router.post("/admin/create", protect, restrictTo(UserRole.ADMIN), validate(signupSchema), createAdmin);
 
 export default router;

@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@dfood/types": "workspace:*",
-    "zod": "^3.23.0"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "typescript": "^5.7.0"

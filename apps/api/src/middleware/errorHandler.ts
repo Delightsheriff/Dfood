@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { AppError } from "../types/errors";
 import { ZodError } from "zod";
 import { env } from "../config/env";
+import { sendError } from "../utils/response";
 
 export const errorHandler = (
   err: Error,
@@ -10,29 +11,26 @@ export const errorHandler = (
   _next: NextFunction,
 ) => {
   if (err instanceof AppError) {
-    return res.status(err.statusCode).json({
-      success: false,
-      message: err.message,
-    });
+    return sendError(res, err.message, err.statusCode);
   }
 
   if (err instanceof ZodError) {
-    return res.status(400).json({
-      success: false,
-      message: "Validation failed",
-      errors: err.issues.map((e) => ({
+    return sendError(
+      res,
+      "Validation failed",
+      400,
+      err.issues.map((e) => ({
         field: e.path.join("."),
         message: e.message,
       })),
-    });
+    );
   }
 
-  // Log unexpected errors
   console.error("Unexpected error:", err);
 
-  return res.status(500).json({
-    success: false,
-    message:
-      env.NODE_ENV === "production" ? "Internal server error" : err.message,
-  });
+  return sendError(
+    res,
+    env.NODE_ENV === "production" ? "Internal server error" : err.message,
+    500,
+  );
 };
