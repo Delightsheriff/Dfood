@@ -1,4 +1,20 @@
-import { z } from "zod";
+import {
+  signupSchema,
+  signinSchema,
+  forgotPasswordSchema,
+  verifyOTPSchema,
+  resetPasswordSchema,
+} from "@dfood/validation";
+
+export {
+  signupSchema,
+  signinSchema,
+  forgotPasswordSchema,
+  verifyOTPSchema,
+  resetPasswordSchema,
+};
+
+export type { SignupInput, SigninInput, ForgotPasswordInput, VerifyOTPInput, ResetPasswordInput } from "@dfood/validation";
 
 export enum UserRole {
   CUSTOMER = "customer",
@@ -14,33 +30,3 @@ export type SanitizedUser = {
   profileImage?: string;
   phone?: string;
 };
-
-export const signupSchema = z.object({
-  name: z.string().min(2).max(50),
-  email: z.string().email(),
-  password: z.string().min(8).max(128),
-});
-
-export const signinSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-});
-
-export const forgotPasswordSchema = z.object({
-  email: z.string().email(),
-});
-
-export const verifyOTPSchema = z.object({
-  email: z.string().email(),
-  otp: z.string().length(4),
-});
-
-export const resetPasswordSchema = z.object({
-  newPassword: z.string().min(8).max(128),
-});
-
-export type SignupInput = z.infer<typeof signupSchema>;
-export type SigninInput = z.infer<typeof signinSchema>;
-export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
-export type VerifyOTPInput = z.infer<typeof verifyOTPSchema>;
-export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
