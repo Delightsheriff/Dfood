@@ -61,7 +61,7 @@ export class CloudinaryService {
       // Extract public_id from Cloudinary URL
       const parts = imageUrl.split("/");
       const fileWithExt = parts[parts.length - 1];
-      const publicId = `${parts[parts.length - 2]}/${fileWithExt.split(".")[0]}`;
+      const publicId = `${parts[parts.length - 2]}/${fileWithExt!.split(".")[0]!}`;
 
       await cloudinary.uploader.destroy(publicId);
     } catch (error) {

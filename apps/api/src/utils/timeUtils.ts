@@ -4,8 +4,8 @@ export const checkIsOpen = (
 ): boolean => {
   const now = new Date();
   const currMinutes = now.getHours() * 60 + now.getMinutes();
-  const [openHour, openMin] = openingTime.split(":").map(Number);
-  const [closeHour, closeMin] = closingTime.split(":").map(Number);
+  const [openHour = 0, openMin = 0] = openingTime.split(":").map(Number);
+  const [closeHour = 0, closeMin = 0] = closingTime.split(":").map(Number);
   const openMinutes = openHour * 60 + openMin;
   const closeMinutes = closeHour * 60 + closeMin;
 

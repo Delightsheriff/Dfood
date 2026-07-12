@@ -66,8 +66,8 @@ export function StatsGrid() {
           ? [
               {
                 label: "Top Restaurant",
-                value: stats.topRestaurants[0].restaurantName,
-                subtitle: `${stats.topRestaurants[0].orderCount} orders · ${formatCurrency(stats.topRestaurants[0].revenue)}`,
+                value: stats.topRestaurants[0]!.restaurantName,
+                subtitle: `${stats.topRestaurants[0]!.orderCount} orders · ${formatCurrency(stats.topRestaurants[0]!.revenue)}`,
                 icon: Store,
                 color: "text-emerald-500",
                 bgColor: "bg-emerald-500/10",

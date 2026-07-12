@@ -76,8 +76,8 @@ export function OrderStatsCards({
           ? [
               {
                 label: "Top Restaurant",
-                value: stats.topRestaurants[0].restaurantName,
-                subtitle: `${stats.topRestaurants[0].orderCount} orders · ${formatCurrency(stats.topRestaurants[0].revenue)}`,
+                value: stats.topRestaurants[0]!.restaurantName,
+                subtitle: `${stats.topRestaurants[0]!.orderCount} orders · ${formatCurrency(stats.topRestaurants[0]!.revenue)}`,
                 icon: Store,
                 color: "text-orange",
                 bgColor: "bg-orange/10",

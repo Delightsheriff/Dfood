@@ -202,9 +202,9 @@ For each app:
 5. [ ] Test `pnpm dev` runs from the root
 
 ### Known build issues (pre-existing, not migration-caused)
-- **@dfood/api** — 8 TypeScript errors (strict mode catching `undefined`, `override` modifier)
-- **@dfood/admin** — missing `@radix-ui/react-dialog` (was a transitive dep via `radix-ui` metapackage; pnpm hoisting differs from npm)
-- **@dfood/mobile** — not yet tested (requires expo/native toolchain)
+- **@dfood/api** — ✅ Fixed (8 strict-mode TS errors: `!` assertions, `override` modifier, defaults)
+- **@dfood/admin** — ✅ Fixed (added `@radix-ui/react-dialog` + `@radix-ui/react-visually-hidden`; 5 strict-mode TS errors)
+- **@dfood/mobile** — ❌ ~35 pre-existing TS errors (`activeOpacity` removed in RN 0.81, implicit `any` types, possibly-undefined values). Separate fix session needed.
 
 ### Done when
 - [x] `pnpm install` works

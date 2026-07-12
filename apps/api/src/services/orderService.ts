@@ -21,7 +21,7 @@ export class OrderService {
    */
   private generateOrderNumber(): string {
     const date = new Date();
-    const dateStr = date.toISOString().split("T")[0].replace(/-/g, "");
+    const dateStr = date.toISOString().split("T")[0]!.replace(/-/g, "");
     const random = crypto.randomBytes(3).toString("hex").toUpperCase();
     return `ORD-${dateStr}-${random}`;
   }

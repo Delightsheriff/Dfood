@@ -24,7 +24,7 @@ export const protect = asyncHandler(
       throw new UnauthorizedError("No token provided");
     }
 
-    const token = authHeader.split(" ")[1];
+    const token = authHeader.split(" ")[1]!;
     const user = await authService.validateToken(token);
 
     req.user = user;

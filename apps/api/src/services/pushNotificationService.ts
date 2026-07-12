@@ -82,7 +82,7 @@ export class PushNotificationService {
           );
           // DeviceNotRegistered means the token is dead
           if (ticket.details?.error === "DeviceNotRegistered") {
-            invalidTokens.push(expoTokens[idx]);
+            if (expoTokens[idx]) invalidTokens.push(expoTokens[idx]!);
           }
         }
       });

@@ -112,7 +112,7 @@ export function RestaurantSettings() {
     setSelectedImages((prev) => prev.filter((_, i) => i !== index));
 
     // Revoke URL to avoid memory leaks
-    URL.revokeObjectURL(previewUrls[index]);
+    URL.revokeObjectURL(previewUrls[index]!);
     setPreviewUrls((prev) => prev.filter((_, i) => i !== index));
   };
 

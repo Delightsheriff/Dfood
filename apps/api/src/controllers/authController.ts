@@ -93,7 +93,7 @@ export const resetPassword = asyncHandler(
       throw new UnauthorizedError("Reset token required");
     }
 
-    const resetToken = authHeader.split(" ")[1];
+    const resetToken = authHeader.split(" ")[1]!;
     const userId = await authService.validateResetToken(resetToken);
 
     const data = resetPasswordSchema.parse(req.body);
