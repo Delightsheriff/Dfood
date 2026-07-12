@@ -218,19 +218,21 @@ For each app:
 **Goal:** New monorepo is the source of truth on GitHub; old repos archived.
 
 ### Steps
-1. Create new empty repo on GitHub: `Delightsheriff/Dfood` (or confirmed name)
-2. Add as remote and push:
+1. [x] Create new empty repo on GitHub: `Delightsheriff/Dfood`
+2. [x] Add as remote and push:
    ```bash
    git remote add origin git@github.com:Delightsheriff/Dfood.git
    git push -u origin main
    ```
-3. On GitHub, archive the 3 old repos (Settings → Archive, do not delete)
-4. Update local clones' remotes if needed
-5. Update any team docs/READMEs pointing to old repos
+3. [ ] On GitHub, archive the 3 old repos (Settings → Archive, do not delete)
+   - Run `gh auth login` then `gh repo archive <repo>` for each
+   - or archive manually at github.com/Delightsheriff/<repo>/settings
+4. [ ] Update local clones' remotes if needed
+5. [ ] Update any team docs/READMEs pointing to old repos
 
 ### Done when
 - [x] Monorepo is live at `Delightsheriff/Dfood`
-- [x] Old repos archived (not deleted)
+- [ ] Old repos archived (not deleted)
 - [x] All local work pushes to the new repo
 
 ---
@@ -244,7 +246,7 @@ For each app:
 | 3 — Monorepo infra | ✅ Complete | 2026-07-12 |
 | 4 — Shared packages | ✅ Complete | 2026-07-12 |
 | 5 — Get building | ✅ Complete | 2026-07-12 |
-| 6 — Push & cleanup | ⏳ Pending | — |
+| 6 — Push & cleanup | ⏳ In progress | 2026-07-12 |
 
 **Phase 1 result:** 272 commits (132 api + 90 mobile + 46 admin + 4 merge/init). 3 histories merged, all files under `apps/<name>/`.
 
