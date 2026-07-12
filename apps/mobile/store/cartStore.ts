@@ -109,7 +109,7 @@ export const useCartStore = create<CartState>()(
 
       getRestaurantId: () => {
         const { items } = get();
-        return items.length > 0 ? items[0].restaurantId : null;
+        return items.length > 0 ? items[0]!.restaurantId : null;
       },
 
       clearCart: () => set({ items: [] }),

@@ -159,7 +159,7 @@ export default function Profile() {
         shadowRadius: 4,
         elevation: 1,
       }}
-      activeOpacity={0.7}
+      
     >
       <View className="flex-row items-center">
         <View
@@ -211,7 +211,7 @@ export default function Profile() {
           <Pressable
             onPress={() => router.push("/profile/personal-info" as any)}
             className="flex-row items-center mb-8 p-4 bg-[#F6F8FA] rounded-2xl"
-            activeOpacity={0.7}
+            
             style={{
               shadowColor: "#000",
               shadowOffset: { width: 0, height: 2 },
@@ -283,7 +283,7 @@ export default function Profile() {
               shadowRadius: 4,
               elevation: 1,
             }}
-            activeOpacity={0.7}
+            
           >
             <View className="flex-row items-center">
               <View className="w-10 h-10 bg-white rounded-xl items-center justify-center mr-4">

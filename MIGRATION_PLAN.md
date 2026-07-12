@@ -204,12 +204,12 @@ For each app:
 ### Known build issues (pre-existing, not migration-caused)
 - **@dfood/api** — ✅ Fixed (8 strict-mode TS errors: `!` assertions, `override` modifier, defaults)
 - **@dfood/admin** — ✅ Fixed (added `@radix-ui/react-dialog` + `@radix-ui/react-visually-hidden`; 5 strict-mode TS errors)
-- **@dfood/mobile** — ❌ ~35 pre-existing TS errors (`activeOpacity` removed in RN 0.81, implicit `any` types, possibly-undefined values). Separate fix session needed.
+- **@dfood/mobile** — ✅ Fixed (35 pre-existing TS errors: removed `activeOpacity` from Pressable, added `zustand` dep, `!` assertions for array access, `NodeJS.Timeout` → `ReturnType<typeof setInterval>`, fixed `SearchRestaurant` vs `Restaurant` type mismatch)
 
 ### Done when
 - [x] `pnpm install` works
-- [ ] `pnpm turbo run build` builds all apps + packages
-- [ ] `pnpm dev` runs all dev servers in parallel
+- [x] `pnpm turbo run build` builds all apps + packages
+- [x] `pnpm dev` runs all dev servers in parallel
 
 ---
 
@@ -243,7 +243,7 @@ For each app:
 | 2 — Strip cruft | ✅ Complete | 2026-07-12 |
 | 3 — Monorepo infra | ✅ Complete | 2026-07-12 |
 | 4 — Shared packages | ✅ Complete | 2026-07-12 |
-| 5 — Get building | ⏳ In progress | 2026-07-12 |
+| 5 — Get building | ✅ Complete | 2026-07-12 |
 | 6 — Push & cleanup | ⏳ Pending | — |
 
 **Phase 1 result:** 272 commits (132 api + 90 mobile + 46 admin + 4 merge/init). 3 histories merged, all files under `apps/<name>/`.

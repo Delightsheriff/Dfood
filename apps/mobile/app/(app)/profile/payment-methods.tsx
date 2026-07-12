@@ -105,7 +105,7 @@ export default function PaymentMethods() {
           shadowRadius: 6,
           elevation: paymentMethod.isDefault ? 3 : 1,
         }}
-        activeOpacity={0.7}
+        
       >
         <View
           className="w-10 h-10 rounded-xl items-center justify-center mr-3.5"

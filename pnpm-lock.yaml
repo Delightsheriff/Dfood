@@ -436,6 +436,9 @@ importers:
       zod:
         specifier: ^4.3.6
         version: 4.4.3
+      zustand:
+        specifier: ^5.0.0
+        version: 5.0.14(@types/react@19.1.17)(immer@11.1.11)(react@19.1.0)(use-sync-external-store@1.6.0(react@19.1.0))
     devDependencies:
       '@types/react':
         specifier: ~19.1.0

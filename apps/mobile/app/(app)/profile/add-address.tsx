@@ -131,7 +131,7 @@ export default function AddAddress() {
       });
 
       if (addresses.length > 0) {
-        const address = addresses[0];
+        const address = addresses[0]!;
         setValue("street", address.street || "");
         setValue("city", address.city || "");
         setValue("state", address.region || "");

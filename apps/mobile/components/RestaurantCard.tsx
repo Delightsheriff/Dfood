@@ -1,4 +1,3 @@
-import { Restaurant } from "@/types/api";
 import { Image } from "expo-image";
 import { Clock, MapPin, Star, Truck } from "lucide-react-native";
 import { memo } from "react";
@@ -20,8 +19,23 @@ const badgeShadow = {
   elevation: 3,
 } as const;
 
+type RestaurantCardData = {
+  _id: string;
+  name: string;
+  description?: string;
+  address?: string;
+  deliveryFee: number;
+  openingTime: string;
+  closingTime: string;
+  status?: string;
+  isOpen?: boolean;
+  images?: string[];
+  imageUrls?: string[];
+  rating?: number;
+};
+
 interface RestaurantCardProps {
-  restaurant: Restaurant;
+  restaurant: RestaurantCardData;
   onPress: () => void;
 }
 
@@ -37,7 +51,7 @@ function RestaurantCard({ restaurant, onPress }: RestaurantCardProps) {
       {/* Image Container */}
       <View className="relative">
         <Image
-          source={{ uri: restaurant.images[0] }}
+          source={{ uri: restaurant.images?.[0] ?? restaurant.imageUrls?.[0] }}
           className="w-full"
           style={{ width: "100%", height: 180 }}
           contentFit="cover"

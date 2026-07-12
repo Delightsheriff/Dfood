@@ -23,7 +23,7 @@ export default function Cart() {
   const removeItem = useCartStore((state) => state.removeItem);
   const getTotalPrice = useCartStore((state) => state.getTotalPrice());
 
-  const restaurantName = items.length > 0 ? items[0].restaurantName : "";
+  const restaurantName = items.length > 0 ? items[0]!.restaurantName : "";
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (

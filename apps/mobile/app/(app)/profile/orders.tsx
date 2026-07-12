@@ -62,7 +62,7 @@ export default function Orders() {
           shadowRadius: 6,
           elevation: 2,
         }}
-        activeOpacity={0.7}
+        
       >
         {/* Header */}
         <View className="flex-row justify-between items-start mb-3">

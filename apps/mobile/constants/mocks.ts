@@ -186,7 +186,7 @@ export const FOOD_ITEMS: FoodItem[] = [
     image:
       "https://img.freepik.com/free-photo/delicious-hot-dog-with-toppings_23-2148725308.jpg",
     rating: 4.3,
-    ingredients: [INGREDIENTS[0], INGREDIENTS[2]],
+    ingredients: [INGREDIENTS[0]!, INGREDIENTS[2]!],
     sizes: ["Regular", "Large"],
     reviews: 67,
     categoryId: "2",
@@ -200,7 +200,7 @@ export const FOOD_ITEMS: FoodItem[] = [
     image:
       "https://img.freepik.com/free-photo/hot-dog-with-vegetables_144627-20274.jpg",
     rating: 4.6,
-    ingredients: [INGREDIENTS[0], INGREDIENTS[2], INGREDIENTS[4]],
+    ingredients: [INGREDIENTS[0]!, INGREDIENTS[2]!, INGREDIENTS[4]!],
     sizes: ["Regular", "Large"],
     reviews: 43,
     categoryId: "2",
@@ -215,7 +215,7 @@ export const FOOD_ITEMS: FoodItem[] = [
     image:
       "https://img.freepik.com/free-photo/pizza-pizza-filled-with-tomatoes-salami-olives_140725-1200.jpg",
     rating: 4.8,
-    ingredients: [INGREDIENTS[0], INGREDIENTS[3]],
+    ingredients: [INGREDIENTS[0]!, INGREDIENTS[3]!],
     sizes: ['12"', '16"', '20"'],
     reviews: 128,
     categoryId: "4",
@@ -229,7 +229,7 @@ export const FOOD_ITEMS: FoodItem[] = [
     image:
       "https://img.freepik.com/free-photo/mixed-pizza-with-various-ingridients_140725-3790.jpg",
     rating: 4.7,
-    ingredients: [INGREDIENTS[0], INGREDIENTS[4]],
+    ingredients: [INGREDIENTS[0]!, INGREDIENTS[4]!],
     sizes: ['12"', '16"', '20"'],
     reviews: 89,
     categoryId: "4",
@@ -243,7 +243,7 @@ export const FOOD_ITEMS: FoodItem[] = [
     image:
       "https://img.freepik.com/free-photo/top-view-pepperoni-pizza-sliced-into-six-slices_141793-2157.jpg",
     rating: 4.9,
-    ingredients: [INGREDIENTS[0], INGREDIENTS[2], INGREDIENTS[4]],
+    ingredients: [INGREDIENTS[0]!, INGREDIENTS[2]!, INGREDIENTS[4]!],
     sizes: ['12"', '16"', '20"'],
     reviews: 156,
     categoryId: "4",
@@ -304,7 +304,7 @@ export const RESTAURANTS: Restaurant[] = [
     image:
       "https://img.freepik.com/free-photo/restaurant-interior_1127-3394.jpg",
     status: "Open",
-    menu: [FOOD_ITEMS[0]],
+    menu: [FOOD_ITEMS[0]!],
   },
   {
     id: "r2",
@@ -316,7 +316,7 @@ export const RESTAURANTS: Restaurant[] = [
     image:
       "https://img.freepik.com/free-photo/restaurant-interior_1127-3394.jpg",
     status: "Open",
-    menu: [FOOD_ITEMS[0]],
+    menu: [FOOD_ITEMS[0]!],
   },
   {
     id: "r3",
@@ -328,7 +328,7 @@ export const RESTAURANTS: Restaurant[] = [
     image:
       "https://img.freepik.com/free-photo/restaurant-interior_1127-3394.jpg",
     status: "Open",
-    menu: [FOOD_ITEMS[0]],
+    menu: [FOOD_ITEMS[0]!],
   },
   {
     id: "r5",
@@ -340,7 +340,7 @@ export const RESTAURANTS: Restaurant[] = [
     image:
       "https://img.freepik.com/free-photo/restaurant-interior_1127-3394.jpg",
     status: "Open",
-    menu: [FOOD_ITEMS[0]],
+    menu: [FOOD_ITEMS[0]!],
   },
   {
     id: "r6",
@@ -352,7 +352,7 @@ export const RESTAURANTS: Restaurant[] = [
     image:
       "https://img.freepik.com/free-photo/restaurant-interior_1127-3394.jpg",
     status: "Open",
-    menu: [FOOD_ITEMS[0]],
+    menu: [FOOD_ITEMS[0]!],
   },
   {
     id: "r7",
@@ -364,7 +364,7 @@ export const RESTAURANTS: Restaurant[] = [
     image:
       "https://img.freepik.com/free-photo/restaurant-interior_1127-3394.jpg",
     status: "Open",
-    menu: [FOOD_ITEMS[0]],
+    menu: [FOOD_ITEMS[0]!],
   },
   {
     id: "r9",
@@ -376,6 +376,6 @@ export const RESTAURANTS: Restaurant[] = [
     image:
       "https://img.freepik.com/free-photo/cozy-restaurant-with-people-waiter_1753-3796.jpg",
     status: "Open",
-    menu: [FOOD_ITEMS[1]],
+    menu: [FOOD_ITEMS[1]!],
   },
 ];

@@ -97,7 +97,7 @@ export default function EditAddress() {
       });
 
       if (addresses.length > 0) {
-        const addr = addresses[0];
+        const addr = addresses[0]!;
         setValue("street", addr.street || "");
         setValue("city", addr.city || "");
         setValue("state", addr.region || "");

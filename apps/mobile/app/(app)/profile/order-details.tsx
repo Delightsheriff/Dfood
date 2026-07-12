@@ -158,7 +158,7 @@ export default function OrderDetails() {
   const canCancel = order.status === "pending";
   const isDelivered = order.status === "delivered";
   const isCancelled = order.status === "cancelled";
-  const statusConfig = STATUS_CONFIG[order.status] || STATUS_CONFIG.pending;
+  const statusConfig = (STATUS_CONFIG[order.status] || STATUS_CONFIG.pending)!;
   const currentStep = getStatusStep(order.status);
 
   return (

@@ -55,7 +55,7 @@ export default function Checkout() {
   const createOrderMutation = useCreateOrder();
 
   // Get restaurant data for delivery fee
-  const restaurantId = items.length > 0 ? items[0].restaurantId : "";
+  const restaurantId = items.length > 0 ? items[0]!.restaurantId : "";
   const { data: restaurantData } = useRestaurant(restaurantId);
   const restaurant = restaurantData?.data.restaurant;
 
@@ -88,7 +88,7 @@ export default function Checkout() {
   }, [defaultPaymentData, selectedPaymentMethod]);
 
   // Calculate totals
-  const restaurantName = items.length > 0 ? items[0].restaurantName : "";
+  const restaurantName = items.length > 0 ? items[0]!.restaurantName : "";
   const subtotal = getTotalPrice;
   const deliveryFee = restaurant?.deliveryFee || 0;
   const total = subtotal + deliveryFee;
@@ -195,7 +195,7 @@ export default function Checkout() {
           borderWidth: isSelected ? 1.5 : 1,
           borderColor: isSelected ? "#FF7622" : "#F0F0F0",
         }}
-        activeOpacity={0.7}
+        
       >
         <View
           className="w-10 h-10 rounded-xl items-center justify-center mr-3"
@@ -246,7 +246,7 @@ export default function Checkout() {
           borderWidth: isSelected ? 1.5 : 1,
           borderColor: isSelected ? "#FF7622" : "#F0F0F0",
         }}
-        activeOpacity={0.7}
+        
       >
         <View
           className="w-10 h-10 rounded-xl items-center justify-center mr-3"
