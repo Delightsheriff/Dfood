@@ -9,7 +9,9 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@dfood/types": "workspace:*"
+    "@dfood/types": "workspace:*",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.4.1"
   },
   "devDependencies": {
     "typescript": "^5.7.0"
