@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
-import authRoutes from "./routes/authRoutes";
+import authRoutes from "./modules/auth/authRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
 import restaurantRoutes from "./routes/restaurantRoutes";
 import foodItemRoutes from "./routes/foodItemRoutes";
@@ -11,7 +11,7 @@ import favoriteRoutes from "./routes/favoriteRoutes";
 import addressRoutes from "./routes/addressRoutes";
 import paymentMethodRoutes from "./routes/paymentMethodRoutes";
 import orderRoutes from "./routes/orderRoutes";
-import vendorAuthRoutes from "./routes/vendorAuthRoutes";
+import vendorAuthRoutes from "./modules/auth/vendorAuthRoutes";
 import adminUserRoutes from "./routes/adminUserRoutes";
 import dashboardSearchRoutes from "./routes/dashboardSearchRoutes";
 import adminOrderRoutes from "./routes/adminOrderRoutes";

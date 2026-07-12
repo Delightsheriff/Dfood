@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
-import { AuthService } from "../services/authService";
-import { asyncHandler } from "../utils/asyncHandler";
+import { AuthService } from "./authService";
+import { asyncHandler } from "../../utils/asyncHandler";
 import {
   signupSchema,
   signinSchema,
   forgotPasswordSchema,
   verifyOTPSchema,
   resetPasswordSchema,
-} from "../types/auth";
-import { UnauthorizedError } from "../types/errors";
-import { env } from "../config/env";
+} from "./authTypes";
+import { UnauthorizedError } from "../../types/errors";
+import { env } from "../../config/env";
 
 const authService = new AuthService();
 

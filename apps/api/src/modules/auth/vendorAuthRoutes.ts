@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { vendorSignup } from "../controllers/vendorAuthController";
-import { signupLimiter } from "../middleware/rateLimiter";
+import { vendorSignup } from "./vendorAuthController";
+import { signupLimiter } from "../../middleware/rateLimiter";
 
 const router = Router();
 

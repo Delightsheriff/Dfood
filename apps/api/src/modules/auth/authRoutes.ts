@@ -1,5 +1,5 @@
 import { Router } from "express";
-import passport from "../config/passport";
+import passport from "../../config/passport";
 import {
   signup,
   createAdmin,
@@ -9,10 +9,10 @@ import {
   verifyOTP,
   resetPassword,
   getSession,
-} from "../controllers/authController";
-import { protect, restrictTo } from "../middleware/auth";
-import { authLimiter, forgotPasswordLimiter } from "../middleware/rateLimiter";
-import { UserRole } from "../types/auth";
+} from "./authController";
+import { protect, restrictTo } from "../../middleware/auth";
+import { authLimiter, forgotPasswordLimiter } from "../../middleware/rateLimiter";
+import { UserRole } from "./authTypes";
 // import { redisClient } from "../config/redis";
 
 const router = Router();

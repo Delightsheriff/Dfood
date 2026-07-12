@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { asyncHandler } from "../utils/asyncHandler";
-import { vendorAuthService } from "../services/vendorAuthService";
-import { vendorSignupSchema } from "../types/vendorAuth";
+import { asyncHandler } from "../../utils/asyncHandler";
+import { vendorAuthService } from "./vendorAuthService";
+import { vendorSignupSchema } from "./vendorAuthTypes";
 
 export const vendorSignup = asyncHandler(
   async (req: Request, res: Response) => {
