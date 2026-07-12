@@ -1,4 +1,3 @@
-import { Icon } from '@/components/ui/icon';
 import { TextClassContext } from '@/components/ui/text';
 import { cn } from '@/lib/utils';
 import * as TogglePrimitive from '@rn-primitives/toggle';
@@ -37,39 +36,4 @@ const toggleVariants = cva(
   }
 );
 
-function Toggle({
-  className,
-  variant,
-  size,
-  ...props
-}: TogglePrimitive.RootProps &
-  VariantProps<typeof toggleVariants> &
-  React.RefAttributes<TogglePrimitive.RootRef>) {
-  return (
-    <TextClassContext.Provider
-      value={cn(
-        'text-sm text-foreground font-medium',
-        props.pressed
-          ? 'text-accent-foreground'
-          : Platform.select({ web: 'group-hover:text-muted-foreground' }),
-        className
-      )}>
-      <TogglePrimitive.Root
-        className={cn(
-          toggleVariants({ variant, size }),
-          props.disabled && 'opacity-50',
-          props.pressed && 'bg-accent',
-          className
-        )}
-        {...props}
-      />
-    </TextClassContext.Provider>
-  );
-}
-
-function ToggleIcon({ className, ...props }: React.ComponentProps<typeof Icon>) {
-  const textClass = React.useContext(TextClassContext);
-  return <Icon className={cn('size-4 shrink-0', textClass, className)} {...props} />;
-}
-
-export { Toggle, ToggleIcon, toggleVariants };
+export { toggleVariants };

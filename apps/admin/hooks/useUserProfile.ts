@@ -71,20 +71,6 @@ export function useUploadProfilePicture() {
   });
 }
 
-export function useDeleteProfileImage() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: () => userProfileApi.deleteProfileImage(),
-    onSuccess: (response) => {
-      queryClient.setQueryData(["profile"], response);
-    },
-    onError: () => {
-      toast.error("Failed to delete profile picture.");
-    },
-  });
-}
-
 /**
  * Change password
  */

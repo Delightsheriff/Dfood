@@ -33,22 +33,6 @@ export class CacheService {
   /**
    * Set cached data with optional TTL
    */
-  // async set(
-  //   key: string,
-  //   value: any,
-  //   ttl: number = this.defaultTTL,
-  // ): Promise<void> {
-  //   try {
-  //     const client = redisClient.getClient();
-  //     if (!client || !redisClient.isReady()) {
-  //       return; // Graceful degradation
-  //     }
-
-  //     await client.setex(key, ttl, JSON.stringify(value));
-  //   } catch (error) {
-  //     console.error(`Cache SET error for key ${key}:`, error);
-  //   }
-  // }
   async set(
     key: string,
     value: any,
@@ -64,11 +48,7 @@ export class CacheService {
       // Standard Redis requires manual JSON.stringify
       // Check which client you're using:
 
-      // If using @upstash/redis (REST):
-      await client.setex(key, ttl, value); // NO stringify needed
-
-      // If using ioredis or node-redis:
-      // await client.setex(key, ttl, JSON.stringify(value));
+      await client.setex(key, ttl, value);
     } catch (error) {
       console.error(`Cache SET error for key ${key}:`, error);
     }

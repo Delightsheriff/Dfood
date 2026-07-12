@@ -88,4 +88,4 @@ export const useUpdateOrderStatus = ({ isVendor }: { isVendor: boolean }) => {
   });
 };
 
-export type OrdersListItem = Order;
+

@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   restaurantApi,
   UpdateRestaurantRequest,
-  CreateRestaurantRequest,
 } from "@/services/restaurant.service";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
@@ -34,28 +33,6 @@ export const useAllRestaurants = (params?: { isOpen?: boolean }) => {
   return useQuery({
     queryKey: ["restaurants", params],
     queryFn: () => restaurantApi.getAllRestaurants(params),
-  });
-};
-
-export const useCreateRestaurant = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (data: CreateRestaurantRequest) =>
-      restaurantApi.createRestaurant(data),
-    onSuccess: () => {
-      toast.success("Restaurant created successfully");
-      queryClient.invalidateQueries({ queryKey: ["my-restaurant"] });
-      queryClient.invalidateQueries({ queryKey: ["restaurant-completion"] });
-    },
-    onError: (error: AxiosError<ApiErrorResponse>) => {
-      // Use logic to extract error message safely if possible, or keep as any but explicit
-      const message =
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to create restaurant";
-      toast.error(message);
-    },
   });
 };
 

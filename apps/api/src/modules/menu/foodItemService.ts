@@ -67,20 +67,6 @@ export class FoodItemService {
     return foodItem;
   }
 
-  // async getById(id: string): Promise<IFoodItem> {
-  //   const foodItem = await cacheService.getOrSet(
-  //     CACHE_KEYS.FOOD_BY_ID(id),
-  //     async () => FoodItem.findById(id).lean(),
-  //     CACHE_TTL.FOOD_ITEMS,
-  //   );
-
-  //   if (!foodItem) {
-  //     throw new NotFoundError("Food item not found");
-  //   }
-
-  //   return foodItem as IFoodItem;
-  // }
-
   async getById(id: string): Promise<IFoodItem> {
     const foodItem = await cacheService.getOrSet(
       CACHE_KEYS.FOOD_BY_ID(id),

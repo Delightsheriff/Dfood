@@ -38,18 +38,3 @@ export const uploadMultiple = multer({
   },
 }).array("images", 5);
 
-// Helper to handle multer errors
-export const handleUploadError = (err: any, fieldName: string = "image") => {
-  if (err instanceof multer.MulterError) {
-    if (err.code === "LIMIT_FILE_SIZE") {
-      throw new ValidationError("File size exceeds 5MB limit");
-    }
-    if (err.code === "LIMIT_FILE_COUNT") {
-      throw new ValidationError("Maximum 5 images allowed");
-    }
-    if (err.code === "LIMIT_UNEXPECTED_FILE") {
-      throw new ValidationError(`Unexpected field: ${fieldName}`);
-    }
-  }
-  throw err;
-};

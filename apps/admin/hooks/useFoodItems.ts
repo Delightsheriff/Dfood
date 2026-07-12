@@ -10,24 +10,12 @@ import { ErrorResponse } from "@/types/response";
 
 export const foodItemKeys = {
   all: ["food-items"] as const,
-  detail: (id: string) => [...foodItemKeys.all, "detail", id] as const,
   myItems: ["food-items", "my"] as const,
   byRestaurant: (restaurantId: string) =>
     [...foodItemKeys.all, "restaurant", restaurantId] as const,
   byCategory: (categoryId: string) =>
     [...foodItemKeys.all, "category", categoryId] as const,
 };
-
-/**
- * Get a single food item by ID
- */
-export function useFoodItem(id: string) {
-  return useQuery({
-    queryKey: foodItemKeys.detail(id),
-    queryFn: () => foodItemsApi.getById(id),
-    enabled: !!id,
-  });
-}
 
 /**
  * Get current vendor's food items
@@ -125,22 +113,4 @@ export function useDeleteFoodItem() {
   });
 }
 
-/**
- * Delete a food item image (vendor)
- */
-export function useDeleteFoodItemImage() {
-  const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: ({ id, imageUrl }: { id: string; imageUrl: string }) =>
-      foodItemsApi.deleteImage(id, imageUrl),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: foodItemKeys.myItems });
-      queryClient.invalidateQueries({ queryKey: foodItemKeys.all });
-      toast.success("Image deleted successfully");
-    },
-    onError: (error: AxiosError<ErrorResponse>) => {
-      toast.error(error.response?.data?.message || "Failed to delete image");
-    },
-  });
-}

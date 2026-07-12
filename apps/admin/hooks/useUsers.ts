@@ -4,7 +4,6 @@ import { usersApi, UsersFilters } from "@/services/users.service";
 export const userKeys = {
   all: ["admin-users"] as const,
   filtered: (filters: UsersFilters) => [...userKeys.all, filters] as const,
-  detail: (id: string) => [...userKeys.all, "detail", id] as const,
   stats: ["admin-users-stats"] as const,
 };
 
@@ -15,17 +14,6 @@ export function useUsers(filters?: UsersFilters) {
   return useQuery({
     queryKey: userKeys.filtered(filters ?? {}),
     queryFn: () => usersApi.getAll(filters),
-  });
-}
-
-/**
- * Fetch a single user by ID (admin only)
- */
-export function useUser(id: string) {
-  return useQuery({
-    queryKey: userKeys.detail(id),
-    queryFn: () => usersApi.getById(id),
-    enabled: !!id,
   });
 }
 

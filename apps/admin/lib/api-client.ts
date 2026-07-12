@@ -20,8 +20,4 @@ const apiClient = createApiClient({
   },
 });
 
-export function clearTokenCache() {
-  tokenCache.clear();
-}
-
 export default apiClient;

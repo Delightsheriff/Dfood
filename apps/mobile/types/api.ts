@@ -119,10 +119,6 @@ export type PaymentMethodResponse = {
   message?: string;
 };
 
-export type AddCardRequest = {
-  reference: string;
-};
-
 export type CreateOrderRequest = {
   restaurantId: string;
   items: {
