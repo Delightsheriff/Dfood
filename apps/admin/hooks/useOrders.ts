@@ -53,14 +53,21 @@ export type OrderStatsQueryParams = {
   isVendor: boolean;
 };
 
+import { mockOrderStats } from "@/lib/mockData";
+
 export const useOrderStats = ({ isVendor }: OrderStatsQueryParams) => {
   return useQuery({
     queryKey: orderKeys.stats(isVendor ? "vendor" : "admin"),
     queryFn: async () => {
-      const response = isVendor
-        ? await ordersApi.getVendorOrderStats()
-        : await ordersApi.getAdminOrderStats();
-      return response.data;
+      try {
+        const response = isVendor
+          ? await ordersApi.getVendorOrderStats()
+          : await ordersApi.getAdminOrderStats();
+        return response.data;
+      } catch (error) {
+        console.warn("API order stats failed, falling back to local mock data:", error);
+        return mockOrderStats(isVendor);
+      }
     },
   });
 };

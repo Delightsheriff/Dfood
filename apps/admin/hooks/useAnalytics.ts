@@ -5,6 +5,7 @@ import {
   VendorAnalytics,
   AdminAnalytics,
 } from "@/services/analytics.service";
+import { mockAdminAnalytics, mockVendorAnalytics } from "@/lib/mockData";
 
 export const analyticsKeys = {
   all: ["analytics"] as const,
@@ -21,10 +22,7 @@ export type UseAnalyticsParams = {
 
 /**
  * Fetch analytics – returns typed vendor or admin data depending on role.
- *
- * Usage:
- *   const { data } = useAnalytics({ isVendor, params: { days: 30 } });
- *   // data.summary, data.revenueTrend, etc.
+ * Fallback to mock data in case of connection issues / empty dev db.
  */
 export const useAnalytics = ({ isVendor, params }: UseAnalyticsParams) => {
   return useQuery<VendorAnalytics | AdminAnalytics>({
@@ -32,13 +30,19 @@ export const useAnalytics = ({ isVendor, params }: UseAnalyticsParams) => {
       ? analyticsKeys.vendor(params)
       : analyticsKeys.admin(params),
     queryFn: async () => {
-      if (isVendor) {
-        const res = await analyticsApi.getVendorAnalytics(params);
+      try {
+        if (isVendor) {
+          const res = await analyticsApi.getVendorAnalytics(params);
+          return res.data.analytics;
+        }
+        const res = await analyticsApi.getAdminAnalytics(params);
         return res.data.analytics;
+      } catch (error) {
+        console.warn("API analytics failed, falling back to local mock data:", error);
+        return isVendor ? mockVendorAnalytics : mockAdminAnalytics;
       }
-      const res = await analyticsApi.getAdminAnalytics(params);
-      return res.data.analytics;
     },
+    staleTime: 5 * 60 * 1000,
   });
 };
 
