@@ -6,6 +6,7 @@ import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { useDashboardRole } from "@/components/dashboard/DashboardRoleContext";
 import { useAnalytics, isAdminAnalytics } from "@/hooks/useAnalytics";
 import { formatShortDate } from "@/lib/format";
+import { StaggerText } from "@/components/ui/custom/StaggerText";
 import {
   Select,
   SelectContent,
@@ -48,15 +49,15 @@ export default function AnalyticsPage() {
 
   return (
     <PageShell
-      title="Analytics"
+      title={<StaggerText text="Analytics Hub" />}
       action={
         <Select value={days} onValueChange={setDays}>
-          <SelectTrigger className="w-40 bg-card border-border text-foreground">
+          <SelectTrigger className="w-40 bg-card border-border text-foreground rounded-lg h-10 text-xs">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-card border-border text-xs">
             {DAY_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>
+              <SelectItem key={opt.value} value={opt.value} className="text-xs text-foreground">
                 {opt.label}
               </SelectItem>
             ))}
@@ -64,48 +65,50 @@ export default function AnalyticsPage() {
         </Select>
       }
     >
-      <AnalyticsSummaryCards
-        analytics={analytics}
-        isVendor={isVendor}
-        isLoading={isLoading}
-      />
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <RevenueChart
-          title={isVendor ? "Sales Trend" : "Revenue Trend"}
-          data={revenueData}
-          isLoading={isLoading}
-          className="col-span-1"
-          height={250}
-        />
-        <OrdersTrendChart data={analytics?.orderTrend} isLoading={isLoading} />
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <StatusBreakdown
-          data={analytics?.statusBreakdown}
+      <div className="space-y-6">
+        <AnalyticsSummaryCards
+          analytics={analytics}
+          isVendor={isVendor}
           isLoading={isLoading}
         />
-        {isVendor ? (
-          <PopularItems
-            items={
-              analytics && !isAdminAnalytics(analytics)
-                ? analytics.popularItems
-                : undefined
-            }
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <RevenueChart
+            title={isVendor ? "Sales Trend" : "Revenue Trend"}
+            data={revenueData}
+            isLoading={isLoading}
+            className="col-span-1"
+            height={250}
+          />
+          <OrdersTrendChart data={analytics?.orderTrend} isLoading={isLoading} />
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <StatusBreakdown
+            data={analytics?.statusBreakdown}
             isLoading={isLoading}
           />
-        ) : (
-          <TopRestaurants analytics={admin} isLoading={isLoading} />
+          {isVendor ? (
+            <PopularItems
+              items={
+                analytics && !isAdminAnalytics(analytics)
+                  ? analytics.popularItems
+                  : undefined
+              }
+              isLoading={isLoading}
+            />
+          ) : (
+            <TopRestaurants analytics={admin} isLoading={isLoading} />
+          )}
+        </div>
+
+        {!isVendor && (
+          <div className="grid gap-6 md:grid-cols-2">
+            <CategoryPerformance analytics={admin} isLoading={isLoading} />
+            <UserGrowthChart analytics={admin} isLoading={isLoading} />
+          </div>
         )}
       </div>
-
-      {!isVendor && (
-        <div className="grid gap-6 md:grid-cols-2">
-          <CategoryPerformance analytics={admin} isLoading={isLoading} />
-          <UserGrowthChart analytics={admin} isLoading={isLoading} />
-        </div>
-      )}
     </PageShell>
   );
 }

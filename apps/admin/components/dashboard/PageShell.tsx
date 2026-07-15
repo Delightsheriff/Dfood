@@ -1,7 +1,7 @@
 "use client";
 
 interface PageShellProps {
-  title: string;
+  title: React.ReactNode;
   children: React.ReactNode;
   action?: React.ReactNode;
 }
