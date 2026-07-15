@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Store } from "lucide-react";
+import { StaggerText } from "@/components/ui/custom/StaggerText";
 
 export function Hero() {
   return (
@@ -31,17 +32,13 @@ export function Hero() {
           The Unified Operations Portal
         </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.08, ease: "easeOut" }}
-          className="mb-6 text-[clamp(40px,6.5vw,80px)] font-extrabold tracking-tight leading-[1.1] text-foreground"
-        >
-          Manage your restaurant <br />
+        <h1 className="mb-6 text-[clamp(40px,6.5vw,72px)] font-extrabold tracking-tight leading-[1.1] text-foreground">
+          <StaggerText text="Manage your restaurant" delay={0.02} />
+          <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange">
-            fleet in real-time
+            <StaggerText text="fleet in real-time" delay={0.04} />
           </span>
-        </motion.h1>
+        </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 12 }}

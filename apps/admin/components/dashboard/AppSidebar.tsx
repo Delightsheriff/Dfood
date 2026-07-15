@@ -63,11 +63,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/dashboard">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-orange text-white">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
                   <UtensilsCrossed className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-bold text-orange">FOOD</span>
+                  <span className="truncate font-bold text-primary">DFOOD</span>
                   <span className="truncate text-xs text-muted-foreground">
                     {roleLabels[role] || "Portal"}
                   </span>
@@ -91,10 +91,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       asChild
                       isActive={isActive}
                       tooltip={link.label}
-                      className="data-[active=true]:bg-orange/10 data-[active=true]:text-orange transition-colors hover:bg-surface-2 hover:text-orange"
+                      className="data-[active=true]:bg-primary/10 data-[active=true]:text-primary transition-colors hover:bg-muted hover:text-primary"
                     >
                       <Link href={link.href}>
-                        <link.icon className={cn(isActive && "text-orange")} />
+                        <link.icon className={cn(isActive && "text-primary")} />
                         <span className={cn(isActive && "font-bold")}>
                           {link.label}
                         </span>
@@ -139,7 +139,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     src={user?.image || ""}
                     alt={user?.name || "User"}
                   />
-                  <AvatarFallback className="rounded-lg bg-orange/10 text-orange font-bold font-mono">
+                  <AvatarFallback className="rounded-lg bg-primary/10 text-primary font-bold font-mono">
                     {userInitials}
                   </AvatarFallback>
                 </Avatar>

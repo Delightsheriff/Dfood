@@ -7,6 +7,7 @@ import { StatCard } from "./StatCard";
 import { StatCardGrid } from "./StatCardGrid";
 import { ChartCard } from "./ChartCard";
 import { formatCurrency } from "@/lib/format";
+import { SpotlightCard } from "@/components/ui/custom/SpotlightCard";
 import {
   DollarSign,
   ShoppingBag,
@@ -15,7 +16,6 @@ import {
   PlusCircle,
   Percent,
   Clock,
-  Clock3,
 } from "lucide-react";
 import {
   AreaChart,
@@ -60,32 +60,32 @@ export function RestaurantDashboard() {
       value: formatCurrency(stats?.revenue.total ?? 0, { compact: false }),
       subtitle: `${formatCurrency(stats?.revenue.today ?? 0)} today`,
       icon: DollarSign,
-      color: "text-orange",
-      bgColor: "bg-orange/10",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
     {
       label: "Sales Orders",
       value: (stats?.orders.total ?? 0).toLocaleString(),
       subtitle: `${stats?.orders.today ?? 0} orders today`,
       icon: ShoppingBag,
-      color: "text-blue-400",
-      bgColor: "bg-blue-400/10",
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
     },
     {
       label: "Menu Items",
       value: "18 items",
       subtitle: "3 categories",
       icon: Utensils,
-      color: "text-purple-400",
-      bgColor: "bg-purple-400/10",
+      color: "text-purple-500",
+      bgColor: "bg-purple-500/10",
     },
     {
       label: "Customer Rating",
       value: "4.8 / 5.0",
       subtitle: "24 reviews",
       icon: Star,
-      color: "text-amber-400",
-      bgColor: "bg-amber-400/10",
+      color: "text-amber-500",
+      bgColor: "bg-amber-500/10",
     },
   ];
 
@@ -105,10 +105,10 @@ export function RestaurantDashboard() {
     : [];
 
   const statusConfigs: { value: OperationalStatus; label: string; color: string; hover: string }[] = [
-    { value: "Open", label: "Open", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20", hover: "hover:bg-emerald-500/20" },
-    { value: "Closed", label: "Closed", color: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20", hover: "hover:bg-zinc-500/20" },
-    { value: "Busy", label: "Busy / Delay", color: "bg-amber-500/10 text-amber-400 border-amber-500/20", hover: "hover:bg-amber-500/20" },
-    { value: "Disabled", label: "Disabled", color: "bg-red-500/10 text-red-400 border-red-500/20", hover: "hover:bg-red-500/20" },
+    { value: "Open", label: "Open", color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20", hover: "hover:bg-emerald-500/20" },
+    { value: "Closed", label: "Closed", color: "bg-zinc-500/10 text-zinc-500 border-zinc-500/20", hover: "hover:bg-zinc-500/20" },
+    { value: "Busy", label: "Busy", color: "bg-amber-500/10 text-amber-500 border-amber-500/20", hover: "hover:bg-amber-500/20" },
+    { value: "Disabled", label: "Disabled", color: "bg-red-500/10 text-red-500 border-red-500/20", hover: "hover:bg-red-500/20" },
   ];
 
   return (
@@ -134,7 +134,7 @@ export function RestaurantDashboard() {
             <AreaChart data={revenueData}>
               <defs>
                 <linearGradient id="vendorRevenueGlow" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={BRAND_ORANGE} stopOpacity={0.2} />
+                  <stop offset="5%" stopColor={BRAND_ORANGE} stopOpacity={0.15} />
                   <stop offset="95%" stopColor={BRAND_ORANGE} stopOpacity={0} />
                 </linearGradient>
               </defs>
@@ -163,8 +163,11 @@ export function RestaurantDashboard() {
         {/* Operational Status & Quick Actions */}
         <div className="col-span-6 md:col-span-2 space-y-6 flex flex-col justify-between">
           {/* Restaurant Status Card */}
-          <div className="border border-white/5 bg-[#080808] rounded-2xl p-6">
-            <h3 className="text-xs font-bold text-text mb-4 uppercase tracking-wider text-zinc-500">
+          <SpotlightCard
+            className="border border-border bg-card p-6"
+            spotlightColor="rgba(255, 118, 34, 0.04)"
+          >
+            <h3 className="text-xs font-bold text-foreground mb-4 uppercase tracking-wider text-muted-foreground">
               Operational Status
             </h3>
             
@@ -176,7 +179,7 @@ export function RestaurantDashboard() {
                     key={cfg.value}
                     onClick={() => handleStatusChange(cfg.value)}
                     className={`flex items-center justify-center p-3 text-xs font-semibold rounded-xl border transition-all duration-300 ${
-                      isActive ? cfg.color + " border-current" : "border-white/5 bg-black text-zinc-400 " + cfg.hover
+                      isActive ? cfg.color + " border-current" : "border-border bg-background text-muted-foreground " + cfg.hover
                     }`}
                   >
                     {cfg.label}
@@ -184,37 +187,40 @@ export function RestaurantDashboard() {
                 );
               })}
             </div>
-          </div>
+          </SpotlightCard>
 
           {/* Quick Actions */}
-          <div className="border border-white/5 bg-[#080808] rounded-2xl p-6 flex-1 flex flex-col justify-center">
-            <h3 className="text-xs font-bold text-text mb-4 uppercase tracking-wider text-zinc-500">
+          <SpotlightCard
+            className="border border-border bg-card p-6 flex-1 flex flex-col justify-center"
+            spotlightColor="rgba(255, 118, 34, 0.04)"
+          >
+            <h3 className="text-xs font-bold text-foreground mb-4 uppercase tracking-wider text-muted-foreground">
               Shop Actions
             </h3>
             <div className="space-y-2.5">
               <Link
                 href="/menu"
-                className="flex items-center gap-3 w-full p-3 rounded-xl border border-white/5 bg-white/5 text-xs font-semibold text-text hover:bg-white/10 hover:border-white/10 transition-all duration-300"
+                className="flex items-center gap-3 w-full p-3 rounded-xl border border-border bg-background text-xs font-semibold text-foreground hover:bg-muted hover:border-border/85 transition-all duration-300 shadow-sm"
               >
-                <PlusCircle className="w-4 h-4 text-orange" />
+                <PlusCircle className="w-4 h-4 text-primary" />
                 Add New Menu Item
               </Link>
               <Link
                 href="/promotions"
-                className="flex items-center gap-3 w-full p-3 rounded-xl border border-white/5 bg-white/5 text-xs font-semibold text-text hover:bg-white/10 hover:border-white/10 transition-all duration-300"
+                className="flex items-center gap-3 w-full p-3 rounded-xl border border-border bg-background text-xs font-semibold text-foreground hover:bg-muted hover:border-border/85 transition-all duration-300 shadow-sm"
               >
-                <Percent className="w-4 h-4 text-orange" />
+                <Percent className="w-4 h-4 text-primary" />
                 Launch Coupon Campaign
               </Link>
               <Link
                 href="/settings"
-                className="flex items-center gap-3 w-full p-3 rounded-xl border border-white/5 bg-white/5 text-xs font-semibold text-text hover:bg-white/10 hover:border-white/10 transition-all duration-300"
+                className="flex items-center gap-3 w-full p-3 rounded-xl border border-border bg-background text-xs font-semibold text-foreground hover:bg-muted hover:border-border/85 transition-all duration-300 shadow-sm"
               >
-                <Clock className="w-4 h-4 text-orange" />
+                <Clock className="w-4 h-4 text-primary" />
                 Update Opening Hours
               </Link>
             </div>
-          </div>
+          </SpotlightCard>
         </div>
       </div>
 
@@ -240,43 +246,46 @@ export function RestaurantDashboard() {
         </ChartCard>
 
         {/* Live Orders Overview Summary */}
-        <div className="col-span-6 md:col-span-3 border border-white/5 bg-[#080808] rounded-2xl p-6">
-          <h3 className="text-xs font-bold text-text uppercase tracking-wider text-zinc-500 mb-6">
+        <SpotlightCard
+          className="col-span-6 md:col-span-3 border border-border bg-card p-6"
+          spotlightColor="rgba(255, 118, 34, 0.04)"
+        >
+          <h3 className="text-xs font-bold text-foreground uppercase tracking-wider text-muted-foreground mb-6">
             Live Deliveries Checklist
           </h3>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-3.5 border border-white/5 rounded-xl bg-black">
+            <div className="flex items-center justify-between p-3.5 border border-border rounded-xl bg-background">
               <div className="flex items-center gap-3">
-                <span className="flex size-7 items-center justify-center rounded-lg bg-orange/10 font-bold text-orange text-[10px]">
+                <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary text-[10px]">
                   #1
                 </span>
                 <div>
-                  <div className="text-xs font-bold text-text">ORD-20260715-AB</div>
-                  <div className="text-[9px] text-text-muted">1x Chicken Spaghetti, 2x Soda</div>
+                  <div className="text-xs font-bold text-foreground">ORD-20260715-AB</div>
+                  <div className="text-[9px] text-muted-foreground">1x Chicken Spaghetti, 2x Soda</div>
                 </div>
               </div>
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-orange/15 text-orange border border-orange/20 animate-pulse">
+              <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-primary/15 text-primary border border-primary/20 animate-pulse">
                 Pending
               </span>
             </div>
 
-            <div className="flex items-center justify-between p-3.5 border border-white/5 rounded-xl bg-black">
+            <div className="flex items-center justify-between p-3.5 border border-border rounded-xl bg-background">
               <div className="flex items-center gap-3">
-                <span className="flex size-7 items-center justify-center rounded-lg bg-blue-500/10 font-bold text-blue-400 text-[10px]">
+                <span className="flex size-7 items-center justify-center rounded-lg bg-blue-500/10 font-bold text-blue-500 text-[10px]">
                   #2
                 </span>
                 <div>
-                  <div className="text-xs font-bold text-text">ORD-20260715-XY</div>
-                  <div className="text-[9px] text-text-muted">2x Jollof Rice with Beef</div>
+                  <div className="text-xs font-bold text-foreground">ORD-20260715-XY</div>
+                  <div className="text-[9px] text-muted-foreground">2x Jollof Rice with Beef</div>
                 </div>
               </div>
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-blue-500/15 text-blue-400 border border-blue-500/20">
+              <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-blue-500/15 text-blue-500 border border-blue-500/20">
                 Preparing
               </span>
             </div>
           </div>
-        </div>
+        </SpotlightCard>
       </div>
     </div>
   );

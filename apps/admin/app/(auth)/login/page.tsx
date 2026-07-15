@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, ArrowLeft, UtensilsCrossed } from "lucide-react";
 import CountUp from "@/components/ui/CountUp";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -21,9 +21,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { SpotlightCard } from "@/components/ui/custom/SpotlightCard";
+import { ShinyText } from "@/components/ui/custom/ShinyText";
+import { StaggerText } from "@/components/ui/custom/StaggerText";
 
 const formSchema = z.object({
-  role: z.enum(["vendor", "admin"]),
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z
     .string()
@@ -39,7 +41,6 @@ export default function LoginPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      role: "vendor",
       email: "",
       password: "",
       remember: false,
@@ -65,7 +66,6 @@ export default function LoginPage() {
           description: "Welcome back!",
         });
 
-        // Redirect to dashboard
         router.push("/dashboard");
         router.refresh();
       }
@@ -79,228 +79,193 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white flex justify-center">
-      <div className="w-full max-w-350 grid grid-cols-1 md:grid-cols-2">
-        <Link
-          href="/"
-          className="fixed top-6 right-8 z-50 flex items-center gap-2 text-[13px] text-text-muted hover:text-white transition-colors no-underline"
-        >
-          ← Back to home
-        </Link>
+    <main className="min-h-screen bg-background text-foreground flex justify-center items-stretch relative">
+      <Link
+        href="/"
+        className="fixed top-6 right-8 z-50 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-primary transition-all duration-300 bg-background/50 backdrop-blur-md px-3 py-1.5 border border-border rounded-full"
+      >
+        <ArrowLeft className="w-3.5 h-3.5" />
+        Home
+      </Link>
 
+      <div className="w-full max-w-[1400px] grid grid-cols-1 md:grid-cols-[1fr_1.1fr] min-h-screen">
         {/* LEFT PANEL */}
-        <div className="hidden md:flex relative flex-col justify-between p-12 overflow-hidden bg-surface border-r border-border">
-          {/* Grid background */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-size-[60px_60px] pointer-events-none" />
+        <div className="hidden md:flex relative flex-col justify-between p-16 overflow-hidden border-r border-border bg-muted/20">
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,118,34,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,118,34,0.015)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none" />
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[radial-gradient(circle,rgba(255,118,34,0.08),transparent_60%)] pointer-events-none" />
 
-          {/* Orange glow */}
-          <div className="absolute -bottom-25 -left-25 w-125 h-125 bg-[radial-gradient(circle,rgba(255,118,34,0.15),transparent_60%)] pointer-events-none" />
-
-          <Link
-            href="/"
-            className="relative z-10 font-bebas text-[32px] tracking-[4px] text-orange no-underline"
-          >
-            FOOD
+          <Link href="/" className="relative z-10 flex items-center gap-2 group">
+            <div className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+              <UtensilsCrossed className="size-4" />
+            </div>
+            <span className="font-bebas text-2xl tracking-[2px] text-foreground">
+              DFOOD
+            </span>
           </Link>
 
-          <div className="relative z-10">
-            <div className="mb-5 text-[11px] font-mono tracking-[3px] text-orange uppercase">
-              — Partner Portal
+          <div className="relative z-10 max-w-lg">
+            <div className="mb-4 text-[10px] font-bold tracking-widest text-primary uppercase">
+              — Partner Management Portal
             </div>
-            <h2 className="mb-6 text-[72px] font-bebas leading-[0.9] tracking-[1px]">
-              YOUR
-              <br />
-              <span className="text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.2)]">
-                ORDERS
+            <h2 className="mb-6 text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] text-foreground">
+              Your store operations <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange">
+                unified.
               </span>
-              <br />
-              AWAIT.
             </h2>
-            <p className="max-w-85 mb-10 text-[15px] font-light leading-relaxed text-text-muted">
-              Manage your restaurant, track real-time orders, and grow your
-              delivery revenue — all in one dashboard.
+            <p className="mb-10 text-xs leading-relaxed text-muted-foreground">
+              Manage your menus, coordinate incoming order statuses, and track your daily delivery payouts in real-time.
             </p>
-            <div className="grid grid-cols-2 gap-3">
+
+            <div className="grid grid-cols-2 gap-4">
               {[
-                {
-                  value: 48,
-                  label: "Active partners",
-                  suffix: "+",
-                  decimals: 0,
-                },
-                {
-                  value: 891,
-                  label: "Orders this week",
-                  suffix: "",
-                  decimals: 0,
-                },
-                {
-                  value: 4.3,
-                  label: "Weekly GMV",
-                  prefix: "₦",
-                  suffix: "M",
-                  decimals: 1,
-                },
-                {
-                  value: 4.8,
-                  label: "Avg rating",
-                  suffix: "★",
-                  decimals: 1,
-                },
+                { value: 48, label: "Active partners", suffix: "+", decimals: 0 },
+                { value: 891, label: "Orders this week", suffix: "", decimals: 0 },
+                { value: 4.3, label: "Weekly GMV", prefix: "₦", suffix: "M", decimals: 1 },
+                { value: 4.8, label: "Avg rating", suffix: "★", decimals: 1 },
               ].map((stat, i) => (
-                <div
+                <SpotlightCard
                   key={i}
-                  className="p-4 border rounded-xl bg-white/3 border-border"
+                  className="p-5 border border-border/80 bg-card"
+                  spotlightColor="rgba(255, 118, 34, 0.05)"
                 >
-                  <div className="font-bebas text-[28px] text-orange leading-none flex items-center gap-1">
+                  <div className="text-2xl font-bold text-primary flex items-center gap-0.5">
                     {stat.prefix}
-                    <CountUp
-                      to={stat.value}
-                      duration={2.5}
-                      className="tabular-nums"
-                    />
+                    <CountUp to={stat.value} duration={2} className="tabular-nums" />
                     {stat.suffix}
                   </div>
-                  <div className="mt-0.5 text-[12px] text-text-muted">
+                  <div className="mt-1 text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
                     {stat.label}
                   </div>
-                </div>
+                </SpotlightCard>
               ))}
             </div>
           </div>
 
-          <div className="relative z-10 text-[12px] font-mono text-text-muted">
-            © {new Date().getFullYear()} FOOD · All rights reserved
+          <div className="relative z-10 text-[10px] font-mono text-muted-foreground">
+            © {new Date().getFullYear()} DFood Network · Operational Portal
           </div>
         </div>
 
         {/* RIGHT PANEL */}
-        <div className="flex flex-col items-center justify-center p-6 md:p-12">
-          <div className="w-full max-w-100">
-            <div className="mb-10">
-              <h1 className="mb-2 text-[42px] font-bebas tracking-[1px]">
-                SIGN IN
+        <div className="flex flex-col items-center justify-center p-6 md:p-16 bg-background">
+          <div className="w-full max-w-[400px]">
+            <div className="mb-8">
+              <h1 className="mb-2 text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
+                <StaggerText text="Sign In" />
               </h1>
-              <p className="text-sm font-light text-text-muted">
-                Don&apos;t have an account?{" "}
+              <p className="text-xs text-muted-foreground">
+                Don&apos;t have an account yet?{" "}
                 <Link
                   href="/signup"
-                  className="font-medium text-orange hover:underline"
+                  className="font-bold text-primary hover:underline"
                 >
-                  Partner with us →
+                  Register partner store →
                 </Link>
               </p>
             </div>
 
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-5"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[12px] font-semibold tracking-[1.5px] uppercase text-text-dim font-mono">
-                        Email
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="you@restaurant.com"
-                          {...field}
-                          className="bg-surface border-border focus:border-orange/50 focus:ring-orange/10 h-12 rounded-[10px]"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[12px] text-red-400 font-normal" />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[12px] font-semibold tracking-[1.5px] uppercase text-text-dim font-mono">
-                        Password
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="••••••••"
-                            {...field}
-                            className="bg-surface border-border focus:border-orange/50 focus:ring-orange/10 h-12 rounded-[10px] pr-10"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute -translate-y-1/2 right-3 top-1/2 text-text-muted hover:text-white"
-                          >
-                            {showPassword ? (
-                              <EyeOff size={16} />
-                            ) : (
-                              <Eye size={16} />
-                            )}
-                          </button>
-                        </div>
-                      </FormControl>
-                      <FormMessage className="text-[12px] text-red-400 font-normal" />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="flex items-center justify-between mb-2">
+            <SpotlightCard className="p-8 border border-border shadow-md bg-card" spotlightColor="rgba(255, 118, 34, 0.04)">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-4"
+                >
                   <FormField
                     control={form.control}
-                    name="remember"
+                    name="email"
                     render={({ field }) => (
-                      <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                      <FormItem>
+                        <FormLabel className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground">
+                          Email Address
+                        </FormLabel>
                         <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            className="border-border data-[state=checked]:bg-orange data-[state=checked]:border-orange"
+                          <Input
+                            placeholder="operator@restaurant.com"
+                            {...field}
+                            className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs"
                           />
                         </FormControl>
-                        <FormLabel className="text-sm font-normal cursor-pointer text-text-dim">
-                          Remember me
-                        </FormLabel>
+                        <FormMessage className="text-[11px] text-red-500 font-normal" />
                       </FormItem>
                     )}
                   />
-                  <Link
-                    href="/forgot-password"
-                    className="text-sm text-orange hover:opacity-80 transition-opacity"
+
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground">
+                          Password
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              placeholder="••••••••"
+                              {...field}
+                              className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs pr-10"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="absolute -translate-y-1/2 right-3 top-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                              {showPassword ? (
+                                <EyeOff size={14} />
+                              ) : (
+                                <Eye size={14} />
+                              )}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-[11px] text-red-500 font-normal" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="flex items-center justify-between pt-1">
+                    <FormField
+                      control={form.control}
+                      name="remember"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                            />
+                          </FormControl>
+                          <FormLabel className="text-xs font-semibold cursor-pointer text-muted-foreground">
+                            Remember session
+                          </FormLabel>
+                        </FormItem>
+                      )}
+                    />
+                    <Link
+                      href="/forgot-password"
+                      className="text-xs font-semibold text-primary hover:underline"
+                    >
+                      Forgot?
+                    </Link>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full h-11 text-xs font-bold tracking-wider uppercase bg-primary text-primary-foreground hover:opacity-90 transition-all duration-300 rounded-lg shadow-sm"
                   >
-                    Forgot password?
-                  </Link>
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full h-13.5 text-[15px] font-bold tracking-[0.5px] bg-orange hover:bg-[#e86a1e] hover:shadow-[0_12px_24px_rgba(255,118,34,0.25)] hover:-translate-y-0.5 transition-all duration-250 rounded-[10px]"
-                >
-                  {loading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    "SIGN IN"
-                  )}
-                </Button>
-              </form>
-            </Form>
-
-            <div className="mt-6 text-sm text-center text-text-muted">
-              Want to list your restaurant?{" "}
-              <Link
-                href="/signup"
-                className="font-semibold text-orange hover:underline"
-              >
-                Apply here →
-              </Link>
-            </div>
+                    {loading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <ShinyText text="SIGN IN" className="text-primary-foreground" />
+                    )}
+                  </Button>
+                </form>
+              </Form>
+            </SpotlightCard>
           </div>
         </div>
       </div>

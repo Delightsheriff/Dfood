@@ -7,13 +7,12 @@ import { StatCard } from "./StatCard";
 import { StatCardGrid } from "./StatCardGrid";
 import { ChartCard } from "./ChartCard";
 import { formatCurrency } from "@/lib/format";
+import { SpotlightCard } from "@/components/ui/custom/SpotlightCard";
 import {
   DollarSign,
   ShoppingBag,
   Users,
   Store,
-  TrendingUp,
-  Activity,
   PlusCircle,
   FileText,
   Radio,
@@ -27,8 +26,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  BarChart,
-  Bar,
 } from "recharts";
 import Link from "next/link";
 import { BRAND_ORANGE, CHART_AXIS_PROPS, CHART_GRID_PROPS, CHART_TOOLTIP_STYLE } from "@/lib/chart-theme";
@@ -49,32 +46,32 @@ export function PlatformDashboard() {
       value: formatCurrency(stats?.revenue.total ?? 0, { compact: false }),
       subtitle: `${formatCurrency(stats?.revenue.today ?? 0)} collected today`,
       icon: DollarSign,
-      color: "text-orange",
-      bgColor: "bg-orange/10",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
     {
       label: "Total Orders",
       value: (stats?.orders.total ?? 0).toLocaleString(),
       subtitle: `${stats?.orders.today ?? 0} dispatched today`,
       icon: ShoppingBag,
-      color: "text-blue-400",
-      bgColor: "bg-blue-400/10",
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
     },
     {
       label: "Platform Users",
       value: (analytics?.summary && "totalUsers" in analytics.summary ? analytics.summary.totalUsers : 0).toLocaleString(),
       subtitle: `+${analytics?.summary && "newUsers" in analytics.summary ? analytics.summary.newUsers : 0} growth this period`,
       icon: Users,
-      color: "text-purple-400",
-      bgColor: "bg-purple-400/10",
+      color: "text-purple-500",
+      bgColor: "bg-purple-500/10",
     },
     {
       label: "Active Shops",
       value: (analytics?.summary && "activeRestaurants" in analytics.summary ? analytics.summary.activeRestaurants : 0).toLocaleString(),
       subtitle: `${activeOrders} active deliveries`,
       icon: Store,
-      color: "text-emerald-400",
-      bgColor: "bg-emerald-400/10",
+      color: "text-emerald-500",
+      bgColor: "bg-emerald-500/10",
     },
   ];
 
@@ -117,7 +114,7 @@ export function PlatformDashboard() {
             <AreaChart data={revenueData}>
               <defs>
                 <linearGradient id="platformRevenueGlow" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={BRAND_ORANGE} stopOpacity={0.2} />
+                  <stop offset="5%" stopColor={BRAND_ORANGE} stopOpacity={0.15} />
                   <stop offset="95%" stopColor={BRAND_ORANGE} stopOpacity={0} />
                 </linearGradient>
               </defs>
@@ -144,46 +141,49 @@ export function PlatformDashboard() {
         </ChartCard>
 
         {/* Quick Actions Panel */}
-        <div className="col-span-6 md:col-span-2 border border-white/5 bg-[#080808] rounded-2xl p-6 flex flex-col justify-between">
+        <SpotlightCard
+          className="col-span-6 md:col-span-2 border border-border bg-card p-6 flex flex-col justify-between"
+          spotlightColor="rgba(255, 118, 34, 0.04)"
+        >
           <div>
-            <h3 className="text-sm font-bold text-text mb-4 uppercase tracking-wider text-zinc-500">
+            <h3 className="text-xs font-bold text-foreground mb-4 uppercase tracking-wider text-muted-foreground">
               Quick Actions
             </h3>
             <div className="space-y-3">
               <Link
                 href="/restaurants"
-                className="flex items-center gap-3 w-full p-3 rounded-xl border border-white/5 bg-white/5 text-xs font-semibold text-text hover:bg-white/10 hover:border-white/10 transition-all duration-300"
+                className="flex items-center gap-3 w-full p-3 rounded-xl border border-border bg-background text-xs font-semibold text-foreground hover:bg-muted hover:border-border/80 transition-all duration-300 shadow-sm"
               >
-                <PlusCircle className="w-4 h-4 text-orange" />
+                <PlusCircle className="w-4 h-4 text-primary" />
                 Onboard New Restaurant
               </Link>
               <Link
                 href="/notifications"
-                className="flex items-center gap-3 w-full p-3 rounded-xl border border-white/5 bg-white/5 text-xs font-semibold text-text hover:bg-white/10 hover:border-white/10 transition-all duration-300"
+                className="flex items-center gap-3 w-full p-3 rounded-xl border border-border bg-background text-xs font-semibold text-foreground hover:bg-muted hover:border-border/80 transition-all duration-300 shadow-sm"
               >
-                <Radio className="w-4 h-4 text-orange" />
+                <Radio className="w-4 h-4 text-primary" />
                 Launch Notice Broadcast
               </Link>
               <Link
                 href="/logs"
-                className="flex items-center gap-3 w-full p-3 rounded-xl border border-white/5 bg-white/5 text-xs font-semibold text-text hover:bg-white/10 hover:border-white/10 transition-all duration-300"
+                className="flex items-center gap-3 w-full p-3 rounded-xl border border-border bg-background text-xs font-semibold text-foreground hover:bg-muted hover:border-border/80 transition-all duration-300 shadow-sm"
               >
-                <FileText className="w-4 h-4 text-orange" />
+                <FileText className="w-4 h-4 text-primary" />
                 View Security Audit Logs
               </Link>
             </div>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-white/5">
-            <div className="flex items-center justify-between text-xs text-text-muted">
+          <div className="mt-8 pt-6 border-t border-border">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>Platform Health</span>
-              <span className="flex items-center gap-1.5 font-semibold text-emerald-400">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                Active / Stable
+              <span className="flex items-center gap-1.5 font-bold text-emerald-500">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Stable
               </span>
             </div>
           </div>
-        </div>
+        </SpotlightCard>
       </div>
 
       {/* User Growth & Top Restaurants Grid */}
@@ -202,21 +202,24 @@ export function PlatformDashboard() {
               <YAxis {...CHART_AXIS_PROPS} />
               <CartesianGrid {...CHART_GRID_PROPS} />
               <Tooltip {...CHART_TOOLTIP_STYLE} />
-              <Area type="monotone" dataKey="Customers" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.05} strokeWidth={2} />
-              <Area type="monotone" dataKey="Vendors" stroke="#10b981" fill="#10b981" fillOpacity={0.05} strokeWidth={2} />
+              <Area type="monotone" dataKey="Customers" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.03} strokeWidth={2} />
+              <Area type="monotone" dataKey="Vendors" stroke="#10b981" fill="#10b981" fillOpacity={0.03} strokeWidth={2} />
             </AreaChart>
           </ResponsiveContainer>
         </ChartCard>
 
         {/* Top Performing Restaurants */}
-        <div className="col-span-6 md:col-span-3 border border-white/5 bg-[#080808] rounded-2xl p-6">
+        <SpotlightCard
+          className="col-span-6 md:col-span-3 border border-border bg-card p-6"
+          spotlightColor="rgba(255, 118, 34, 0.04)"
+        >
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xs font-bold text-text uppercase tracking-wider text-zinc-500">
+            <h3 className="text-xs font-bold text-foreground uppercase tracking-wider text-muted-foreground">
               Top Restaurants
             </h3>
             <Link
               href="/restaurants"
-              className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-orange hover:text-orange-dim"
+              className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary hover:opacity-85"
             >
               All Restaurants <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
@@ -227,29 +230,29 @@ export function PlatformDashboard() {
               ? analytics.topRestaurants.slice(0, 3).map((rest, index) => (
                   <div
                     key={rest.restaurantId}
-                    className="flex items-center justify-between p-3.5 rounded-xl border border-white/5 bg-black"
+                    className="flex items-center justify-between p-3.5 rounded-xl border border-border bg-background"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="flex size-8 items-center justify-center rounded-lg bg-orange/10 font-bold text-orange text-xs">
+                      <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary text-[10px]">
                         #{index + 1}
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-text">
+                        <div className="text-xs font-bold text-foreground">
                           {rest.restaurantName}
                         </div>
-                        <div className="text-[10px] text-text-muted">
+                        <div className="text-[10px] text-muted-foreground">
                           {rest.orderCount} orders completed
                         </div>
                       </div>
                     </div>
-                    <div className="text-xs font-bold text-orange">
+                    <div className="text-xs font-bold text-primary">
                       {formatCurrency(rest.revenue)}
                     </div>
                   </div>
                 ))
               : null}
           </div>
-        </div>
+        </SpotlightCard>
       </div>
     </div>
   );
