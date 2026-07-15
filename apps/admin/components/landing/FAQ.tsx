@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Reveal } from "./Reveal";
 import { cn } from "@/lib/utils";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Mail } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 export function FAQ() {
@@ -24,64 +24,55 @@ export function FAQ() {
     },
     {
       q: "How do I become a restaurant partner?",
-      a: 'Click "Partner With Us" and fill out the signup form. We review applications within 24 hours. Setup is free — we only charge a 10% commission on completed orders.',
+      a: 'Click "Partner Register" and fill out the signup form. We review applications within 24 hours. Setup is free — we only charge a 10% commission on completed orders.',
     },
     {
       q: "What happens if my order is wrong or late?",
       a: "Contact us through the app and we'll sort it out immediately. Wrong orders get refunded. Consistently late restaurants get flagged on our end.",
     },
-    {
-      q: "Is the app free to download?",
-      a: "Yes. The app is completely free. You only pay for the food you order plus the restaurant's delivery fee. No subscription, no hidden charges.",
-    },
   ];
 
   return (
-    <section
-      id="faq"
-      className="px-6 py-32 border-t bg-surface border-border md:px-12"
-    >
-      <div className="grid items-start grid-cols-1 gap-20 mx-auto w-full max-w-[1400px] lg:grid-cols-2">
+    <section id="faq" className="px-6 py-24 border-t bg-black border-white/5 md:px-12">
+      <div className="grid items-start grid-cols-1 gap-16 mx-auto w-full max-w-7xl lg:grid-cols-2">
         <Reveal>
-          <div className="mb-4 text-xs font-mono tracking-[3px] text-orange uppercase">
+          <div className="mb-4 text-[10px] font-bold tracking-widest text-orange uppercase">
             — FAQ
           </div>
-          <h2 className="mb-6 text-[clamp(48px,6vw,80px)] font-bebas leading-[0.95] tracking-[1px]">
-            GOT
-            <br />
-            QUESTIONS?
+          <h2 className="mb-6 text-3xl md:text-5xl font-bold tracking-tight text-text">
+            Frequently Asked Questions
           </h2>
-          <p className="text-[15px] font-light leading-relaxed text-text-muted">
-            Can&apos;t find what you&apos;re looking for? Reach us at
+          <p className="text-xs leading-relaxed text-text-muted max-w-sm">
+            Can&apos;t find what you&apos;re looking for? Contact support team at:
             <br />
             <a
-              href="mailto:support@food.com"
-              className="text-orange hover:underline"
+              href="mailto:support@dfood.com"
+              className="inline-flex items-center gap-1 mt-2 text-orange hover:underline font-semibold"
             >
-              support@food.com
+              <Mail className="w-3.5 h-3.5" />
+              support@dfood.com
             </a>
           </p>
         </Reveal>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           {faqs.map((faq, index) => (
             <Reveal key={index} delay={index * 0.1}>
-              <div className="overflow-hidden border rounded-lg border-border">
+              <div className="overflow-hidden border rounded-xl border-white/5 bg-[#080808]">
                 <button
                   onClick={() =>
                     setOpenIndex(openIndex === index ? null : index)
                   }
                   className={cn(
-                    "flex items-center justify-between w-full p-5 text-left transition-colors bg-black hover:bg-surface font-medium text-[15px]",
-                    openIndex === index && "text-orange",
+                    "flex items-center justify-between w-full p-5 text-left transition-colors hover:bg-white/5 font-semibold text-xs text-text",
+                    openIndex === index && "text-orange"
                   )}
                 >
                   {faq.q}
                   <ChevronDown
                     className={cn(
-                      "w-5 h-5 transition-transform duration-300 border rounded-full border-border p-1 box-content text-[12px]",
-                      openIndex === index &&
-                        "rotate-180 border-orange text-orange",
+                      "w-4 h-4 transition-transform duration-300 text-zinc-500",
+                      openIndex === index && "rotate-180 text-orange"
                     )}
                   />
                 </button>
@@ -91,9 +82,9 @@ export function FAQ() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
                     >
-                      <div className="px-6 pb-5 text-sm font-light leading-relaxed bg-black text-text-muted">
+                      <div className="px-5 pb-5 text-xs leading-relaxed text-text-dim border-t border-white/[0.03] pt-4">
                         {faq.a}
                       </div>
                     </motion.div>
