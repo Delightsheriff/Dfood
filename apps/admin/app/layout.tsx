@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, DM_Sans, DM_Mono } from "next/font/google";
+import { Bebas_Neue, DM_Sans, DM_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "@/Providers/Providers";
 import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
+
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 const bebasNeue = Bebas_Neue({
   weight: "400",
@@ -33,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={cn("font-sans", inter.variable)}>
       <body
         className={`${bebasNeue.variable} ${dmSans.variable} ${dmMono.variable} antialiased bg-background text-foreground`}
       >
