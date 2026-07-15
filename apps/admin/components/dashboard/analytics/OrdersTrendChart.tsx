@@ -15,6 +15,7 @@ import {
   CHART_TOOLTIP_STYLE,
   CHART_AXIS_PROPS,
   CHART_GRID_PROPS,
+  CHART_PALETTE,
 } from "@/lib/chart-theme";
 
 interface OrdersTrendChartProps {
@@ -38,8 +39,8 @@ export function OrdersTrendChart({ data, isLoading }: OrdersTrendChartProps) {
         <AreaChart data={chartData}>
           <defs>
             <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+              <stop offset="5%" stopColor={CHART_PALETTE[4]} stopOpacity={0.3} />
+              <stop offset="95%" stopColor={CHART_PALETTE[4]} stopOpacity={0} />
             </linearGradient>
           </defs>
           <XAxis dataKey="name" {...CHART_AXIS_PROPS} />
@@ -49,7 +50,7 @@ export function OrdersTrendChart({ data, isLoading }: OrdersTrendChartProps) {
           <Area
             type="monotone"
             dataKey="orders"
-            stroke="#3b82f6"
+            stroke={CHART_PALETTE[4]}
             strokeWidth={2}
             fillOpacity={1}
             fill="url(#colorOrders)"

@@ -28,19 +28,19 @@ export function DeleteCategoryDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="bg-surface border-border">
+      <AlertDialogContent className="bg-card border-border">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-text">
+          <AlertDialogTitle className="text-foreground">
             Are you sure?
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-text-muted">
+          <AlertDialogDescription className="text-muted-foreground">
             This action cannot be undone. This will permanently delete the{" "}
-            <span className="font-bold text-text">{category.name}</span>{" "}
+            <span className="font-bold text-foreground">{category.name}</span>{" "}
             category.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="border-border text-text hover:bg-surface-2 hover:text-white">
+          <AlertDialogCancel className="border-border text-foreground hover:bg-muted hover:text-white">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
@@ -50,7 +50,7 @@ export function DeleteCategoryDialog({
                 onSuccess: () => onOpenChange(false),
               });
             }}
-            className="bg-red-600 hover:bg-red-700 text-white"
+            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
             disabled={deleteCategory.isPending}
           >
             {deleteCategory.isPending ? "Deleting..." : "Delete"}

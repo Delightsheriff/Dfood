@@ -146,7 +146,7 @@ export function ProfileSettings() {
   if (userLoading) {
     return (
       <div className="flex items-center justify-center min-h-100">
-        <Loader2 className="h-8 w-8 animate-spin text-orange" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -154,10 +154,10 @@ export function ProfileSettings() {
   return (
     <div className="space-y-6">
       {/* Profile Picture */}
-      <Card className="bg-surface border-border">
+      <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-text">Profile Picture</CardTitle>
-          <CardDescription className="text-text-muted">
+          <CardTitle className="text-foreground">Profile Picture</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Update your profile picture. Recommended size: 400x400px
           </CardDescription>
         </CardHeader>
@@ -170,7 +170,7 @@ export function ProfileSettings() {
                   alt={user?.name}
                   className="object-cover"
                 />
-                <AvatarFallback className="bg-orange/10 text-orange text-2xl font-bold">
+                <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">
                   {userInitials}
                 </AvatarFallback>
               </Avatar>
@@ -195,12 +195,12 @@ export function ProfileSettings() {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingPicture}
                 variant="outline"
-                className="border-border text-text hover:bg-surface-2 hover:text-white"
+                className="border-border text-foreground hover:bg-muted hover:text-white"
               >
                 <Camera className="h-4 w-4 mr-2" />
                 {uploadingPicture ? "Uploading..." : "Change Picture"}
               </Button>
-              <p className="text-xs text-text-dim mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 JPG, PNG or GIF. Max size 5MB.
               </p>
             </div>
@@ -209,10 +209,10 @@ export function ProfileSettings() {
       </Card>
 
       {/* Personal Information */}
-      <Card className="bg-surface border-border">
+      <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-text">Personal Information</CardTitle>
-          <CardDescription className="text-text-muted">
+          <CardTitle className="text-foreground">Personal Information</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Update your personal details and contact information
           </CardDescription>
         </CardHeader>
@@ -227,12 +227,12 @@ export function ProfileSettings() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-text-muted">Full Name</FormLabel>
+                    <FormLabel className="text-muted-foreground">Full Name</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="John Doe"
                         {...field}
-                        className="bg-black/20 border-border text-text placeholder:text-text-dim"
+                        className="bg-black/20 border-border text-foreground placeholder:text-muted-foreground"
                       />
                     </FormControl>
                     <FormMessage />
@@ -245,7 +245,7 @@ export function ProfileSettings() {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-text-muted">
+                    <FormLabel className="text-muted-foreground">
                       Phone Number
                     </FormLabel>
                     <FormControl>
@@ -253,7 +253,7 @@ export function ProfileSettings() {
                         placeholder="+234 800 000 0000"
                         type="tel"
                         {...field}
-                        className="bg-black/20 border-border text-text placeholder:text-text-dim"
+                        className="bg-black/20 border-border text-foreground placeholder:text-muted-foreground"
                       />
                     </FormControl>
                     <FormMessage />
@@ -262,13 +262,13 @@ export function ProfileSettings() {
               />
 
               <div>
-                <FormLabel className="text-text-muted">Email</FormLabel>
+                <FormLabel className="text-muted-foreground">Email</FormLabel>
                 <Input
                   value={user?.email}
                   disabled
-                  className="bg-surface-2 border-border text-text-muted mt-1"
+                  className="bg-muted border-border text-muted-foreground mt-1"
                 />
-                <p className="text-xs text-text-dim mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   Email cannot be changed
                 </p>
               </div>
@@ -277,7 +277,7 @@ export function ProfileSettings() {
                 <Button
                   type="submit"
                   disabled={updateProfile.isPending}
-                  className="bg-orange hover:bg-orange/90 text-white"
+                  className="bg-primary hover:bg-primary/90 text-white"
                 >
                   {updateProfile.isPending ? (
                     <>
@@ -295,10 +295,10 @@ export function ProfileSettings() {
       </Card>
 
       {/* Change Password */}
-      <Card className="bg-surface border-border">
+      <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-text">Change Password</CardTitle>
-          <CardDescription className="text-text-muted">
+          <CardTitle className="text-foreground">Change Password</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Update your password to keep your account secure
           </CardDescription>
         </CardHeader>
@@ -313,7 +313,7 @@ export function ProfileSettings() {
                 name="currentPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-text-muted">
+                    <FormLabel className="text-muted-foreground">
                       Current Password
                     </FormLabel>
                     <FormControl>
@@ -321,7 +321,7 @@ export function ProfileSettings() {
                         type="password"
                         placeholder="Enter current password"
                         {...field}
-                        className="bg-black/20 border-border text-text placeholder:text-text-dim"
+                        className="bg-black/20 border-border text-foreground placeholder:text-muted-foreground"
                       />
                     </FormControl>
                     <FormMessage />
@@ -334,7 +334,7 @@ export function ProfileSettings() {
                 name="newPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-text-muted">
+                    <FormLabel className="text-muted-foreground">
                       New Password
                     </FormLabel>
                     <FormControl>
@@ -342,7 +342,7 @@ export function ProfileSettings() {
                         type="password"
                         placeholder="Enter new password"
                         {...field}
-                        className="bg-black/20 border-border text-text placeholder:text-text-dim"
+                        className="bg-black/20 border-border text-foreground placeholder:text-muted-foreground"
                       />
                     </FormControl>
                     <FormMessage />
@@ -355,7 +355,7 @@ export function ProfileSettings() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-text-muted">
+                    <FormLabel className="text-muted-foreground">
                       Confirm New Password
                     </FormLabel>
                     <FormControl>
@@ -363,7 +363,7 @@ export function ProfileSettings() {
                         type="password"
                         placeholder="Confirm new password"
                         {...field}
-                        className="bg-black/20 border-border text-text placeholder:text-text-dim"
+                        className="bg-black/20 border-border text-foreground placeholder:text-muted-foreground"
                       />
                     </FormControl>
                     <FormMessage />
@@ -375,7 +375,7 @@ export function ProfileSettings() {
                 <Button
                   type="submit"
                   disabled={changePassword.isPending}
-                  className="bg-orange hover:bg-orange/90 text-white"
+                  className="bg-primary hover:bg-primary/90 text-white"
                 >
                   {changePassword.isPending ? (
                     <>

@@ -33,11 +33,11 @@ export function NotificationList({
   if (notifications.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <Bell className="h-12 w-12 text-text-dim" />
-        <h3 className="mt-4 text-lg font-semibold text-text">
+        <Bell className="h-12 w-12 text-muted-foreground" />
+        <h3 className="mt-4 text-lg font-semibold text-foreground">
           No notifications
         </h3>
-        <p className="mt-1 text-sm text-text-muted">
+        <p className="mt-1 text-sm text-muted-foreground">
           You&apos;re all caught up! We&apos;ll notify you when something new
           arrives.
         </p>
@@ -54,14 +54,14 @@ export function NotificationList({
           className={cn(
             "group flex items-start gap-4 p-4 rounded-xl border transition-colors cursor-pointer",
             n.read
-              ? "border-transparent bg-surface/50"
-              : "border-orange/20 bg-orange/5",
+              ? "border-transparent bg-card/50"
+              : "border-primary/20 bg-primary/5",
           )}
         >
           <div
             className={cn(
               "mt-1 p-2 rounded-full shrink-0",
-              n.read ? "bg-surface-2" : "bg-orange/20 text-orange",
+              n.read ? "bg-muted" : "bg-primary/20 text-primary",
             )}
           >
             <Bell className="h-4 w-4" />
@@ -70,15 +70,15 @@ export function NotificationList({
             <h4
               className={cn(
                 "text-sm font-semibold",
-                n.read ? "text-text-muted" : "text-text",
+                n.read ? "text-muted-foreground" : "text-foreground",
               )}
             >
               {n.title}
             </h4>
-            <p className="mt-0.5 text-xs text-text-muted truncate">
+            <p className="mt-0.5 text-xs text-muted-foreground truncate">
               {n.message}
             </p>
-            <p className="text-xs text-text-dim mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
             </p>
           </div>
@@ -88,7 +88,7 @@ export function NotificationList({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 text-text-muted hover:text-green-500"
+                className="h-7 w-7 text-muted-foreground hover:text-green-500"
                 onClick={(e) => {
                   e.stopPropagation();
                   onMarkAsRead(n._id);
@@ -102,7 +102,7 @@ export function NotificationList({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 text-text-muted hover:text-red-500"
+                className="h-7 w-7 text-muted-foreground hover:text-destructive"
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete(n._id);
@@ -115,7 +115,7 @@ export function NotificationList({
           </div>
 
           {!n.read && (
-            <div className="h-2 w-2 rounded-full bg-orange mt-2 shrink-0" />
+            <div className="h-2 w-2 rounded-full bg-primary mt-2 shrink-0" />
           )}
         </div>
       ))}

@@ -15,6 +15,7 @@ import {
   CHART_TOOLTIP_STYLE,
   CHART_AXIS_PROPS,
   CHART_GRID_PROPS,
+  CHART_PALETTE,
 } from "@/lib/chart-theme";
 import type { AdminAnalytics } from "@/services/analytics.service";
 
@@ -35,6 +36,9 @@ export function UserGrowthChart({
     vendors: p.vendors,
   }));
 
+  const customerColor = CHART_PALETTE[1];
+  const vendorColor = CHART_PALETTE[2];
+
   return (
     <ChartCard
       title="User Growth"
@@ -47,12 +51,12 @@ export function UserGrowthChart({
             <AreaChart data={data}>
               <defs>
                 <linearGradient id="colorCustomers" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                  <stop offset="5%" stopColor={customerColor} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={customerColor} stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="colorVendors" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
+                  <stop offset="5%" stopColor={vendorColor} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={vendorColor} stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis dataKey="name" {...CHART_AXIS_PROPS} />
@@ -62,7 +66,7 @@ export function UserGrowthChart({
               <Area
                 type="monotone"
                 dataKey="customers"
-                stroke="#22c55e"
+                stroke={customerColor}
                 strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#colorCustomers)"
@@ -70,7 +74,7 @@ export function UserGrowthChart({
               <Area
                 type="monotone"
                 dataKey="vendors"
-                stroke="#a855f7"
+                stroke={vendorColor}
                 strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#colorVendors)"
@@ -80,12 +84,12 @@ export function UserGrowthChart({
         </div>
         <div className="flex items-center justify-center gap-6 mt-3">
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-green-500" />
-            <span className="text-xs text-text-muted">Customers</span>
+            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: customerColor }} />
+            <span className="text-xs text-muted-foreground">Customers</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-purple-500" />
-            <span className="text-xs text-text-muted">Vendors</span>
+            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: vendorColor }} />
+            <span className="text-xs text-muted-foreground">Vendors</span>
           </div>
         </div>
       </div>

@@ -1,6 +1,3 @@
-"use client";
-
-import { Reveal } from "./Reveal";
 import { cn } from "@/lib/utils";
 import { Zap, CreditCard, MapPin, Star, Search } from "lucide-react";
 
@@ -37,28 +34,27 @@ export function Features() {
   return (
     <section id="features" className="px-6 py-20 border-y border-border/40 bg-muted/30 md:px-12">
       <div className="w-full max-w-7xl mx-auto">
-        <Reveal>
+        <div data-reveal="fade-up">
           <div className="mb-4 text-[10px] font-bold tracking-widest text-primary uppercase">
             — Core Features
           </div>
           <h2 className="mb-12 text-2xl md:text-4xl font-bold tracking-tight text-foreground">
             Engineered for performance
           </h2>
-        </Reveal>
+        </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {features.map((feature, index) => (
-            <Reveal
+            <div
               key={index}
-              delay={index * 0.08}
+              data-reveal="fade-up"
+              style={{ "--reveal-delay": `${index * 0.06}s` } as React.CSSProperties}
               className={cn(
-                "relative p-8 overflow-hidden transition-all duration-300 border border-border rounded-xl bg-card hover:border-primary/20 hover:-translate-y-0.5 shadow-sm hover:shadow group",
+                "relative p-8 border border-border rounded-xl bg-card",
                 feature.large && "md:col-span-2"
               )}
             >
-              <div className="absolute inset-x-0 top-0 h-px transition-opacity opacity-0 bg-gradient-to-r from-transparent via-primary to-transparent group-hover:opacity-100" />
-              
-              <div className="flex items-center justify-center w-10 h-10 mb-6 border border-border rounded-lg bg-muted shadow-inner">
+              <div className="flex items-center justify-center w-10 h-10 mb-6 border border-border rounded-lg bg-muted">
                 {feature.icon}
               </div>
 
@@ -68,7 +64,7 @@ export function Features() {
               <p className="text-xs leading-relaxed text-muted-foreground">
                 {feature.desc}
               </p>
-            </Reveal>
+            </div>
           ))}
         </div>
       </div>

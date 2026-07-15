@@ -33,13 +33,13 @@ const STATUS_META: Record<
     color: "text-purple-500",
     bg: "bg-purple-500/10",
   },
-  out_for_delivery: { icon: Truck, color: "text-orange", bg: "bg-orange/10" },
+  out_for_delivery: { icon: Truck, color: "text-primary", bg: "bg-primary/10" },
   delivered: {
     icon: CheckCircle2,
     color: "text-green-500",
     bg: "bg-green-500/10",
   },
-  cancelled: { icon: XCircle, color: "text-red-500", bg: "bg-red-500/10" },
+  cancelled: { icon: XCircle, color: "text-destructive", bg: "bg-destructive/10" },
 };
 
 function getCustomerName(customerId: string | OrderCustomer): string {
@@ -61,7 +61,7 @@ export function ActivityFeed() {
 
   if (isLoading) {
     return (
-      <Card className="col-span-4 border-border bg-surface md:col-span-1">
+      <Card className="col-span-4 border-border bg-card md:col-span-1">
         <CardHeader>
           <Skeleton className="h-5 w-28" />
         </CardHeader>
@@ -83,21 +83,21 @@ export function ActivityFeed() {
   }
 
   return (
-    <Card className="col-span-4 border-border bg-surface md:col-span-1">
+    <Card className="col-span-4 border-border bg-card md:col-span-1">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-base font-bold text-text">
+        <CardTitle className="text-base font-bold text-foreground">
           Recent Orders
         </CardTitle>
         <Link
           href="/orders"
-          className="flex items-center text-xs font-semibold text-orange hover:opacity-80 transition-opacity"
+          className="flex items-center text-xs font-semibold text-primary hover:opacity-80 transition-opacity"
         >
           View All <ArrowRight className="ml-1 h-3 w-3" />
         </Link>
       </CardHeader>
       <CardContent>
         {recentOrders.length === 0 ? (
-          <p className="text-sm text-text-muted py-8 text-center">
+          <p className="text-sm text-muted-foreground py-8 text-center">
             No orders yet
           </p>
         ) : (
@@ -120,7 +120,7 @@ export function ActivityFeed() {
                     <Icon className={cn("h-4 w-4", meta.color)} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-text leading-snug truncate group-hover:text-orange transition-colors">
+                    <p className="text-sm text-foreground leading-snug truncate group-hover:text-primary transition-colors">
                       <span className="font-semibold">
                         #{order.orderNumber}
                       </span>{" "}
@@ -130,12 +130,12 @@ export function ActivityFeed() {
                       <span className={cn("text-xs font-medium", meta.color)}>
                         {formatStatusLabel(order.status)}
                       </span>
-                      <span className="text-text-dim text-xs">·</span>
-                      <span className="text-xs text-text-muted font-mono">
+                      <span className="text-muted-foreground text-xs">·</span>
+                      <span className="text-xs text-muted-foreground font-mono">
                         {formatCurrency(order.total)}
                       </span>
-                      <span className="text-text-dim text-xs">·</span>
-                      <span className="text-xs text-text-muted font-mono">
+                      <span className="text-muted-foreground text-xs">·</span>
+                      <span className="text-xs text-muted-foreground font-mono">
                         {timeAgo(order.createdAt)}
                       </span>
                     </div>

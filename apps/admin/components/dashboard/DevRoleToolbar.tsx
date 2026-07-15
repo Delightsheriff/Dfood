@@ -23,7 +23,7 @@ export function DevRoleToolbar() {
       value: "super_admin",
       label: "Super Admin",
       icon: <Shield className="w-4 h-4" />,
-      color: "text-red-400 border-red-500/20 bg-red-500/5",
+      color: "text-destructive border-red-500/20 bg-destructive/5",
     },
     {
       value: "manager",
@@ -41,7 +41,7 @@ export function DevRoleToolbar() {
       value: "restaurant_admin",
       label: "Restaurant Admin",
       icon: <User className="w-4 h-4" />,
-      color: "text-orange-400 border-orange-500/20 bg-orange-500/5",
+      color: "text-primary-400 border-primary-500/20 bg-primary-500/5",
     },
     {
       value: "content_manager",
@@ -77,16 +77,16 @@ export function DevRoleToolbar() {
                 }}
                 className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium border transition-all duration-200 ${
                   role === r.value
-                    ? "border-orange text-orange bg-orange/5"
+                    ? "border-primary text-primary bg-primary/5"
                     : "border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-white/5"
                 }`}
               >
-                <span className={role === r.value ? "text-orange" : "text-zinc-500"}>
+                <span className={role === r.value ? "text-primary" : "text-zinc-500"}>
                   {r.icon}
                 </span>
                 <span className="flex-1 text-left">{r.label}</span>
                 {role === r.value && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-orange animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                 )}
               </button>
             ))}

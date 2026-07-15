@@ -66,7 +66,7 @@ function getStatusColor(status: string) {
     case "delivered":
       return "bg-green-500/10 text-green-500";
     case "cancelled":
-      return "bg-red-500/10 text-red-500";
+      return "bg-destructive/10 text-destructive";
     default:
       return "bg-gray-500/10 text-gray-400";
   }
@@ -85,7 +85,7 @@ function getStatusDotColor(status: string) {
     case "delivered":
       return "bg-green-500";
     case "cancelled":
-      return "bg-red-500";
+      return "bg-destructive";
     default:
       return "bg-gray-400";
   }
@@ -98,7 +98,7 @@ function getPaymentStatusColor(status: string) {
     case "pending":
       return "bg-yellow-500/10 text-yellow-500";
     case "failed":
-      return "bg-red-500/10 text-red-500";
+      return "bg-destructive/10 text-destructive";
     case "refunded":
       return "bg-blue-500/10 text-blue-500";
     default:
@@ -182,13 +182,13 @@ export default function OrderDetailPage({
     return (
       <PageShell title="Order Details">
         <div className="flex flex-col items-center justify-center py-24">
-          <div className="rounded-full bg-red-500/10 p-4 mb-4">
-            <Package className="h-8 w-8 text-red-500" />
+          <div className="rounded-full bg-destructive/10 p-4 mb-4">
+            <Package className="h-8 w-8 text-destructive" />
           </div>
-          <p className="text-lg font-semibold text-text mb-1">
+          <p className="text-lg font-semibold text-foreground mb-1">
             Order not found
           </p>
-          <p className="text-sm text-text-muted mb-6">
+          <p className="text-sm text-muted-foreground mb-6">
             This order may have been removed or you don&apos;t have access.
           </p>
           <Button
@@ -233,7 +233,7 @@ export default function OrderDetailPage({
       action={
         <Button
           variant="outline"
-          className="border-border text-text-muted hover:text-text"
+          className="border-border text-muted-foreground hover:text-foreground"
           onClick={() => router.push("/orders")}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -242,11 +242,11 @@ export default function OrderDetailPage({
       }
     >
       {/* ── Status Progress ───────────────────────────────────────── */}
-      <Card className="border-border bg-surface">
+      <Card className="border-border bg-card">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-3">
-              <CardTitle className="text-lg text-text">Order Status</CardTitle>
+              <CardTitle className="text-lg text-foreground">Order Status</CardTitle>
               <Badge
                 variant="secondary"
                 className={cn(
@@ -267,14 +267,14 @@ export default function OrderDetailPage({
             {/* Status update (vendor only) */}
             {isVendor && allowedStatuses.length > 0 && (
               <div className="flex items-center gap-2">
-                <span className="text-xs text-text-muted">Move to:</span>
+                <span className="text-xs text-muted-foreground">Move to:</span>
                 <Select
                   onValueChange={(v) =>
                     handleStatusChange(v as Order["status"])
                   }
                   disabled={updatingStatus}
                 >
-                  <SelectTrigger className="h-9 text-sm bg-surface-2 border-border/60 w-44">
+                  <SelectTrigger className="h-9 text-sm bg-muted border-border/60 w-44">
                     {updatingStatus ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     ) : (
@@ -310,9 +310,9 @@ export default function OrderDetailPage({
                         className={cn(
                           "h-8 w-8 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors",
                           isCompleted
-                            ? "bg-orange text-white"
-                            : "bg-surface-2 text-text-muted",
-                          isCurrent && "ring-2 ring-orange/30",
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground",
+                          isCurrent && "ring-2 ring-primary/30",
                         )}
                       >
                         {i + 1}
@@ -320,7 +320,7 @@ export default function OrderDetailPage({
                       <span
                         className={cn(
                           "text-[10px] font-medium text-center whitespace-nowrap",
-                          isCompleted ? "text-orange" : "text-text-muted",
+                          isCompleted ? "text-primary" : "text-muted-foreground",
                         )}
                       >
                         {formatStatusLabel(step)}
@@ -330,7 +330,7 @@ export default function OrderDetailPage({
                       <div
                         className={cn(
                           "flex-1 h-0.5 mx-1 rounded-full -mt-4.5",
-                          currentStepIdx > i ? "bg-orange" : "bg-surface-2",
+                          currentStepIdx > i ? "bg-primary" : "bg-muted",
                         )}
                       />
                     )}
@@ -339,7 +339,7 @@ export default function OrderDetailPage({
               })}
             </div>
           ) : (
-            <p className="text-sm text-red-400">
+            <p className="text-sm text-destructive">
               This order has been cancelled.
             </p>
           )}
@@ -351,10 +351,10 @@ export default function OrderDetailPage({
         {/* Left column: Items + Payment */}
         <div className="lg:col-span-2 space-y-6">
           {/* Order Items */}
-          <Card className="border-border bg-surface">
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-base text-text flex items-center gap-2">
-                <Package className="h-4 w-4 text-text-muted" />
+              <CardTitle className="text-base text-foreground flex items-center gap-2">
+                <Package className="h-4 w-4 text-muted-foreground" />
                 Items ({order.items.length})
               </CardTitle>
             </CardHeader>
@@ -366,7 +366,7 @@ export default function OrderDetailPage({
                     className="flex items-center gap-4 px-6 py-4"
                   >
                     {/* Item image */}
-                    <div className="relative h-14 w-14 rounded-lg overflow-hidden bg-surface-2 shrink-0">
+                    <div className="relative h-14 w-14 rounded-lg overflow-hidden bg-muted shrink-0">
                       {item.image ? (
                         <Image
                           src={item.image}
@@ -377,23 +377,23 @@ export default function OrderDetailPage({
                         />
                       ) : (
                         <div className="h-full w-full flex items-center justify-center">
-                          <Package className="h-5 w-5 text-text-muted" />
+                          <Package className="h-5 w-5 text-muted-foreground" />
                         </div>
                       )}
                     </div>
 
                     {/* Item info */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-text truncate">
+                      <p className="text-sm font-medium text-foreground truncate">
                         {item.name}
                       </p>
-                      <p className="text-xs text-text-muted mt-0.5">
+                      <p className="text-xs text-muted-foreground mt-0.5">
                         {formatCurrency(item.price)} × {item.quantity}
                       </p>
                     </div>
 
                     {/* Subtotal */}
-                    <span className="font-mono text-sm font-semibold text-text tabular-nums">
+                    <span className="font-mono text-sm font-semibold text-foreground tabular-nums">
                       {formatCurrency(item.subtotal)}
                     </span>
                   </div>
@@ -403,21 +403,21 @@ export default function OrderDetailPage({
               {/* Totals */}
               <div className="border-t border-border/40 px-6 py-4 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-text-muted">Subtotal</span>
-                  <span className="font-mono text-text tabular-nums">
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="font-mono text-foreground tabular-nums">
                     {formatCurrency(order.subtotal)}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-text-muted">Delivery Fee</span>
-                  <span className="font-mono text-text tabular-nums">
+                  <span className="text-muted-foreground">Delivery Fee</span>
+                  <span className="font-mono text-foreground tabular-nums">
                     {formatCurrency(order.deliveryFee)}
                   </span>
                 </div>
                 <Separator className="bg-border/40" />
                 <div className="flex justify-between text-base font-bold">
-                  <span className="text-text">Total</span>
-                  <span className="font-mono text-orange tabular-nums">
+                  <span className="text-foreground">Total</span>
+                  <span className="font-mono text-primary tabular-nums">
                     {formatCurrency(order.total)}
                   </span>
                 </div>
@@ -426,10 +426,10 @@ export default function OrderDetailPage({
           </Card>
 
           {/* Payment Info */}
-          <Card className="border-border bg-surface">
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-base text-text flex items-center gap-2">
-                <CreditCard className="h-4 w-4 text-text-muted" />
+              <CardTitle className="text-base text-foreground flex items-center gap-2">
+                <CreditCard className="h-4 w-4 text-muted-foreground" />
                 Payment
               </CardTitle>
             </CardHeader>
@@ -471,10 +471,10 @@ export default function OrderDetailPage({
         {/* Right column: Customer, Restaurant, Delivery, Notes, Timestamps */}
         <div className="space-y-6">
           {/* Customer */}
-          <Card className="border-border bg-surface">
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-base text-text flex items-center gap-2">
-                <User className="h-4 w-4 text-text-muted" />
+              <CardTitle className="text-base text-foreground flex items-center gap-2">
+                <User className="h-4 w-4 text-muted-foreground" />
                 Customer
               </CardTitle>
             </CardHeader>
@@ -491,10 +491,10 @@ export default function OrderDetailPage({
 
           {/* Restaurant */}
           {!isVendor && (
-            <Card className="border-border bg-surface">
+            <Card className="border-border bg-card">
               <CardHeader>
-                <CardTitle className="text-base text-text flex items-center gap-2">
-                  <Store className="h-4 w-4 text-text-muted" />
+                <CardTitle className="text-base text-foreground flex items-center gap-2">
+                  <Store className="h-4 w-4 text-muted-foreground" />
                   Restaurant
                 </CardTitle>
               </CardHeader>
@@ -508,18 +508,18 @@ export default function OrderDetailPage({
           )}
 
           {/* Delivery Address */}
-          <Card className="border-border bg-surface">
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-base text-text flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-text-muted" />
+              <CardTitle className="text-base text-foreground flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
                 Delivery Address
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-text">
+              <p className="text-sm text-foreground">
                 {order.deliveryAddress.street}
               </p>
-              <p className="text-sm text-text-muted mt-0.5">
+              <p className="text-sm text-muted-foreground mt-0.5">
                 {order.deliveryAddress.city}, {order.deliveryAddress.state}
               </p>
             </CardContent>
@@ -527,15 +527,15 @@ export default function OrderDetailPage({
 
           {/* Customer Notes */}
           {order.customerNotes && (
-            <Card className="border-border bg-surface">
+            <Card className="border-border bg-card">
               <CardHeader>
-                <CardTitle className="text-base text-text flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-text-muted" />
+                <CardTitle className="text-base text-foreground flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-muted-foreground" />
                   Customer Notes
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-text-muted italic">
+                <p className="text-sm text-muted-foreground italic">
                   &ldquo;{order.customerNotes}&rdquo;
                 </p>
               </CardContent>
@@ -543,10 +543,10 @@ export default function OrderDetailPage({
           )}
 
           {/* Timestamps */}
-          <Card className="border-border bg-surface">
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-base text-text flex items-center gap-2">
-                <Clock className="h-4 w-4 text-text-muted" />
+              <CardTitle className="text-base text-foreground flex items-center gap-2">
+                <Clock className="h-4 w-4 text-muted-foreground" />
                 Timeline
               </CardTitle>
             </CardHeader>
@@ -572,10 +572,10 @@ function InfoField({
 }) {
   return (
     <div>
-      <p className="text-[11px] uppercase tracking-wider text-text-muted font-semibold mb-1">
+      <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold mb-1">
         {label}
       </p>
-      <div className="text-sm text-text">{value}</div>
+      <div className="text-sm text-foreground">{value}</div>
     </div>
   );
 }
@@ -584,7 +584,7 @@ function OrderDetailSkeleton() {
   return (
     <div className="space-y-6">
       {/* Status card */}
-      <Card className="border-border bg-surface">
+      <Card className="border-border bg-card">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -606,7 +606,7 @@ function OrderDetailSkeleton() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
-          <Card className="border-border bg-surface">
+          <Card className="border-border bg-card">
             <CardContent className="p-6 space-y-4">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="flex items-center gap-4">
@@ -623,7 +623,7 @@ function OrderDetailSkeleton() {
         </div>
         <div className="space-y-6">
           {[...Array(3)].map((_, i) => (
-            <Card key={i} className="border-border bg-surface">
+            <Card key={i} className="border-border bg-card">
               <CardContent className="p-6 space-y-3">
                 <Skeleton className="h-4 w-24" />
                 <Skeleton className="h-4 w-36" />

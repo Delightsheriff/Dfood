@@ -28,7 +28,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Link from "next/link";
-import { BRAND_ORANGE, CHART_AXIS_PROPS, CHART_GRID_PROPS, CHART_TOOLTIP_STYLE } from "@/lib/chart-theme";
+import { BRAND_ORANGE, CHART_AXIS_PROPS, CHART_GRID_PROPS, CHART_TOOLTIP_STYLE, CHART_PALETTE } from "@/lib/chart-theme";
 
 export function PlatformDashboard() {
   const { data: analytics, isLoading: analyticsLoading } = useAnalytics({
@@ -202,8 +202,8 @@ export function PlatformDashboard() {
               <YAxis {...CHART_AXIS_PROPS} />
               <CartesianGrid {...CHART_GRID_PROPS} />
               <Tooltip {...CHART_TOOLTIP_STYLE} />
-              <Area type="monotone" dataKey="Customers" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.03} strokeWidth={2} />
-              <Area type="monotone" dataKey="Vendors" stroke="#10b981" fill="#10b981" fillOpacity={0.03} strokeWidth={2} />
+              <Area type="monotone" dataKey="Customers" stroke={CHART_PALETTE[1]} fill={CHART_PALETTE[1]} fillOpacity={0.03} strokeWidth={2} />
+              <Area type="monotone" dataKey="Vendors" stroke={CHART_PALETTE[2]} fill={CHART_PALETTE[2]} fillOpacity={0.03} strokeWidth={2} />
             </AreaChart>
           </ResponsiveContainer>
         </ChartCard>

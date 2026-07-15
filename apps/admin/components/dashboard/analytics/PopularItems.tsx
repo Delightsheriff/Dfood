@@ -29,7 +29,7 @@ export function PopularItems({ items, isLoading }: PopularItemsProps) {
         {items.map((item, idx) => (
           <div key={idx}>
             <div className="flex items-center justify-between mb-1">
-              <span className="text-sm text-text truncate max-w-[60%]">
+              <span className="text-sm text-foreground truncate max-w-[60%]">
                 {item.name}
               </span>
               <div className="flex items-center gap-3 text-xs">
@@ -39,14 +39,14 @@ export function PopularItems({ items, isLoading }: PopularItemsProps) {
                 >
                   {item.orders} orders
                 </Badge>
-                <span className="text-text-muted font-mono">
+                <span className="text-muted-foreground font-mono">
                   {formatCurrency(item.revenue)}
                 </span>
               </div>
             </div>
-            <div className="h-1.5 rounded-full bg-surface-2 overflow-hidden">
+            <div className="h-1.5 rounded-full bg-muted overflow-hidden">
               <div
-                className="h-full rounded-full bg-orange transition-all duration-500"
+                className="h-full rounded-full bg-primary transition-all duration-500"
                 style={{
                   width: `${(item.orders / maxOrders) * 100}%`,
                 }}

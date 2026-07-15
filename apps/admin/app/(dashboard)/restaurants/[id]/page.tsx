@@ -32,7 +32,7 @@ export default function RestaurantDetailPage() {
       action={
         <Button
           variant="ghost"
-          className="text-text-muted hover:text-text"
+          className="text-muted-foreground hover:text-foreground"
           onClick={() => router.push("/restaurants")}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />

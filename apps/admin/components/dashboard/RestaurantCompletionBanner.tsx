@@ -29,10 +29,10 @@ export function RestaurantCompletionBanner() {
   if (missingCount === 0) return null;
 
   return (
-    <div className="relative bg-orange/10 border border-orange/30 rounded-lg p-4 mb-6">
+    <div className="relative bg-primary/10 border border-primary/30 rounded-lg p-4 mb-6">
       <button
         onClick={() => setDismissed(true)}
-        className="absolute top-3 right-3 text-orange/60 hover:text-orange transition-colors"
+        className="absolute top-3 right-3 text-primary/60 hover:text-primary transition-colors"
         aria-label="Dismiss"
       >
         <X className="h-4 w-4" />
@@ -40,16 +40,16 @@ export function RestaurantCompletionBanner() {
 
       <div className="flex items-start gap-3 pr-8">
         <div className="shrink-0 mt-0.5">
-          <div className="w-8 h-8 rounded-full bg-orange/20 flex items-center justify-center">
-            <AlertCircle className="h-4 w-4 text-orange" />
+          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+            <AlertCircle className="h-4 w-4 text-primary" />
           </div>
         </div>
 
         <div className="flex-1">
-          <h3 className="text-sm font-semibold text-orange mb-1">
+          <h3 className="text-sm font-semibold text-primary mb-1">
             Complete Your Restaurant Profile
           </h3>
-          <p className="text-sm text-text-muted mb-3">
+          <p className="text-sm text-muted-foreground mb-3">
             You&apos;re missing {missingCount}{" "}
             {missingCount === 1 ? "field" : "fields"}. Complete your profile to
             start receiving orders and appear in customer searches.
@@ -60,13 +60,13 @@ export function RestaurantCompletionBanner() {
               {missingFields.slice(0, 3).map((field) => (
                 <span
                   key={field}
-                  className="inline-flex items-center px-2 py-1 rounded-md bg-orange/10 border border-orange/20 text-xs text-orange font-medium"
+                  className="inline-flex items-center px-2 py-1 rounded-md bg-primary/10 border border-primary/20 text-xs text-primary font-medium"
                 >
                   {formatFieldName(field)}
                 </span>
               ))}
               {missingFields.length > 3 && (
-                <span className="inline-flex items-center px-2 py-1 rounded-md bg-orange/10 border border-orange/20 text-xs text-orange font-medium">
+                <span className="inline-flex items-center px-2 py-1 rounded-md bg-primary/10 border border-primary/20 text-xs text-primary font-medium">
                   +{missingFields.length - 3} more
                 </span>
               )}
@@ -75,7 +75,7 @@ export function RestaurantCompletionBanner() {
 
           <Link
             href="/settings"
-            className="inline-flex items-center gap-1 text-sm font-semibold text-orange hover:text-orange/80 transition-colors"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
           >
             Complete Profile
             <ChevronRight className="h-4 w-4" />

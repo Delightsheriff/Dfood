@@ -55,14 +55,14 @@ export function RestaurantList() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-100">
-        <Loader2 className="h-8 w-8 animate-spin text-orange" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="text-center py-12 text-red-500">
+      <div className="text-center py-12 text-destructive">
         Failed to load restaurants. Please try again later.
       </div>
     );
@@ -72,10 +72,10 @@ export function RestaurantList() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="relative w-64">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-text-muted" />
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search restaurants..."
-            className="pl-8 bg-surface border-border"
+            className="pl-8 bg-card border-border"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -83,10 +83,10 @@ export function RestaurantList() {
         {/* Future: Add filters here */}
       </div>
 
-      <Card className="bg-surface border-border">
+      <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-xl text-text">All Restaurants</CardTitle>
-          <CardDescription className="text-text-muted">
+          <CardTitle className="text-xl text-foreground">All Restaurants</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Manage and view all registered restaurants.
           </CardDescription>
         </CardHeader>
@@ -94,7 +94,7 @@ export function RestaurantList() {
           <div className="rounded-md border border-border">
             <Table>
               <TableHeader>
-                <TableRow className="border-border hover:bg-surface-hover">
+                <TableRow className="border-border hover:bg-card-hover">
                   <TableHead className="w-20">Image</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Status</TableHead>
@@ -107,14 +107,14 @@ export function RestaurantList() {
                   <TableRow>
                     <TableCell colSpan={5} className="h-64 text-center">
                       <div className="flex flex-col items-center justify-center space-y-3">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-hover">
-                          <Store className="h-6 w-6 text-text-muted" />
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-card-hover">
+                          <Store className="h-6 w-6 text-muted-foreground" />
                         </div>
                         <div className="space-y-1">
-                          <p className="font-medium text-text">
+                          <p className="font-medium text-foreground">
                             No restaurants found
                           </p>
-                          <p className="text-sm text-text-muted">
+                          <p className="text-sm text-muted-foreground">
                             {searchTerm
                               ? "Try adjusting your search terms"
                               : "No restaurants have been registered yet"}
@@ -127,7 +127,7 @@ export function RestaurantList() {
                   filteredRestaurants.map((restaurant) => (
                     <TableRow
                       key={restaurant._id}
-                      className="border-border hover:bg-surface-hover"
+                      className="border-border hover:bg-card-hover"
                     >
                       <TableCell>
                         <div className="relative h-10 w-10 rounded-md overflow-hidden bg-background">
@@ -147,10 +147,10 @@ export function RestaurantList() {
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col">
-                          <span className="font-medium text-text">
+                          <span className="font-medium text-foreground">
                             {restaurant.name}
                           </span>
-                          <span className="flex items-center text-xs text-text-muted">
+                          <span className="flex items-center text-xs text-muted-foreground">
                             <MapPin className="mr-1 h-3 w-3" />
                             {restaurant.address || "No address"}
                           </span>
@@ -173,10 +173,10 @@ export function RestaurantList() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center text-text">
+                        <div className="flex items-center text-foreground">
                           <Star className="mr-1 h-4 w-4 fill-yellow-400 text-yellow-400" />
                           <span>{restaurant.rating.toFixed(1)}</span>
-                          <span className="ml-1 text-xs text-text-muted">
+                          <span className="ml-1 text-xs text-muted-foreground">
                             ({restaurant.totalReviews})
                           </span>
                         </div>
@@ -207,7 +207,7 @@ export function RestaurantList() {
                             >
                               View Details
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-500 focus:text-red-500">
+                            <DropdownMenuItem className="text-destructive focus:text-destructive">
                               Delete
                             </DropdownMenuItem>
                           </DropdownMenuContent>

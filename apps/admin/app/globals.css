@@ -169,8 +169,96 @@ html {
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   html {
     @apply font-sans;
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+  .focus-ring-light {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black;
+  }
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-primary focus:text-primary-foreground focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:font-semibold focus:text-sm;
+  }
+  .ink-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .ink-underline:hover,
+  .ink-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* ── CSS-only reveal animations (JS-free scroll reveals, respects reduced-motion) ── */
+@keyframes reveal-fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes reveal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+[data-reveal="fade-up"],
+[data-reveal="stagger-item"] {
+  animation: reveal-fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+[data-reveal="fade-in"] {
+  animation: reveal-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--reveal-delay, 0s);
+  will-change: opacity;
+}
+
+/* ── Hero entrance (fires on mount, no JS) ── */
+@keyframes hero-blur-in {
+  from { opacity: 0; filter: blur(12px); transform: translateY(8px); }
+  to   { opacity: 1; filter: blur(0);    transform: none; }
+}
+.hero-line-1 { display: block; animation: hero-blur-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both 0.05s; }
+.hero-line-2 { display: block; animation: hero-blur-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both 0.18s; }
+.hero-line-3 { display: block; animation: hero-blur-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both 0.30s; }
+.hero-fade-in { animation: reveal-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both 0.35s; }
+
+/* ── Auth card entrance ── */
+@keyframes auth-card-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+.auth-card {
+  animation: auth-card-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── prefers-reduced-motion ── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  [data-reveal] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero-line-1, .hero-line-2, .hero-line-3, .hero-fade-in, .auth-card {
+    animation: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
   }
 }

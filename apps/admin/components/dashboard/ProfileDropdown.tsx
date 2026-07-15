@@ -32,7 +32,7 @@ export function ProfileDropdown({ children }: { children?: React.ReactNode }) {
           <Button variant="ghost" className="relative h-9 w-9 rounded-full">
             <Avatar className="h-9 w-9 border border-border">
               <AvatarImage src={user?.image || ""} alt={user?.name || "User"} />
-              <AvatarFallback className="bg-orange/10 font-bold text-orange">
+              <AvatarFallback className="bg-primary/10 font-bold text-primary">
                 {userInitials}
               </AvatarFallback>
             </Avatar>
@@ -40,7 +40,7 @@ export function ProfileDropdown({ children }: { children?: React.ReactNode }) {
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="glass w-56 border-border text-text"
+        className="glass w-56 border-border text-foreground"
         align="end"
         forceMount
       >
@@ -58,7 +58,7 @@ export function ProfileDropdown({ children }: { children?: React.ReactNode }) {
         <DropdownMenuItem asChild>
           <Link
             href="/settings"
-            className="cursor-pointer focus:bg-surface-2 focus:text-text"
+            className="cursor-pointer focus:bg-muted focus:text-foreground"
           >
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
@@ -67,7 +67,7 @@ export function ProfileDropdown({ children }: { children?: React.ReactNode }) {
         <DropdownMenuSeparator className="bg-border" />
         <DropdownMenuItem
           onClick={() => signOut({ callbackUrl: "/login" })}
-          className="cursor-pointer text-red-500 hover:bg-red-500/10 hover:text-red-500 focus:bg-red-500/10 focus:text-red-500"
+          className="cursor-pointer text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive"
         >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>

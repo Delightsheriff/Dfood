@@ -33,13 +33,13 @@ export function Header() {
       .toUpperCase() || "U";
 
   return (
-    <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-border bg-surface px-4 shadow-sm">
+    <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-border bg-card px-4 shadow-sm">
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"
           size="icon"
           onClick={toggleSidebar}
-          className="lg:hidden text-text hover:bg-surface-2"
+          className="lg:hidden text-foreground hover:bg-muted"
         >
           <Menu className="h-6 w-6" />
         </Button>
@@ -50,7 +50,7 @@ export function Header() {
           variant="ghost"
           size="icon"
           onClick={() => setIsSearchOpen(true)}
-          className="text-text hover:bg-surface-2"
+          className="text-foreground hover:bg-muted"
         >
           <Search className="h-5 w-5" />
         </Button>
@@ -62,30 +62,30 @@ export function Header() {
             <Button variant="ghost" className="relative h-9 w-9 rounded-full">
               <Avatar className="h-9 w-9 border border-border">
                 <AvatarImage src={user?.profileImage} alt={user?.name} />
-                <AvatarFallback className="bg-orange/10 text-orange font-bold">
+                <AvatarFallback className="bg-primary/10 text-primary font-bold">
                   {userInitials}
                 </AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-56 bg-surface border-border"
+            className="w-56 bg-card border-border"
             align="end"
             forceMount
           >
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none text-text">
+                <p className="text-sm font-medium leading-none text-foreground">
                   {user?.name}
                 </p>
-                <p className="text-xs leading-none text-text-muted">
+                <p className="text-xs leading-none text-muted-foreground">
                   {user?.email}
                 </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-border" />
             <DropdownMenuItem
-              className="text-text hover:bg-surface-2 cursor-pointer"
+              className="text-foreground hover:bg-muted cursor-pointer"
               onClick={() => router.push("/settings")}
             >
               <Settings className="mr-2 h-4 w-4" />
@@ -93,7 +93,7 @@ export function Header() {
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border" />
             <DropdownMenuItem
-              className="cursor-pointer text-red-500 hover:bg-red-500/10 hover:text-red-500 focus:bg-red-500/10 focus:text-red-500"
+              className="cursor-pointer text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive"
               onClick={() => signOut({ callbackUrl: "/login" })}
             >
               <LogOut className="mr-2 h-4 w-4" />

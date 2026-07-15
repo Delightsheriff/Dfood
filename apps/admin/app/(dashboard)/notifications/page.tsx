@@ -27,7 +27,7 @@ export default function NotificationsPage() {
           <Button
             variant="ghost"
             size="sm"
-            className="text-sm text-text-muted hover:text-text"
+            className="text-sm text-muted-foreground hover:text-foreground"
             onClick={() => markAllAsRead.mutate()}
             disabled={markAllAsRead.isPending}
           >
@@ -43,7 +43,7 @@ export default function NotificationsPage() {
     >
       {isLoading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-text-muted" />
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
       ) : (
         <NotificationList

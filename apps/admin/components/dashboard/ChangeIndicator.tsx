@@ -11,7 +11,7 @@ interface ChangeIndicatorProps {
 export function ChangeIndicator({ value, suffix = "" }: ChangeIndicatorProps) {
   if (value === 0) {
     return (
-      <span className="inline-flex items-center text-xs text-text-muted">
+      <span className="inline-flex items-center text-xs text-muted-foreground">
         <Minus className="h-3 w-3 mr-0.5" /> 0%{suffix}
       </span>
     );
@@ -24,7 +24,7 @@ export function ChangeIndicator({ value, suffix = "" }: ChangeIndicatorProps) {
     <span
       className={cn(
         "inline-flex items-center text-xs font-semibold",
-        isUp ? "text-green-500" : "text-red-500",
+        isUp ? "text-green-500" : "text-destructive",
       )}
     >
       <Icon className="h-3 w-3 mr-0.5" />

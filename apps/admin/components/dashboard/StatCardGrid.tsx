@@ -32,7 +32,7 @@ export function StatCardGrid({
     return (
       <div className={cn("grid gap-4", getGridCols(skeletonCount), className)}>
         {[...Array(skeletonCount)].map((_, i) => (
-          <Card key={i} className="border-border bg-surface shadow-sm">
+          <Card key={i} className="border-border bg-card shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <Skeleton className="h-4 w-20" />
               <Skeleton className="h-8 w-8 rounded-lg" />

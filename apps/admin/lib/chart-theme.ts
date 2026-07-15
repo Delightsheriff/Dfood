@@ -1,9 +1,5 @@
-/**
- * Shared Recharts theme constants.
- * Keeps chart styling consistent and DRY across all chart components.
- */
+/** Shared Recharts theme constants. Dark-theme optimized. */
 
-/** Standard tooltip style matching the dark design system */
 export const CHART_TOOLTIP_STYLE = {
   contentStyle: {
     backgroundColor: "#1a1a1a",
@@ -14,7 +10,6 @@ export const CHART_TOOLTIP_STYLE = {
   labelStyle: { color: "#999" },
 } as const;
 
-/** Default axis props for XAxis / YAxis */
 export const CHART_AXIS_PROPS = {
   stroke: "#6b6b6b",
   fontSize: 12,
@@ -22,14 +17,13 @@ export const CHART_AXIS_PROPS = {
   axisLine: false,
 } as const;
 
-/** Default CartesianGrid props */
 export const CHART_GRID_PROPS = {
   strokeDasharray: "3 3",
   stroke: "#333",
   vertical: false,
 } as const;
 
-/** Brand / status palette used across charts */
+/** Status-based semantic colors (matches status meaning, not just decoration) */
 export const STATUS_COLORS: Record<string, string> = {
   pending: "#eab308",
   confirmed: "#3b82f6",
@@ -39,5 +33,17 @@ export const STATUS_COLORS: Record<string, string> = {
   cancelled: "#ef4444",
 };
 
-/** Brand orange for primary chart accents */
+/** Brand orange for single-series charts and primary accents */
 export const BRAND_ORANGE = "#ff7622";
+
+/** Multi-series chart palette — visually distinct on dark backgrounds */
+export const CHART_PALETTE = [
+  "#ff7622",
+  "#3b82f6",
+  "#a855f7",
+  "#22c55e",
+  "#eab308",
+  "#06b6d4",
+  "#ec4899",
+  "#8b5cf6",
+];

@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Eye, EyeOff, Loader2, ArrowLeft, UtensilsCrossed } from "lucide-react";
-import CountUp from "@/components/ui/CountUp";
-import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import {
@@ -21,254 +20,156 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { SpotlightCard } from "@/components/ui/custom/SpotlightCard";
-import { ShinyText } from "@/components/ui/custom/ShinyText";
-import { StaggerText } from "@/components/ui/custom/StaggerText";
 
 const formSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
   remember: z.boolean(),
 });
+
+type FormData = z.infer<typeof formSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      remember: false,
-    },
+    defaultValues: { email: "", password: "", remember: false },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(data: FormData) {
     setLoading(true);
-
     try {
       const result = await signIn("credentials", {
-        email: values.email,
-        password: values.password,
+        email: data.email,
+        password: data.password,
         redirect: false,
       });
 
       if (result?.error) {
-        toast.error("Login Failed", {
-          description: "Invalid email or password. Please try again.",
-        });
+        toast.error("Invalid email or password");
       } else {
-        toast.success("Login Successful", {
-          description: "Welcome back!",
-        });
-
+        toast.success("Welcome back!");
         router.push("/dashboard");
         router.refresh();
       }
     } catch {
-      toast.error("An error occurred", {
-        description: "Something went wrong. Please try again.",
-      });
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <main className="min-h-screen bg-background text-foreground flex justify-center items-stretch relative">
-      <Link
-        href="/"
-        className="fixed top-6 right-8 z-50 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-primary transition-all duration-300 bg-background/50 backdrop-blur-md px-3 py-1.5 border border-border rounded-full"
-      >
-        <ArrowLeft className="w-3.5 h-3.5" />
-        Home
-      </Link>
-
-      <div className="w-full max-w-[1400px] grid grid-cols-1 md:grid-cols-[1fr_1.1fr] min-h-screen">
-        {/* LEFT PANEL */}
-        <div className="hidden md:flex relative flex-col justify-between p-16 overflow-hidden border-r border-border bg-muted/20">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,118,34,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,118,34,0.015)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none" />
-          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[radial-gradient(circle,rgba(255,118,34,0.08),transparent_60%)] pointer-events-none" />
-
-          <Link href="/" className="relative z-10 flex items-center gap-2 group">
-            <div className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-              <UtensilsCrossed className="size-4" />
-            </div>
-            <span className="font-bebas text-2xl tracking-[2px] text-foreground">
-              DFOOD
-            </span>
+    <div className="auth-card w-full max-w-sm">
+      <div className="bg-card border border-border/50 rounded-2xl p-8 shadow-sm">
+        <div className="flex flex-col items-center mb-8">
+          <Link href="/" className="mb-6">
+            <img src="/logo.png" alt="DFOOD" className="h-12 w-auto" />
           </Link>
-
-          <div className="relative z-10 max-w-lg">
-            <div className="mb-4 text-[10px] font-bold tracking-widest text-primary uppercase">
-              — Partner Management Portal
-            </div>
-            <h2 className="mb-6 text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] text-foreground">
-              Your store operations <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange">
-                unified.
-              </span>
-            </h2>
-            <p className="mb-10 text-xs leading-relaxed text-muted-foreground">
-              Manage your menus, coordinate incoming order statuses, and track your daily delivery payouts in real-time.
-            </p>
-
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { value: 48, label: "Active partners", suffix: "+", decimals: 0 },
-                { value: 891, label: "Orders this week", suffix: "", decimals: 0 },
-                { value: 4.3, label: "Weekly GMV", prefix: "₦", suffix: "M", decimals: 1 },
-                { value: 4.8, label: "Avg rating", suffix: "★", decimals: 1 },
-              ].map((stat, i) => (
-                <SpotlightCard
-                  key={i}
-                  className="p-5 border border-border/80 bg-card"
-                  spotlightColor="rgba(255, 118, 34, 0.05)"
-                >
-                  <div className="text-2xl font-bold text-primary flex items-center gap-0.5">
-                    {stat.prefix}
-                    <CountUp to={stat.value} duration={2} className="tabular-nums" />
-                    {stat.suffix}
-                  </div>
-                  <div className="mt-1 text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
-                    {stat.label}
-                  </div>
-                </SpotlightCard>
-              ))}
-            </div>
-          </div>
-
-          <div className="relative z-10 text-[10px] font-mono text-muted-foreground">
-            © {new Date().getFullYear()} DFood Network · Operational Portal
-          </div>
+          <h1 className="text-xl font-bold tracking-tight text-foreground text-balance text-center">
+            Sign in
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground text-balance text-center">
+            Don&apos;t have an account?{" "}
+            <Link href="/signup" className="focus-ring font-semibold text-primary hover:underline">
+              Register
+            </Link>
+          </p>
         </div>
 
-        {/* RIGHT PANEL */}
-        <div className="flex flex-col items-center justify-center p-6 md:p-16 bg-background">
-          <div className="w-full max-w-[400px]">
-            <div className="mb-8">
-              <h1 className="mb-2 text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
-                <StaggerText text="Sign In" />
-              </h1>
-              <p className="text-xs text-muted-foreground">
-                Don&apos;t have an account yet?{" "}
-                <Link
-                  href="/signup"
-                  className="font-bold text-primary hover:underline"
-                >
-                  Register partner store →
-                </Link>
-              </p>
-            </div>
-
-            <SpotlightCard className="p-8 border border-border shadow-md bg-card" spotlightColor="rgba(255, 118, 34, 0.04)">
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4"
-                >
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground">
-                          Email Address
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="operator@restaurant.com"
-                            {...field}
-                            className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs"
-                          />
-                        </FormControl>
-                        <FormMessage className="text-[11px] text-red-500 font-normal" />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground">
-                          Password
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              type={showPassword ? "text" : "password"}
-                              placeholder="••••••••"
-                              {...field}
-                              className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs pr-10"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => setShowPassword(!showPassword)}
-                              className="absolute -translate-y-1/2 right-3 top-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                              {showPassword ? (
-                                <EyeOff size={14} />
-                              ) : (
-                                <Eye size={14} />
-                              )}
-                            </button>
-                          </div>
-                        </FormControl>
-                        <FormMessage className="text-[11px] text-red-500 font-normal" />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="flex items-center justify-between pt-1">
-                    <FormField
-                      control={form.control}
-                      name="remember"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center space-x-2 space-y-0">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                              className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                            />
-                          </FormControl>
-                          <FormLabel className="text-xs font-semibold cursor-pointer text-muted-foreground">
-                            Remember session
-                          </FormLabel>
-                        </FormItem>
-                      )}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="you@restaurant.com"
+                      {...field}
                     />
-                    <Link
-                      href="/forgot-password"
-                      className="text-xs font-semibold text-primary hover:underline"
-                    >
-                      Forgot?
-                    </Link>
-                  </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full h-11 text-xs font-bold tracking-wider uppercase bg-primary text-primary-foreground hover:opacity-90 transition-all duration-300 rounded-lg shadow-sm"
-                  >
-                    {loading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <ShinyText text="SIGN IN" className="text-primary-foreground" />
-                    )}
-                  </Button>
-                </form>
-              </Form>
-            </SpotlightCard>
-          </div>
-        </div>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
+                        {...field}
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        tabIndex={-1}
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex items-center justify-between">
+              <FormField
+                control={form.control}
+                name="remember"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel className="text-xs font-medium cursor-pointer">
+                      Remember me
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
+              <Link
+                href="/forgot-password"
+                className="focus-ring text-xs font-medium text-primary hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
+
+            <Button type="submit" disabled={loading} className="w-full h-11">
+              {loading ? <Loader2 className="size-4 animate-spin" /> : "Sign in"}
+            </Button>
+          </form>
+        </Form>
       </div>
-    </main>
+
+      <div className="mt-6 flex flex-col items-center gap-2">
+        <Link href="/" className="focus-ring text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors">
+          &larr; Back to home
+        </Link>
+        <p className="text-xs text-muted-foreground/60">
+          &copy; {new Date().getFullYear()} DFood Network
+        </p>
+      </div>
+    </div>
   );
 }

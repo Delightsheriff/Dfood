@@ -122,7 +122,7 @@ export function CategoryDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w- bg-sur106.25face border-border">
         <DialogHeader>
-          <DialogTitle className="text-text">
+          <DialogTitle className="text-foreground">
             {isEditing ? "Edit Category" : "Add Category"}
           </DialogTitle>
         </DialogHeader>
@@ -133,12 +133,12 @@ export function CategoryDialog({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-text-muted">Name</FormLabel>
+                  <FormLabel className="text-muted-foreground">Name</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="e.g. Italian"
                       {...field}
-                      className="bg-black/20 border-border text-text placeholder:text-text-dim"
+                      className="bg-black/20 border-border text-foreground placeholder:text-muted-foreground"
                     />
                   </FormControl>
                   <FormMessage />
@@ -147,9 +147,9 @@ export function CategoryDialog({
             />
 
             <div className="space-y-2">
-              <FormLabel className="text-text-muted">Image</FormLabel>
+              <FormLabel className="text-muted-foreground">Image</FormLabel>
               <div
-                className="flex items-center justify-center w-full h-40 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-surface-2 transition-colors relative overflow-hidden"
+                className="flex items-center justify-center w-full h-40 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted transition-colors relative overflow-hidden"
                 onClick={() => fileInputRef.current?.click()}
               >
                 {imagePreview ? (
@@ -167,7 +167,7 @@ export function CategoryDialog({
                     </div>
                   </>
                 ) : (
-                  <div className="flex flex-col items-center gap-2 text-text-muted">
+                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <ImagePlus className="h-8 w-8" />
                     <span className="text-sm">Click to upload image</span>
                   </div>
@@ -187,7 +187,7 @@ export function CategoryDialog({
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                className="border-border text-text hover:bg-surface-2 hover:text-white"
+                className="border-border text-foreground hover:bg-muted hover:text-white"
                 disabled={isPending}
               >
                 Cancel
@@ -195,7 +195,7 @@ export function CategoryDialog({
               <Button
                 type="submit"
                 disabled={isPending}
-                className="bg-orange hover:bg-orange/90 text-white"
+                className="bg-primary hover:bg-primary/90 text-white"
               >
                 {isPending ? "Saving..." : "Save Changes"}
               </Button>

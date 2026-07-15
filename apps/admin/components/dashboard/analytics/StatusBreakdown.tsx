@@ -61,9 +61,9 @@ export function StatusBreakdown({ data, isLoading }: StatusBreakdownProps) {
                   className="h-3 w-3 rounded-full"
                   style={{ backgroundColor: item.fill }}
                 />
-                <span className="text-sm text-text">{item.name}</span>
+                <span className="text-sm text-foreground">{item.name}</span>
               </div>
-              <span className="text-sm font-semibold text-text">
+              <span className="text-sm font-semibold text-foreground">
                 {item.value}
               </span>
             </div>

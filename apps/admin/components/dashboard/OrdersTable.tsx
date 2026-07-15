@@ -72,7 +72,7 @@ export function OrdersTable() {
   };
 
   return (
-    <Card className="border-border bg-surface overflow-hidden">
+    <Card className="border-border bg-card overflow-hidden">
       {/* Status Filter Tabs */}
       <div className="border-b border-border/60 px-4 pt-4 pb-0 overflow-x-auto">
         <div className="flex gap-1 min-w-max">
@@ -83,13 +83,13 @@ export function OrdersTable() {
               className={cn(
                 "relative px-4 py-2.5 text-sm font-medium rounded-t-lg transition-colors whitespace-nowrap",
                 statusFilter === tab.value
-                  ? "text-orange"
-                  : "text-text-muted hover:text-text hover:bg-surface-2/50",
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
               )}
             >
               {tab.label}
               {statusFilter === tab.value && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange rounded-full" />
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
               )}
             </button>
           ))}
@@ -107,13 +107,13 @@ export function OrdersTable() {
         {/* Error */}
         {!isLoading && isError && (
           <div className="flex flex-col items-center justify-center py-16 px-4">
-            <div className="rounded-full bg-red-500/10 p-3 mb-3">
-              <Package className="h-6 w-6 text-red-500" />
+            <div className="rounded-full bg-destructive/10 p-3 mb-3">
+              <Package className="h-6 w-6 text-destructive" />
             </div>
-            <p className="text-sm font-medium text-text mb-1">
+            <p className="text-sm font-medium text-foreground mb-1">
               Failed to load orders
             </p>
-            <p className="text-xs text-text-muted">
+            <p className="text-xs text-muted-foreground">
               Please check your connection and try again.
             </p>
           </div>
@@ -122,13 +122,13 @@ export function OrdersTable() {
         {/* Empty */}
         {!isLoading && !isError && sortedOrders.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 px-4">
-            <div className="rounded-full bg-surface-2 p-3 mb-3">
-              <Package className="h-6 w-6 text-text-muted" />
+            <div className="rounded-full bg-muted p-3 mb-3">
+              <Package className="h-6 w-6 text-muted-foreground" />
             </div>
-            <p className="text-sm font-medium text-text mb-1">
+            <p className="text-sm font-medium text-foreground mb-1">
               No orders found
             </p>
-            <p className="text-xs text-text-muted">
+            <p className="text-xs text-muted-foreground">
               {statusFilter !== "all"
                 ? `No ${statusFilter.replace(/_/g, " ")} orders right now.`
                 : "Orders will appear here once placed."}
@@ -166,11 +166,11 @@ export function OrdersTable() {
                   return (
                     <TableRow
                       key={order._id}
-                      className="border-border/30 hover:bg-surface-2/50 transition-colors group"
+                      className="border-border/30 hover:bg-muted/50 transition-colors group"
                     >
                       {/* Order Number */}
                       <TableCell className="pl-4">
-                        <span className="font-mono text-sm font-semibold text-orange">
+                        <span className="font-mono text-sm font-semibold text-primary">
                           {formatOrderNumber(order.orderNumber)}
                         </span>
                       </TableCell>
@@ -183,7 +183,7 @@ export function OrdersTable() {
                               {getInitials(customerName)}
                             </AvatarFallback>
                           </Avatar>
-                          <span className="text-sm font-medium text-text truncate max-w-32">
+                          <span className="text-sm font-medium text-foreground truncate max-w-32">
                             {customerName}
                           </span>
                         </div>
@@ -191,21 +191,21 @@ export function OrdersTable() {
 
                       {/* Restaurant (admin only) */}
                       {!isVendor && (
-                        <TableCell className="text-sm text-text-dim truncate max-w-40">
+                        <TableCell className="text-sm text-muted-foreground truncate max-w-40">
                           {restaurantName}
                         </TableCell>
                       )}
 
                       {/* Items count */}
                       <TableCell>
-                        <span className="text-sm text-text-muted tabular-nums">
+                        <span className="text-sm text-muted-foreground tabular-nums">
                           {itemCount}
                         </span>
                       </TableCell>
 
                       {/* Total */}
                       <TableCell>
-                        <span className="font-mono text-sm font-semibold text-text tabular-nums">
+                        <span className="font-mono text-sm font-semibold text-foreground tabular-nums">
                           {formatCurrency(order.total)}
                         </span>
                       </TableCell>
@@ -222,7 +222,7 @@ export function OrdersTable() {
                           >
                             {capitalise(order.paymentStatus)}
                           </Badge>
-                          <span className="text-[10px] text-text-muted uppercase">
+                          <span className="text-[10px] text-muted-foreground uppercase">
                             {order.paymentMethod}
                           </span>
                         </div>
@@ -249,7 +249,7 @@ export function OrdersTable() {
 
                       {/* Time */}
                       <TableCell>
-                        <span className="text-xs text-text-muted font-mono whitespace-nowrap">
+                        <span className="text-xs text-muted-foreground font-mono whitespace-nowrap">
                           {formatRelativeTime(order.createdAt)}
                         </span>
                       </TableCell>
@@ -268,7 +268,7 @@ export function OrdersTable() {
                               }
                               disabled={isUpdating}
                             >
-                              <SelectTrigger className="h-8 text-xs bg-surface-2 border-border/60 w-36">
+                              <SelectTrigger className="h-8 text-xs bg-muted border-border/60 w-36">
                                 {isUpdating ? (
                                   <Loader2 className="h-3 w-3 animate-spin" />
                                 ) : (
@@ -287,7 +287,7 @@ export function OrdersTable() {
                           {/* View details button */}
                           <button
                             onClick={() => router.push(`/orders/${order._id}`)}
-                            className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-border/60 bg-surface-2 hover:bg-surface-2/80 text-text-muted hover:text-text transition-colors"
+                            className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-border/60 bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground transition-colors"
                             title="View order details"
                           >
                             <Eye className="h-3.5 w-3.5" />
@@ -305,7 +305,7 @@ export function OrdersTable() {
         {/* Footer */}
         {!isLoading && !isError && sortedOrders.length > 0 && (
           <div className="flex items-center justify-between border-t border-border/40 px-4 py-3">
-            <span className="text-xs text-text-muted">
+            <span className="text-xs text-muted-foreground">
               Showing {sortedOrders.length} order
               {sortedOrders.length !== 1 ? "s" : ""}
             </span>
@@ -328,7 +328,7 @@ function TH({
   return (
     <TableHead
       className={cn(
-        "text-[11px] uppercase tracking-widest text-text-muted font-semibold first:pl-4",
+        "text-[11px] uppercase tracking-widest text-muted-foreground font-semibold first:pl-4",
         className,
       )}
     >
@@ -395,7 +395,7 @@ function getStatusColor(status: string): string {
     case "delivered":
       return "bg-green-500/10 text-green-500";
     case "cancelled":
-      return "bg-red-500/10 text-red-500";
+      return "bg-destructive/10 text-destructive";
     default:
       return "bg-gray-500/10 text-gray-400";
   }
@@ -414,7 +414,7 @@ function getStatusDotColor(status: string): string {
     case "delivered":
       return "bg-green-500";
     case "cancelled":
-      return "bg-red-500";
+      return "bg-destructive";
     default:
       return "bg-gray-400";
   }
@@ -427,7 +427,7 @@ function getPaymentStatusColor(status: string): string {
     case "pending":
       return "bg-yellow-500/10 text-yellow-500";
     case "failed":
-      return "bg-red-500/10 text-red-500";
+      return "bg-destructive/10 text-destructive";
     case "refunded":
       return "bg-blue-500/10 text-blue-500";
     default:
@@ -481,7 +481,7 @@ function OrdersTableSkeleton({ isVendor }: { isVendor: boolean }) {
       {[...Array(6)].map((_, i) => (
         <div
           key={i}
-          className="flex items-center gap-4 rounded-lg bg-surface-2/50 px-4 py-3"
+          className="flex items-center gap-4 rounded-lg bg-muted/50 px-4 py-3"
         >
           <Skeleton className="h-4 w-16" />
           <div className="flex items-center gap-2 flex-1">

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Reveal } from "./Reveal";
 import { cn } from "@/lib/utils";
 import { ChevronDown, Mail } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -35,7 +34,7 @@ export function FAQ() {
   return (
     <section id="faq" className="px-6 py-20 border-t bg-background border-border md:px-12">
       <div className="grid items-start grid-cols-1 gap-16 mx-auto w-full max-w-7xl lg:grid-cols-2">
-        <Reveal>
+        <div data-reveal="fade-up">
           <div className="mb-4 text-[10px] font-bold tracking-widest text-primary uppercase">
             — FAQ
           </div>
@@ -47,51 +46,54 @@ export function FAQ() {
             <br />
             <a
               href="mailto:support@dfood.com"
-              className="inline-flex items-center gap-1 mt-2 text-primary hover:underline font-semibold"
+              className="focus-ring inline-flex items-center gap-1 mt-2 text-primary hover:underline font-semibold"
             >
               <Mail className="w-3.5 h-3.5" />
               support@dfood.com
             </a>
           </p>
-        </Reveal>
+        </div>
 
         <div className="flex flex-col gap-3">
           {faqs.map((faq, index) => (
-            <Reveal key={index} delay={index * 0.08}>
-              <div className="overflow-hidden border rounded-xl border-border bg-card">
-                <button
-                  onClick={() =>
-                    setOpenIndex(openIndex === index ? null : index)
-                  }
+            <div
+              key={index}
+              data-reveal="fade-up"
+              style={{ "--reveal-delay": `${index * 0.06}s` } as React.CSSProperties}
+              className="overflow-hidden border rounded-xl border-border bg-card"
+            >
+              <button
+                onClick={() =>
+                  setOpenIndex(openIndex === index ? null : index)
+                }
+                className={cn(
+                  "focus-ring flex items-center justify-between w-full p-5 text-left transition-colors hover:bg-muted/50 font-semibold text-xs text-foreground",
+                  openIndex === index && "text-primary"
+                )}
+              >
+                {faq.q}
+                <ChevronDown
                   className={cn(
-                    "flex items-center justify-between w-full p-5 text-left transition-colors hover:bg-muted/50 font-semibold text-xs text-foreground",
-                    openIndex === index && "text-primary"
+                    "w-4 h-4 transition-transform duration-300 text-muted-foreground",
+                    openIndex === index && "rotate-180 text-primary"
                   )}
-                >
-                  {faq.q}
-                  <ChevronDown
-                    className={cn(
-                      "w-4 h-4 transition-transform duration-300 text-muted-foreground",
-                      openIndex === index && "rotate-180 text-primary"
-                    )}
-                  />
-                </button>
-                <AnimatePresence initial={false}>
-                  {openIndex === index && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2, ease: "easeInOut" }}
-                    >
-                      <div className="px-5 pb-5 text-xs leading-relaxed text-muted-foreground border-t border-border/40 pt-4">
-                        {faq.a}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </Reveal>
+                />
+              </button>
+              <AnimatePresence initial={false}>
+                {openIndex === index && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                  >
+                    <div className="px-5 pb-5 text-xs leading-relaxed text-muted-foreground border-t border-border/40 pt-4">
+                      {faq.a}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           ))}
         </div>
       </div>

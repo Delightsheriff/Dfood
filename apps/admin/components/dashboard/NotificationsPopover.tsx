@@ -42,11 +42,11 @@ export function NotificationsPopover() {
         <Button
           variant="ghost"
           size="icon"
-          className="relative h-9 w-9 text-text-muted hover:bg-surface-2 hover:text-text"
+          className="relative h-9 w-9 text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           <Bell className="h-4 w-4" />
           {(unreadCount ?? 0) > 0 && (
-            <span className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-orange text-[10px] font-bold text-white">
+            <span className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
               {unreadCount && unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}
@@ -55,10 +55,10 @@ export function NotificationsPopover() {
       </PopoverTrigger>
       <PopoverContent className="glass w-80 border-border p-0" align="end">
         <div className="flex items-center justify-between border-b border-border p-4">
-          <h4 className="font-semibold text-text">Notifications</h4>
+          <h4 className="font-semibold text-foreground">Notifications</h4>
           <Link
             href="/notifications"
-            className="text-xs text-orange hover:underline"
+            className="text-xs text-primary hover:underline"
           >
             View all
           </Link>
@@ -66,12 +66,12 @@ export function NotificationsPopover() {
         <div className="max-h-[300px] overflow-y-auto">
           {isLoading ? (
             <div className="flex items-center justify-center p-8">
-              <Loader2 className="h-5 w-5 animate-spin text-text-muted" />
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </div>
           ) : !notifications || notifications.length === 0 ? (
             <div className="p-8 text-center">
-              <Bell className="mx-auto h-8 w-8 text-text-dim" />
-              <p className="mt-2 text-sm text-text-muted">
+              <Bell className="mx-auto h-8 w-8 text-muted-foreground" />
+              <p className="mt-2 text-sm text-muted-foreground">
                 No notifications yet
               </p>
             </div>
@@ -81,30 +81,30 @@ export function NotificationsPopover() {
                 key={n._id}
                 onClick={() => handleNotificationClick(n)}
                 className={cn(
-                  "cursor-pointer border-b border-border p-4 transition-colors last:border-0 hover:bg-surface-2",
-                  !n.read && "bg-orange/5",
+                  "cursor-pointer border-b border-border p-4 transition-colors last:border-0 hover:bg-muted",
+                  !n.read && "bg-primary/5",
                 )}
               >
                 <div className="flex items-start gap-3">
                   <div
                     className={cn(
                       "mt-1 h-2 w-2 shrink-0 rounded-full",
-                      n.read ? "bg-transparent" : "bg-orange",
+                      n.read ? "bg-transparent" : "bg-primary",
                     )}
                   />
                   <div className="min-w-0 flex-1">
                     <p
                       className={cn(
                         "text-sm",
-                        n.read ? "text-text-muted" : "font-medium text-text",
+                        n.read ? "text-muted-foreground" : "font-medium text-foreground",
                       )}
                     >
                       {n.title}
                     </p>
-                    <p className="mt-0.5 truncate text-xs text-text-dim">
+                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
                       {n.message}
                     </p>
-                    <p className="mt-1 text-xs text-text-dim">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {formatDistanceToNow(new Date(n.createdAt), {
                         addSuffix: true,
                       })}

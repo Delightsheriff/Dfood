@@ -29,7 +29,7 @@ function GridSkeleton() {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (
-        <Card key={i} className="border-border bg-surface overflow-hidden">
+        <Card key={i} className="border-border bg-card overflow-hidden">
           <Skeleton className="aspect-4/3 w-full" />
           <CardContent className="p-4 space-y-2">
             <Skeleton className="h-5 w-3/4" />
@@ -51,8 +51,8 @@ export function FoodItemsGrid({
 
   if (isError) {
     return (
-      <div className="rounded-xl border border-border bg-surface p-12 text-center">
-        <p className="text-red-500">Failed to load menu items.</p>
+      <div className="rounded-xl border border-border bg-card p-12 text-center">
+        <p className="text-destructive">Failed to load menu items.</p>
       </div>
     );
   }
@@ -71,10 +71,10 @@ export function FoodItemsGrid({
       {items.map((item) => (
         <Card
           key={item._id}
-          className="border-border bg-surface overflow-hidden hover:border-orange/40 hover:shadow-md transition-all group"
+          className="border-border bg-card overflow-hidden hover:border-primary/40 hover:shadow-md transition-all group"
         >
           {/* Image */}
-          <div className="relative aspect-4/3 bg-surface-2">
+          <div className="relative aspect-4/3 bg-muted">
             {item.images?.[0] ? (
               <Image
                 src={item.images[0]}
@@ -84,7 +84,7 @@ export function FoodItemsGrid({
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center">
-                <UtensilsCrossed className="h-8 w-8 text-text-dim" />
+                <UtensilsCrossed className="h-8 w-8 text-muted-foreground" />
               </div>
             )}
             <div className="absolute top-2 right-2">
@@ -95,23 +95,23 @@ export function FoodItemsGrid({
           </div>
 
           <CardContent className="p-4 space-y-2">
-            <h3 className="font-bold text-text leading-tight">{item.name}</h3>
-            <p className="text-xs text-text-muted line-clamp-2">
+            <h3 className="font-bold text-foreground leading-tight">{item.name}</h3>
+            <p className="text-xs text-muted-foreground line-clamp-2">
               {item.description}
             </p>
 
             <div className="flex items-center justify-between pt-1">
               <div className="flex items-center gap-1 text-sm">
                 <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-                <span className="text-text font-medium">
+                <span className="text-foreground font-medium">
                   {item.rating.toFixed(1)}
                 </span>
-                <span className="text-text-muted text-xs">
+                <span className="text-muted-foreground text-xs">
                   ({item.totalReviews})
                 </span>
               </div>
               {item.calories !== undefined && (
-                <span className="text-xs text-text-muted">
+                <span className="text-xs text-muted-foreground">
                   {item.calories} cal
                 </span>
               )}

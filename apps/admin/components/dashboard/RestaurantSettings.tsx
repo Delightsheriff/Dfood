@@ -151,19 +151,19 @@ export function RestaurantSettings() {
 
   if (isLoadingRestaurant) {
     return (
-      <Card className="bg-surface border-border">
+      <Card className="bg-card border-border">
         <CardContent className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-orange" />
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="bg-surface border-border">
+    <Card className="bg-card border-border">
       <CardHeader>
-        <CardTitle className="text-text">Restaurant Details</CardTitle>
-        <CardDescription className="text-text-muted">
+        <CardTitle className="text-foreground">Restaurant Details</CardTitle>
+        <CardDescription className="text-muted-foreground">
           Manage your restaurant information and gallery.
         </CardDescription>
       </CardHeader>
@@ -177,7 +177,7 @@ export function RestaurantSettings() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-text">
+                      <FormLabel className="text-foreground">
                         Restaurant Name
                       </FormLabel>
                       <FormControl>
@@ -197,7 +197,7 @@ export function RestaurantSettings() {
                     name="openingTime"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-text">
+                        <FormLabel className="text-foreground">
                           Opening Time
                         </FormLabel>
                         <FormControl>
@@ -216,7 +216,7 @@ export function RestaurantSettings() {
                     name="closingTime"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-text">
+                        <FormLabel className="text-foreground">
                           Closing Time
                         </FormLabel>
                         <FormControl>
@@ -238,7 +238,7 @@ export function RestaurantSettings() {
                 name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-text">Address</FormLabel>
+                    <FormLabel className="text-foreground">Address</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -256,7 +256,7 @@ export function RestaurantSettings() {
                   name="deliveryFee"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-text">
+                      <FormLabel className="text-foreground">
                         Delivery Fee (₦)
                       </FormLabel>
                       <FormControl>
@@ -266,7 +266,7 @@ export function RestaurantSettings() {
                           className="bg-background border-border"
                         />
                       </FormControl>
-                      <FormDescription className="text-text-muted">
+                      <FormDescription className="text-muted-foreground">
                         Fee charged for delivery services.
                       </FormDescription>
                       <FormMessage />
@@ -280,7 +280,7 @@ export function RestaurantSettings() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-text">Description</FormLabel>
+                    <FormLabel className="text-foreground">Description</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
@@ -294,10 +294,10 @@ export function RestaurantSettings() {
 
               {/* Image Management Section */}
               <div className="space-y-4 pt-4 border-t border-border">
-                <FormLabel className="text-text block">
+                <FormLabel className="text-foreground block">
                   Restaurant Images
                 </FormLabel>
-                <FormDescription className="text-text-muted">
+                <FormDescription className="text-muted-foreground">
                   Upload up to 5 images. These will be displayed in your
                   restaurant gallery.
                 </FormDescription>
@@ -319,7 +319,7 @@ export function RestaurantSettings() {
                         <button
                           type="button"
                           onClick={() => handleDeleteServerImage(url)}
-                          className="absolute top-2 right-2 p-1.5 bg-red-500/80 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute top-2 right-2 p-1.5 bg-destructive/80 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
                           disabled={isDeletingImage}
                         >
                           <Trash2 className="w-4 h-4" />
@@ -335,7 +335,7 @@ export function RestaurantSettings() {
                     {previewUrls.map((url, index) => (
                       <div
                         key={`preview-${index}`}
-                        className="relative group aspect-square rounded-lg overflow-hidden border border-orange/50 border-dashed bg-orange/5"
+                        className="relative group aspect-square rounded-lg overflow-hidden border border-primary/50 border-dashed bg-primary/5"
                       >
                         <Image
                           src={url}
@@ -346,7 +346,7 @@ export function RestaurantSettings() {
                         <button
                           type="button"
                           onClick={() => removeSelectedImage(index)}
-                          className="absolute top-2 right-2 p-1.5 bg-background/80 text-text rounded-md hover:bg-red-500 hover:text-white transition-colors"
+                          className="absolute top-2 right-2 p-1.5 bg-background/80 text-foreground rounded-md hover:bg-destructive hover:text-white transition-colors"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -360,7 +360,7 @@ export function RestaurantSettings() {
                   <Button
                     type="button"
                     variant="outline"
-                    className="border-dashed border-border text-text-muted hover:text-orange hover:border-orange bg-transparent"
+                    className="border-dashed border-border text-muted-foreground hover:text-primary hover:border-primary bg-transparent"
                     onClick={() =>
                       document.getElementById("image-upload")?.click()
                     }
@@ -376,7 +376,7 @@ export function RestaurantSettings() {
                     className="hidden"
                     onChange={handleImageChange}
                   />
-                  <span className="text-xs text-text-muted">
+                  <span className="text-xs text-muted-foreground">
                     {selectedImages.length > 0
                       ? `${selectedImages.length} new image(s) selected`
                       : "No new images selected"}
@@ -388,7 +388,7 @@ export function RestaurantSettings() {
                 <Button
                   type="submit"
                   disabled={isUpdating}
-                  className="bg-orange hover:bg-orange/90 text-white min-w-[120px]"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[120px]"
                 >
                   {isUpdating ? (
                     <>
@@ -406,8 +406,8 @@ export function RestaurantSettings() {
             </form>
           </Form>
         ) : (
-          <div className="text-center py-12 text-text-muted">
-            <div className="w-16 h-16 bg-surface-hover rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="text-center py-12 text-muted-foreground">
+            <div className="w-16 h-16 bg-card-hover rounded-full flex items-center justify-center mx-auto mb-4">
               <ImageIcon className="w-8 h-8 opacity-50" />
             </div>
             <p>No restaurant found.</p>

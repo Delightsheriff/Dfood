@@ -50,8 +50,8 @@ export function CategoryList() {
 
   if (error) {
     return (
-      <div className="rounded-xl border border-border bg-surface p-12 text-center">
-        <p className="text-red-500">Failed to load categories.</p>
+      <div className="rounded-xl border border-border bg-card p-12 text-center">
+        <p className="text-destructive">Failed to load categories.</p>
       </div>
     );
   }
@@ -61,20 +61,20 @@ export function CategoryList() {
       <div className="flex justify-end">
         <Button
           onClick={() => setIsCreateOpen(true)}
-          className="bg-orange hover:bg-orange/90"
+          className="bg-primary hover:bg-primary/90"
         >
           Add Category
         </Button>
       </div>
 
-      <Card className="border-border bg-surface">
+      <Card className="border-border bg-card">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
-                <TableHead className="w-25 text-text-muted">Image</TableHead>
-                <TableHead className="text-text-muted">Name</TableHead>
-                <TableHead className="text-right text-text-muted">
+                <TableHead className="w-25 text-muted-foreground">Image</TableHead>
+                <TableHead className="text-muted-foreground">Name</TableHead>
+                <TableHead className="text-right text-muted-foreground">
                   Actions
                 </TableHead>
               </TableRow>
@@ -84,7 +84,7 @@ export function CategoryList() {
                 <TableRow>
                   <TableCell
                     colSpan={3}
-                    className="h-24 text-center text-text-muted"
+                    className="h-24 text-center text-muted-foreground"
                   >
                     No categories found.
                   </TableCell>
@@ -93,10 +93,10 @@ export function CategoryList() {
                 categories.map((category) => (
                   <TableRow
                     key={category._id}
-                    className="border-border hover:bg-surface-2"
+                    className="border-border hover:bg-muted"
                   >
                     <TableCell>
-                      <Avatar className="h-10 w-10 text-orange">
+                      <Avatar className="h-10 w-10 text-primary">
                         {category.image && (
                           <AvatarImage
                             src={category.image}
@@ -104,12 +104,12 @@ export function CategoryList() {
                             className="object-cover"
                           />
                         )}
-                        <AvatarFallback className="bg-orange/10">
+                        <AvatarFallback className="bg-primary/10">
                           <Layers className="h-5 w-5" />
                         </AvatarFallback>
                       </Avatar>
                     </TableCell>
-                    <TableCell className="font-medium text-text">
+                    <TableCell className="font-medium text-foreground">
                       {category.name}
                     </TableCell>
                     <TableCell className="text-right">
@@ -117,7 +117,7 @@ export function CategoryList() {
                         <DropdownMenuTrigger asChild>
                           <Button
                             variant="ghost"
-                            className="h-8 w-8 p-0 text-text-muted hover:text-text"
+                            className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
                           >
                             <span className="sr-only">Open menu</span>
                             <MoreHorizontal className="h-4 w-4" />
@@ -125,27 +125,27 @@ export function CategoryList() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
                           align="end"
-                          className="bg-surface border-border"
+                          className="bg-card border-border"
                         >
                           <DropdownMenuItem
                             onClick={() =>
                               router.push(`/categories/${category._id}`)
                             }
-                            className="text-text hover:bg-surface-2 focus:bg-surface-2 cursor-pointer"
+                            className="text-foreground hover:bg-muted focus:bg-muted cursor-pointer"
                           >
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => setEditingCategory(category)}
-                            className="text-text hover:bg-surface-2 focus:bg-surface-2 cursor-pointer"
+                            className="text-foreground hover:bg-muted focus:bg-muted cursor-pointer"
                           >
                             <Pencil className="mr-2 h-4 w-4" />
                             Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => setDeletingCategory(category)}
-                            className="text-red-500 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-500 cursor-pointer"
+                            className="text-destructive hover:bg-destructive/10 focus:bg-destructive/10 focus:text-destructive cursor-pointer"
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
                             Delete

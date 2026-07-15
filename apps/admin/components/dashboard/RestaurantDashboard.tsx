@@ -108,7 +108,7 @@ export function RestaurantDashboard() {
     { value: "Open", label: "Open", color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20", hover: "hover:bg-emerald-500/20" },
     { value: "Closed", label: "Closed", color: "bg-zinc-500/10 text-zinc-500 border-zinc-500/20", hover: "hover:bg-zinc-500/20" },
     { value: "Busy", label: "Busy", color: "bg-amber-500/10 text-amber-500 border-amber-500/20", hover: "hover:bg-amber-500/20" },
-    { value: "Disabled", label: "Disabled", color: "bg-red-500/10 text-red-500 border-red-500/20", hover: "hover:bg-red-500/20" },
+    { value: "Disabled", label: "Disabled", color: "bg-destructive/10 text-destructive border-red-500/20", hover: "hover:bg-destructive/20" },
   ];
 
   return (

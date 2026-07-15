@@ -51,7 +51,7 @@ export default function AnalyticsPage() {
       title="Analytics"
       action={
         <Select value={days} onValueChange={setDays}>
-          <SelectTrigger className="w-40 bg-surface border-border text-text">
+          <SelectTrigger className="w-40 bg-card border-border text-foreground">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

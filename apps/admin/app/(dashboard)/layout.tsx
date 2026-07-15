@@ -3,6 +3,7 @@ import { DashboardRoleProvider } from "@/components/dashboard/DashboardRoleConte
 import { AppSidebar } from "@/components/dashboard/AppSidebar";
 import { Header } from "@/components/dashboard/Header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { DevRoleToolbar } from "@/components/dashboard/DevRoleToolbar";
 
 export default function DashboardLayout({
@@ -12,15 +13,17 @@ export default function DashboardLayout({
 }) {
   return (
     <DashboardRoleProvider>
+      <TooltipProvider>
       <SidebarProvider>
         <AppSidebar />
-        <SidebarInset className="bg-black">
+        <SidebarInset className="bg-background">
           <Header />
-          <main className="flex-1 overflow-y-auto bg-black p-4 md:p-8 pt-6">
+          <main className="flex-1 overflow-y-auto bg-background p-4 md:p-8 pt-6">
             {children}
           </main>
         </SidebarInset>
       </SidebarProvider>
+      </TooltipProvider>
       <DevRoleToolbar />
     </DashboardRoleProvider>
   );

@@ -37,19 +37,19 @@ interface UsersTableProps {
 /* ------------------------------------------------------------------ */
 function TableSkeleton() {
   return (
-    <div className="rounded-xl border border-border bg-surface overflow-hidden">
+    <div className="rounded-xl border border-border bg-card overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow className="border-border hover:bg-transparent">
-            <TableHead className="text-text-muted">User</TableHead>
-            <TableHead className="text-text-muted">Role</TableHead>
-            <TableHead className="text-text-muted hidden sm:table-cell">
+            <TableHead className="text-muted-foreground">User</TableHead>
+            <TableHead className="text-muted-foreground">Role</TableHead>
+            <TableHead className="text-muted-foreground hidden sm:table-cell">
               Phone
             </TableHead>
-            <TableHead className="text-text-muted hidden md:table-cell">
+            <TableHead className="text-muted-foreground hidden md:table-cell">
               Joined
             </TableHead>
-            <TableHead className="text-right text-text-muted">Action</TableHead>
+            <TableHead className="text-right text-muted-foreground">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -101,12 +101,12 @@ export function UsersTable({
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search by name or email…"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9 bg-surface border-border focus:border-orange/50 focus:ring-orange/10 h-10 rounded-[10px]"
+            className="pl-9 bg-card border-border focus:border-primary/50 focus:ring-primary/10 h-10 rounded-[10px]"
           />
         </div>
 
@@ -120,8 +120,8 @@ export function UsersTable({
               className={cn(
                 "rounded-full px-4 text-xs font-semibold tracking-wide uppercase transition-colors",
                 roleFilter === f.value
-                  ? "bg-orange/10 text-orange hover:bg-orange/20"
-                  : "text-text-muted hover:bg-surface-2 hover:text-text",
+                  ? "bg-primary/10 text-primary hover:bg-primary/20"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
               {f.label}
@@ -150,19 +150,19 @@ export function UsersTable({
           }
         />
       ) : (
-        <div className="rounded-xl border border-border bg-surface overflow-hidden">
+        <div className="rounded-xl border border-border bg-card overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
-                <TableHead className="text-text-muted">User</TableHead>
-                <TableHead className="text-text-muted">Role</TableHead>
-                <TableHead className="text-text-muted hidden sm:table-cell">
+                <TableHead className="text-muted-foreground">User</TableHead>
+                <TableHead className="text-muted-foreground">Role</TableHead>
+                <TableHead className="text-muted-foreground hidden sm:table-cell">
                   Phone
                 </TableHead>
-                <TableHead className="text-text-muted hidden md:table-cell">
+                <TableHead className="text-muted-foreground hidden md:table-cell">
                   Joined
                 </TableHead>
-                <TableHead className="text-right text-text-muted">
+                <TableHead className="text-right text-muted-foreground">
                   Action
                 </TableHead>
               </TableRow>
@@ -171,13 +171,13 @@ export function UsersTable({
               {users.map((user) => (
                 <TableRow
                   key={user._id}
-                  className="border-border hover:bg-surface-2 transition-colors"
+                  className="border-border hover:bg-muted transition-colors"
                 >
-                  <TableCell className="font-medium text-text">
+                  <TableCell className="font-medium text-foreground">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-9 w-9 border border-border">
                         <AvatarImage src={user.profileImage} alt={user.name} />
-                        <AvatarFallback className="bg-orange/10 text-orange font-bold text-xs">
+                        <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
                           {getInitials(user.name)}
                         </AvatarFallback>
                       </Avatar>
@@ -185,7 +185,7 @@ export function UsersTable({
                         <div className="font-bold leading-tight">
                           {user.name}
                         </div>
-                        <div className="text-xs text-text-muted">
+                        <div className="text-xs text-muted-foreground">
                           {user.email}
                         </div>
                       </div>
@@ -194,17 +194,17 @@ export function UsersTable({
                   <TableCell>
                     <UserRoleBadge role={user.role} />
                   </TableCell>
-                  <TableCell className="text-text-muted text-sm hidden sm:table-cell">
+                  <TableCell className="text-muted-foreground text-sm hidden sm:table-cell">
                     {user.phone || "—"}
                   </TableCell>
-                  <TableCell className="text-text-muted text-sm hidden md:table-cell">
+                  <TableCell className="text-muted-foreground text-sm hidden md:table-cell">
                     {formatDate(user.createdAt)}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-text-muted hover:text-white hover:bg-surface-2"
+                      className="h-8 w-8 text-muted-foreground hover:text-white hover:bg-muted"
                       onClick={() => onSelectUser(user)}
                     >
                       <Eye className="h-4 w-4" />

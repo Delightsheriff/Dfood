@@ -74,7 +74,7 @@ function MenuSkeleton() {
       {Array.from({ length: 6 }).map((_, i) => (
         <div
           key={i}
-          className="overflow-hidden rounded-xl border border-border bg-surface"
+          className="overflow-hidden rounded-xl border border-border bg-card"
         >
           <Skeleton className="aspect-4/3 w-full" />
           <div className="p-4 space-y-2">
@@ -236,9 +236,9 @@ function FoodItemDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg bg-surface border-border max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-lg bg-card border-border max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-text">
+          <DialogTitle className="text-foreground">
             {isEditing ? "Edit Food Item" : "Add Food Item"}
           </DialogTitle>
         </DialogHeader>
@@ -250,12 +250,12 @@ function FoodItemDialog({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-text-muted">Name</FormLabel>
+                  <FormLabel className="text-muted-foreground">Name</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="e.g. Margherita Pizza"
                       {...field}
-                      className="bg-black/20 border-border text-text placeholder:text-text-dim"
+                      className="bg-black/20 border-border text-foreground placeholder:text-muted-foreground"
                     />
                   </FormControl>
                   <FormMessage />
@@ -269,12 +269,12 @@ function FoodItemDialog({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-text-muted">Description</FormLabel>
+                  <FormLabel className="text-muted-foreground">Description</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Describe your food item…"
                       {...field}
-                      className="bg-black/20 border-border text-text placeholder:text-text-dim resize-none"
+                      className="bg-black/20 border-border text-foreground placeholder:text-muted-foreground resize-none"
                       rows={3}
                     />
                   </FormControl>
@@ -290,13 +290,13 @@ function FoodItemDialog({
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-text-muted">Price (₦)</FormLabel>
+                    <FormLabel className="text-muted-foreground">Price (₦)</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
                         placeholder="2500"
                         {...field}
-                        className="bg-black/20 border-border text-text placeholder:text-text-dim"
+                        className="bg-black/20 border-border text-foreground placeholder:text-muted-foreground"
                       />
                     </FormControl>
                     <FormMessage />
@@ -308,9 +308,9 @@ function FoodItemDialog({
                 name="calories"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-text-muted">
+                    <FormLabel className="text-muted-foreground">
                       Calories{" "}
-                      <span className="text-text-dim text-xs">(optional)</span>
+                      <span className="text-muted-foreground text-xs">(optional)</span>
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -318,7 +318,7 @@ function FoodItemDialog({
                         placeholder="250"
                         {...field}
                         value={field.value ?? ""}
-                        className="bg-black/20 border-border text-text placeholder:text-text-dim"
+                        className="bg-black/20 border-border text-foreground placeholder:text-muted-foreground"
                       />
                     </FormControl>
                     <FormMessage />
@@ -333,9 +333,9 @@ function FoodItemDialog({
               name="categoryIds"
               render={() => (
                 <FormItem>
-                  <FormLabel className="text-text-muted">
+                  <FormLabel className="text-muted-foreground">
                     Categories{" "}
-                    <span className="text-text-dim text-xs">(1-3)</span>
+                    <span className="text-muted-foreground text-xs">(1-3)</span>
                   </FormLabel>
                   <div className="flex flex-wrap gap-2">
                     {categories.map((cat) => {
@@ -347,8 +347,8 @@ function FoodItemDialog({
                           onClick={() => toggleCategory(cat._id)}
                           className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
                             selected
-                              ? "bg-orange/10 text-orange border-orange/30"
-                              : "bg-surface-2 text-text-muted border-border hover:border-text-dim"
+                              ? "bg-primary/10 text-primary border-primary/30"
+                              : "bg-muted text-muted-foreground border-border hover:border-text-dim"
                           }`}
                         >
                           {cat.name}
@@ -363,7 +363,7 @@ function FoodItemDialog({
 
             {/* Images */}
             <div className="space-y-2">
-              <FormLabel className="text-text-muted">Images</FormLabel>
+              <FormLabel className="text-muted-foreground">Images</FormLabel>
               <div className="flex flex-wrap gap-3">
                 {imagePreviews.map((src, i) => (
                   <div
@@ -381,9 +381,9 @@ function FoodItemDialog({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex h-20 w-20 items-center justify-center rounded-lg border-2 border-dashed border-border hover:border-orange/50 transition-colors"
+                  className="flex h-20 w-20 items-center justify-center rounded-lg border-2 border-dashed border-border hover:border-primary/50 transition-colors"
                 >
-                  <ImagePlus className="h-5 w-5 text-text-muted" />
+                  <ImagePlus className="h-5 w-5 text-muted-foreground" />
                 </button>
               </div>
               <input
@@ -399,7 +399,7 @@ function FoodItemDialog({
             <Button
               type="submit"
               disabled={isPending}
-              className="w-full bg-orange hover:bg-orange/90 text-white font-bold"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold"
             >
               {isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -429,19 +429,19 @@ function DeleteFoodItemDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="bg-surface border-border">
+      <AlertDialogContent className="bg-card border-border">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-text">
+          <AlertDialogTitle className="text-foreground">
             Delete food item?
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-text-muted">
+          <AlertDialogDescription className="text-muted-foreground">
             This will permanently delete{" "}
-            <span className="font-bold text-text">{foodItem.name}</span> and
+            <span className="font-bold text-foreground">{foodItem.name}</span> and
             remove all its images.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="border-border text-text hover:bg-surface-2 hover:text-white">
+          <AlertDialogCancel className="border-border text-foreground hover:bg-muted hover:text-white">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
@@ -451,7 +451,7 @@ function DeleteFoodItemDialog({
                 onSuccess: () => onOpenChange(false),
               });
             }}
-            className="bg-red-600 hover:bg-red-700 text-white"
+            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
             disabled={deleteFoodItem.isPending}
           >
             {deleteFoodItem.isPending ? "Deleting…" : "Delete"}
@@ -474,12 +474,12 @@ export function MenuGrid() {
   const [deletingItem, setDeletingItem] = useState<FoodItem | null>(null);
 
   return (
-    <Card className="border-border bg-surface">
+    <Card className="border-border bg-card">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-xl font-bold text-text">Your Menu</CardTitle>
+        <CardTitle className="text-xl font-bold text-foreground">Your Menu</CardTitle>
         <Button
           size="sm"
-          className="bg-orange hover:bg-orange/90 text-white font-semibold"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
           onClick={() => setIsCreateOpen(true)}
         >
           <Plus className="mr-1.5 h-4 w-4" />
@@ -490,18 +490,18 @@ export function MenuGrid() {
         {isLoading ? (
           <MenuSkeleton />
         ) : isError ? (
-          <div className="rounded-xl border border-border bg-surface p-12 text-center">
-            <p className="text-red-500">Failed to load menu items.</p>
+          <div className="rounded-xl border border-border bg-card p-12 text-center">
+            <p className="text-destructive">Failed to load menu items.</p>
           </div>
         ) : foodItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <UtensilsCrossed className="h-10 w-10 text-text-dim mb-3" />
-            <p className="text-text-muted text-sm mb-3">
+            <UtensilsCrossed className="h-10 w-10 text-muted-foreground mb-3" />
+            <p className="text-muted-foreground text-sm mb-3">
               You haven&apos;t added any menu items yet.
             </p>
             <Button
               size="sm"
-              className="bg-orange hover:bg-orange/90 text-white"
+              className="bg-primary hover:bg-primary/90 text-white"
               onClick={() => setIsCreateOpen(true)}
             >
               <Plus className="mr-1.5 h-4 w-4" />
@@ -513,10 +513,10 @@ export function MenuGrid() {
             {foodItems.map((item) => (
               <div
                 key={item._id}
-                className="group overflow-hidden rounded-xl border border-border bg-black/20 hover:border-orange/50 hover:shadow-md transition-all"
+                className="group overflow-hidden rounded-xl border border-border bg-black/20 hover:border-primary/50 hover:shadow-md transition-all"
               >
                 {/* Image */}
-                <div className="relative aspect-4/3 bg-surface-2">
+                <div className="relative aspect-4/3 bg-muted">
                   {item.images?.[0] ? (
                     <Image
                       src={item.images[0]}
@@ -526,7 +526,7 @@ export function MenuGrid() {
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-orange/20 to-amber-500/20">
-                      <UtensilsCrossed className="h-10 w-10 text-orange/40" />
+                      <UtensilsCrossed className="h-10 w-10 text-primary/40" />
                     </div>
                   )}
 
@@ -551,18 +551,18 @@ export function MenuGrid() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
                         align="end"
-                        className="bg-surface border-border"
+                        className="bg-card border-border"
                       >
                         <DropdownMenuItem
                           onClick={() => setEditingItem(item)}
-                          className="text-text hover:bg-surface-2 focus:bg-surface-2 cursor-pointer"
+                          className="text-foreground hover:bg-muted focus:bg-muted cursor-pointer"
                         >
                           <Pencil className="mr-2 h-4 w-4" />
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setDeletingItem(item)}
-                          className="text-red-500 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-500 cursor-pointer"
+                          className="text-destructive hover:bg-destructive/10 focus:bg-destructive/10 focus:text-destructive cursor-pointer"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Delete
@@ -574,23 +574,23 @@ export function MenuGrid() {
 
                 {/* Info */}
                 <div className="p-4">
-                  <h3 className="font-semibold text-text mb-1">{item.name}</h3>
-                  <p className="text-xs text-text-muted line-clamp-2 mb-3">
+                  <h3 className="font-semibold text-foreground mb-1">{item.name}</h3>
+                  <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
                     {item.description}
                   </p>
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1 text-sm">
                       <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-                      <span className="text-text font-medium">
+                      <span className="text-foreground font-medium">
                         {item.rating.toFixed(1)}
                       </span>
-                      <span className="text-text-muted text-xs">
+                      <span className="text-muted-foreground text-xs">
                         ({item.totalReviews})
                       </span>
                     </div>
                     {item.calories !== undefined && (
-                      <span className="text-xs text-text-muted">
+                      <span className="text-xs text-muted-foreground">
                         {item.calories} cal
                       </span>
                     )}

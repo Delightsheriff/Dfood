@@ -40,7 +40,8 @@ export default function RootLayout({
       <body
         className={`${bebasNeue.variable} ${dmSans.variable} ${dmMono.variable} antialiased bg-background text-foreground`}
       >
-        <Providers>{children}</Providers>
+        <a href="#main" className="skip-link">Skip to main content</a>
+        <Providers><main id="main">{children}</main></Providers>
         <Toaster />
       </body>
     </html>

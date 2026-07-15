@@ -40,8 +40,8 @@ export function AnalyticsSummaryCards({
             />
           ),
           icon: DollarSign,
-          color: "text-orange",
-          bgColor: "bg-orange/10",
+          color: "text-primary",
+          bgColor: "bg-primary/10",
         },
         {
           label: "Total Orders",

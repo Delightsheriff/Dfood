@@ -99,7 +99,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-135 bg-surface border-border p-0 gap-0 overflow-hidden">
+      <DialogContent className="sm:max-w-135 bg-card border-border p-0 gap-0 overflow-hidden">
         <VisuallyHidden>
           <DialogTitle>Search</DialogTitle>
         </VisuallyHidden>
@@ -107,17 +107,17 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
         {/* Search input */}
         <div className="flex items-center border-b border-border px-4">
           {isFetching ? (
-            <Loader2 className="mr-2 h-5 w-5 shrink-0 animate-spin text-text-muted" />
+            <Loader2 className="mr-2 h-5 w-5 shrink-0 animate-spin text-muted-foreground" />
           ) : (
-            <Search className="mr-2 h-5 w-5 shrink-0 text-text-muted" />
+            <Search className="mr-2 h-5 w-5 shrink-0 text-muted-foreground" />
           )}
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search everything…"
-            className="flex-1 border-none bg-transparent py-4 text-base shadow-none focus-visible:ring-0 placeholder:text-text-dim text-text h-12"
+            className="flex-1 border-none bg-transparent py-4 text-base shadow-none focus-visible:ring-0 placeholder:text-muted-foreground text-foreground h-12"
           />
-          <kbd className="hidden sm:inline-flex h-6 select-none items-center gap-1 rounded border border-border bg-surface-2 px-1.5 font-mono text-[10px] font-medium text-text-muted">
+          <kbd className="hidden sm:inline-flex h-6 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
             ESC
           </kbd>
         </div>
@@ -127,7 +127,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
           {/* No query → show quick links */}
           {!hasQuery && (
             <div className="p-2">
-              <p className="px-3 py-1.5 text-xs font-medium text-text-muted">
+              <p className="px-3 py-1.5 text-xs font-medium text-muted-foreground">
                 Quick links
               </p>
               {quickLinks
@@ -139,9 +139,9 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                   <button
                     key={link.href}
                     onClick={() => navigate(link.href)}
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-text hover:bg-surface-2 transition-colors cursor-pointer"
+                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-muted transition-colors cursor-pointer"
                   >
-                    <link.icon className="h-4 w-4 text-text-muted" />
+                    <link.icon className="h-4 w-4 text-muted-foreground" />
                     {link.label}
                   </button>
                 ))}
@@ -150,14 +150,14 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 
           {/* Has query but still loading first time */}
           {hasQuery && !results && isFetching && (
-            <div className="p-8 text-center text-sm text-text-muted">
+            <div className="p-8 text-center text-sm text-muted-foreground">
               Searching…
             </div>
           )}
 
           {/* Has query, finished loading, no results */}
           {hasQuery && results && !hasResults && (
-            <div className="p-8 text-center text-sm text-text-muted">
+            <div className="p-8 text-center text-sm text-muted-foreground">
               No results for &ldquo;{debouncedQuery}&rdquo;
             </div>
           )}
@@ -174,7 +174,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                       onClick={() => navigate("/users")}
                       icon={
                         <Avatar className="h-6 w-6 border border-border">
-                          <AvatarFallback className="bg-orange/10 text-orange text-[10px] font-bold">
+                          <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-bold">
                             {u.name?.[0]?.toUpperCase() || "U"}
                           </AvatarFallback>
                         </Avatar>
@@ -201,7 +201,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                             alt={r.name}
                             className="rounded-lg"
                           />
-                          <AvatarFallback className="bg-surface-2 text-text-muted text-[10px] rounded-lg">
+                          <AvatarFallback className="bg-muted text-muted-foreground text-[10px] rounded-lg">
                             <Store className="h-3 w-3" />
                           </AvatarFallback>
                         </Avatar>
@@ -221,8 +221,8 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                       key={o._id}
                       onClick={() => navigate("/orders")}
                       icon={
-                        <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-surface-2">
-                          <Hash className="h-3 w-3 text-text-muted" />
+                        <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-muted">
+                          <Hash className="h-3 w-3 text-muted-foreground" />
                         </div>
                       }
                       title={o.orderNumber}
@@ -251,7 +251,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                             alt={f.name}
                             className="rounded-lg object-cover"
                           />
-                          <AvatarFallback className="bg-surface-2 text-text-muted text-[10px] rounded-lg">
+                          <AvatarFallback className="bg-muted text-muted-foreground text-[10px] rounded-lg">
                             <UtensilsCrossed className="h-3 w-3" />
                           </AvatarFallback>
                         </Avatar>
@@ -285,7 +285,7 @@ function ResultGroup({
 }) {
   return (
     <div>
-      <p className="px-3 py-1.5 text-xs font-medium text-text-muted">{label}</p>
+      <p className="px-3 py-1.5 text-xs font-medium text-muted-foreground">{label}</p>
       {children}
     </div>
   );
@@ -307,19 +307,19 @@ function ResultItem({
   return (
     <button
       onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-text hover:bg-surface-2 transition-colors cursor-pointer"
+      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-muted transition-colors cursor-pointer"
     >
       {icon}
       <div className="flex-1 text-left min-w-0">
         <p className="truncate font-medium">{title}</p>
         {subtitle && (
-          <p className="truncate text-xs text-text-muted">{subtitle}</p>
+          <p className="truncate text-xs text-muted-foreground">{subtitle}</p>
         )}
       </div>
       {badge && (
         <Badge
           variant="outline"
-          className="ml-auto shrink-0 border-border text-text-muted text-[10px] capitalize"
+          className="ml-auto shrink-0 border-border text-muted-foreground text-[10px] capitalize"
         >
           {badge}
         </Badge>

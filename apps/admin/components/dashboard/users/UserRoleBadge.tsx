@@ -21,7 +21,7 @@ const ROLE_STYLES: Record<UserRole, { className: string; label: string }> = {
     label: "Vendor",
   },
   admin: {
-    className: "bg-orange/10 text-orange border-orange/20",
+    className: "bg-primary/10 text-primary border-primary/20",
     label: "Admin",
   },
 };

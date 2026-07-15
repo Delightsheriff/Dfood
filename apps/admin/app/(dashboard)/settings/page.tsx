@@ -12,17 +12,17 @@ export default function SettingsPage() {
   return (
     <PageShell title={isVendor ? "Restaurant Settings" : "Global Settings"}>
       <Tabs defaultValue="profile" className="w-full max-w-4xl">
-        <TabsList className="grid w-full grid-cols-2 lg:w-[400px] mb-8 bg-surface border border-border">
+        <TabsList className="grid w-full grid-cols-2 lg:w-[400px] mb-8 bg-card border border-border">
           <TabsTrigger
             value="profile"
-            className="data-[state=active]:bg-orange data-[state=active]:text-white text-text-muted"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-muted-foreground"
           >
             Profile
           </TabsTrigger>
           {isVendor && (
             <TabsTrigger
               value="restaurant"
-              className="data-[state=active]:bg-orange data-[state=active]:text-white text-text-muted"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-muted-foreground"
             >
               Restaurant
             </TabsTrigger>

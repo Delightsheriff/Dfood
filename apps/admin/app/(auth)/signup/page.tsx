@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm, Control, Resolver } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Check, ChevronRight, Eye, EyeOff, Loader2, ArrowLeft, UtensilsCrossed } from "lucide-react";
+import { z } from "zod";
+import { Eye, EyeOff, Loader2, Check } from "lucide-react";
 import { signIn } from "next-auth/react";
-
+import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Form,
   FormControl,
@@ -16,53 +17,50 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "sonner";
-import { SpotlightCard } from "@/components/ui/custom/SpotlightCard";
-import { ShinyText } from "@/components/ui/custom/ShinyText";
-import { StaggerText } from "@/components/ui/custom/StaggerText";
 
-// Schema Definitions
-const step1Schema = z.object({
-  firstName: z.string().min(1, "First name required"),
-  lastName: z.string().min(1, "Last name required"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(10, "Invalid phone number"),
+const formSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Please enter a valid email"),
+  phone: z.string().min(10, "Please enter a valid phone number"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-});
-
-const step2Schema = z.object({
-  restaurantName: z.string().min(2, "Restaurant name required").max(100),
-  restaurantAddress: z.string().min(10, "Full address required"),
-  deliveryFee: z.coerce.number().min(0, "Delivery fee must be 0 or more"),
-  openingTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format (HH:MM)"),
-  closingTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format (HH:MM)"),
+  restaurantName: z.string().min(2, "Restaurant name is required"),
+  restaurantAddress: z.string().min(10, "Please enter the full address"),
+  deliveryFee: z.number().min(0, "Delivery fee must be 0 or more"),
+  openingTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time"),
+  closingTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time"),
   description: z.string().max(500).optional(),
+  agreeTerms: z.boolean().refine((val) => val === true, "You must agree to the terms"),
 });
 
-const step3Schema = z.object({
-  agreeTerms: z.boolean().refine((val) => val === true, "Must agree to terms"),
-});
+type FormData = z.infer<typeof formSchema>;
 
-const signupSchema = step1Schema.merge(step2Schema).merge(step3Schema);
+const steps = [
+  { number: 1, label: "Account" },
+  { number: 2, label: "Restaurant" },
+  { number: 3, label: "Review" },
+];
 
-type SignupFormValues = z.infer<typeof signupSchema>;
+const stepFields: Record<number, (keyof FormData)[]> = {
+  1: ["firstName", "lastName", "email", "phone", "password"],
+  2: ["restaurantName", "restaurantAddress", "deliveryFee", "openingTime", "closingTime"],
+  3: ["agreeTerms"],
+};
 
 export default function SignupPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const form = useForm<SignupFormValues>({
-    resolver: zodResolver(signupSchema) as unknown as Resolver<SignupFormValues>,
-    mode: "onChange",
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -79,41 +77,26 @@ export default function SignupPage() {
     },
   });
 
-  const { trigger, getValues } = form;
+  const values = form.watch();
 
-  const nextStep = async () => {
-    let fieldsToValidate: (keyof SignupFormValues)[] = [];
-    if (step === 1) {
-      fieldsToValidate = ["firstName", "lastName", "email", "phone", "password"];
-    } else if (step === 2) {
-      fieldsToValidate = [
-        "restaurantName",
-        "restaurantAddress",
-        "deliveryFee",
-        "openingTime",
-        "closingTime",
-      ];
-    }
+  async function handleContinue() {
+    const fields = stepFields[step];
+    const valid = await form.trigger(fields);
+    if (valid) setStep((s) => Math.min(s + 1, 3));
+  }
 
-    const isValid = await trigger(fieldsToValidate);
-    if (isValid) {
-      setStep((s) => s + 1);
-    }
-  };
+  function handleBack() {
+    setStep((s) => Math.max(s - 1, 1));
+  }
 
-  const prevStep = () => setStep((s) => s - 1);
-
-  const onSubmit = async (data: SignupFormValues) => {
+  async function onSubmit(data: FormData) {
     setLoading(true);
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/vendor/signup`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             firstName: data.firstName,
             lastName: data.lastName,
@@ -143,538 +126,441 @@ export default function SignupPage() {
       });
 
       if (signInResult?.error) {
-        toast.success("Account Created", {
-          description: "Please sign in with your credentials.",
-        });
+        toast.success("Account created! Please sign in.");
         router.push("/login");
       } else {
         setIsSuccess(true);
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 2000);
+        setTimeout(() => router.push("/dashboard"), 2000);
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An error occurred. Please try again.";
-      toast.error("Signup Failed", {
-        description: errorMessage,
-      });
+      const message = error instanceof Error ? error.message : "Something went wrong";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   if (isSuccess) {
     return (
-      <main className="min-h-screen bg-background text-foreground flex justify-center items-center p-6">
-        <SpotlightCard className="w-full max-w-md text-center p-12 border border-border bg-card shadow-lg">
-          <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
-            🎉
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-sm text-center"
+      >
+        <div className="bg-card border border-border/50 rounded-2xl p-10 shadow-sm">
+          <div className="size-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-5">
+            <svg className="size-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
           </div>
-          <h2 className="mb-4 text-2xl font-extrabold tracking-tight text-foreground">
-            Account Created!
-          </h2>
-          <p className="mb-8 text-xs leading-relaxed text-muted-foreground">
-            Your vendor account has been created successfully. Redirecting you to the dashboard...
+          <h2 className="text-xl font-bold text-foreground mb-2">Account created!</h2>
+          <p className="text-sm text-muted-foreground">
+            Redirecting to your dashboard...
           </p>
-          <div className="flex items-center justify-center">
-            <Loader2 className="w-5 h-5 animate-spin text-primary" />
-          </div>
-        </SpotlightCard>
-      </main>
+        </div>
+      </motion.div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-background text-foreground flex justify-center items-stretch relative">
-      <Link
-        href="/"
-        className="fixed top-6 right-8 z-50 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-primary transition-all duration-300 bg-background/50 backdrop-blur-md px-3 py-1.5 border border-border rounded-full"
-      >
-        <ArrowLeft className="w-3.5 h-3.5" />
-        Home
-      </Link>
-
-      <div className="w-full max-w-[1400px] grid grid-cols-1 md:grid-cols-[1fr_1.1fr] min-h-screen">
-        {/* LEFT PANEL */}
-        <div className="hidden md:flex relative flex-col justify-between p-16 overflow-hidden border-r border-border bg-muted/20">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,118,34,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,118,34,0.015)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none" />
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-[radial-gradient(circle,rgba(255,118,34,0.08),transparent_60%)] pointer-events-none" />
-
-          <Link href="/" className="relative z-10 flex items-center gap-2 group">
-            <div className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-              <UtensilsCrossed className="size-4" />
-            </div>
-            <span className="font-bebas text-2xl tracking-[2px] text-foreground">
-              DFOOD
-            </span>
+    <div className="auth-card w-full max-w-sm">
+      <div className="bg-card border border-border/50 rounded-2xl p-8 shadow-sm">
+        <div className="flex flex-col items-center mb-8">
+          <Link href="/" className="mb-6">
+            <img src="/logo.png" alt="DFOOD" className="h-12 w-auto" />
           </Link>
 
-          <div className="relative z-10 max-w-lg">
-            <div className="mb-4 text-[10px] font-bold tracking-widest text-primary uppercase">
-              — Onboarding Program
-            </div>
-            <h2 className="mb-6 text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] text-foreground">
-              Partner with <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange">
-                DFood Network.
-              </span>
-            </h2>
-            <p className="mb-8 text-xs leading-relaxed text-muted-foreground">
-              Join local partners currently managing operations, updating delivery routes, and collecting payouts on the DFood dashboard.
-            </p>
-
-            <ul className="flex flex-col gap-3 p-0 list-none">
-              {[
-                { icon: "₦", text: "10% commission only — zero setup fees" },
-                { icon: "⚡", text: "Store dashboard activated in 24 hours" },
-                { icon: "📊", text: "Full analytical reports & customer insights" },
-                { icon: "🔔", text: "Instant order sound alerts — never miss a sale" },
-              ].map((item, i) => (
-                <li key={i} className="flex items-center gap-3 text-xs text-muted-foreground">
-                  <div className="w-6 h-6 bg-primary/10 border border-primary/20 rounded-lg flex items-center justify-center text-[10px] shrink-0 font-bold text-primary">
-                    {item.icon}
+          <div className="flex items-center gap-0 w-full max-w-[240px] mb-6">
+            {steps.map((s, i) => (
+              <div key={s.number} className="flex items-center flex-1">
+                <div className="flex flex-col items-center gap-1.5">
+                  <div
+                    className={`size-7 rounded-full flex items-center justify-center text-xs font-semibold transition-colors ${
+                      s.number < step
+                        ? "bg-primary text-primary-foreground"
+                        : s.number === step
+                          ? "border-2 border-primary text-primary"
+                          : "border-2 border-border text-muted-foreground"
+                    }`}
+                  >
+                    {s.number < step ? (
+                      <Check className="size-3.5" />
+                    ) : (
+                      s.number
+                    )}
                   </div>
-                  {item.text}
-                </li>
-              ))}
-            </ul>
+                  <span
+                    className={`text-[10px] font-medium leading-none ${
+                      s.number <= step ? "text-foreground" : "text-muted-foreground"
+                    }`}
+                  >
+                    {s.label}
+                  </span>
+                </div>
+                {i < steps.length - 1 && (
+                  <div
+                    className={`flex-1 h-px mx-2 mt-[-18px] ${
+                      s.number < step ? "bg-primary" : "bg-border"
+                    }`}
+                  />
+                )}
+              </div>
+            ))}
           </div>
 
-          <div className="relative z-10 text-[10px] font-mono text-muted-foreground">
-            © {new Date().getFullYear()} DFood Network · Operational Portal
+          <div className="text-center">
+            <h1 className="text-xl font-bold tracking-tight text-foreground text-balance">
+              {step === 1 && "Create your account"}
+              {step === 2 && "Restaurant details"}
+              {step === 3 && "Review & submit"}
+            </h1>
+            <p className="mt-1 text-sm text-muted-foreground text-balance">
+              {step === 1 && "Already registered? "}
+              {step === 1 && (
+                <Link href="/login" className="focus-ring font-semibold text-primary hover:underline">
+                  Sign in
+                </Link>
+              )}
+              {step === 2 && "Tell us about your restaurant"}
+              {step === 3 && "Check everything looks right"}
+            </p>
           </div>
         </div>
 
-        {/* RIGHT PANEL */}
-        <div className="flex flex-col items-center pt-24 pb-12 px-6 md:px-16 bg-background overflow-y-auto">
-          <div className="w-full max-w-[420px]">
-            {/* Header */}
-            <div className="mb-8">
-              <h1 className="mb-2 text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
-                <StaggerText text="Partner Up" />
-              </h1>
-              <p className="text-xs text-muted-foreground">
-                Already registered?{" "}
-                <Link href="/login" className="font-bold text-primary hover:underline">
-                  Sign in here →
-                </Link>
-              </p>
-            </div>
-
-            {/* Step Indicator */}
-            <div className="mb-8">
-              <div className="relative flex items-center justify-between mb-2">
-                <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex pointer-events-none">
-                  <div
-                    className={`flex-1 h-px transition-colors duration-300 ${
-                      step > 1 ? "bg-primary/50" : "bg-border"
-                    }`}
-                  />
-                  <div
-                    className={`flex-1 h-px transition-colors duration-300 ${
-                      step > 2 ? "bg-primary/50" : "bg-border"
-                    }`}
-                  />
-                </div>
-                {[1, 2, 3].map((s) => (
-                  <div
-                    key={s}
-                    className={`relative z-10 w-7 h-7 rounded-full border flex items-center justify-center text-[10px] font-mono transition-all duration-300 ${
-                      step === s
-                        ? "bg-primary border-primary text-primary-foreground font-bold"
-                        : step > s
-                        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-bold"
-                        : "bg-muted border-border text-muted-foreground"
-                    }`}
-                  >
-                    {step > s ? <Check size={12} /> : s}
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex justify-between px-1">
-                {["Contact", "Restaurant", "Review"].map((label, i) => (
-                  <span
-                    key={label}
-                    className={`text-[9px] font-bold tracking-wider uppercase transition-colors ${
-                      step === i + 1 ? "text-primary" : "text-muted-foreground"
-                    }`}
-                  >
-                    {label}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <SpotlightCard className="p-8 border border-border shadow-md bg-card" spotlightColor="rgba(255, 118, 34, 0.04)">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  {/* STEP 1: Account Info */}
-                  <div className={step === 1 ? "block animate-in fade-in" : "hidden"}>
-                    <div className="mb-4 pb-2 border-b border-border/40 text-[10px] font-bold tracking-wider uppercase text-muted-foreground font-mono">
-                      Your Details
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <FormField
-                        control={form.control as unknown as Control<SignupFormValues>}
-                        name="firstName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-[9px] font-bold tracking-wider uppercase text-muted-foreground">
-                              First Name
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="John"
-                                {...field}
-                                className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs"
-                              />
-                            </FormControl>
-                            <FormMessage className="text-[11px] text-red-500" />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control as unknown as Control<SignupFormValues>}
-                        name="lastName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-[9px] font-bold tracking-wider uppercase text-muted-foreground">
-                              Last Name
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Doe"
-                                {...field}
-                                className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs"
-                              />
-                            </FormControl>
-                            <FormMessage className="text-[11px] text-red-500" />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <AnimatePresence mode="wait">
+              {step === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-4"
+                >
+                  <div className="grid grid-cols-2 gap-3">
                     <FormField
-                      control={form.control as unknown as Control<SignupFormValues>}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem className="mt-3">
-                          <FormLabel className="text-[9px] font-bold tracking-wider uppercase text-muted-foreground">
-                            Email Address
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="operator@restaurant.com"
-                              type="email"
-                              {...field}
-                              className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-[11px] text-red-500" />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control as unknown as Control<SignupFormValues>}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem className="mt-3">
-                          <FormLabel className="text-[9px] font-bold tracking-wider uppercase text-muted-foreground">
-                            Phone Number
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="+234..."
-                              type="tel"
-                              {...field}
-                              className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-[11px] text-red-500" />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control as unknown as Control<SignupFormValues>}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem className="mt-3">
-                          <FormLabel className="text-[9px] font-bold tracking-wider uppercase text-muted-foreground">
-                            Password
-                          </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input
-                                type={showPassword ? "text" : "password"}
-                                placeholder="Min. 8 characters"
-                                {...field}
-                                className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs pr-10"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute -translate-y-1/2 right-3 top-1/2 text-muted-foreground hover:text-foreground"
-                              >
-                                {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                              </button>
-                            </div>
-                          </FormControl>
-                          <FormMessage className="text-[11px] text-red-500" />
-                        </FormItem>
-                      )}
-                    />
-
-                    <div className="mt-6">
-                      <Button
-                        type="button"
-                        onClick={nextStep}
-                        className="w-full h-11 text-xs font-bold tracking-wider uppercase bg-primary text-primary-foreground hover:opacity-90 rounded-lg flex items-center justify-center gap-1 shadow-sm"
-                      >
-                        Continue <ChevronRight size={16} />
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* STEP 2: Restaurant Info */}
-                  <div className={step === 2 ? "block animate-in fade-in" : "hidden"}>
-                    <div className="mb-4 pb-2 border-b border-border/40 text-[10px] font-bold tracking-wider uppercase text-muted-foreground font-mono">
-                      Restaurant Details
-                    </div>
-
-                    <FormField
-                      control={form.control as unknown as Control<SignupFormValues>}
-                      name="restaurantName"
+                      control={form.control}
+                      name="firstName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-[9px] font-bold tracking-wider uppercase text-muted-foreground">
-                            Restaurant Name
-                          </FormLabel>
+                          <FormLabel>First name</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="e.g. Chow Cafe"
-                              {...field}
-                              className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs"
-                            />
+                            <Input placeholder="John" {...field} />
                           </FormControl>
-                          <FormMessage className="text-[11px] text-red-500" />
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
-
                     <FormField
-                      control={form.control as unknown as Control<SignupFormValues>}
-                      name="restaurantAddress"
+                      control={form.control}
+                      name="lastName"
                       render={({ field }) => (
-                        <FormItem className="mt-3">
-                          <FormLabel className="text-[9px] font-bold tracking-wider uppercase text-muted-foreground">
-                            Full Address
-                          </FormLabel>
+                        <FormItem>
+                          <FormLabel>Last name</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Street, City, State"
-                              {...field}
-                              className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs"
-                            />
+                            <Input placeholder="Doe" {...field} />
                           </FormControl>
-                          <FormMessage className="text-[11px] text-red-500" />
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
+                  </div>
 
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input type="email" placeholder="you@restaurant.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone</FormLabel>
+                        <FormControl>
+                          <Input type="tel" placeholder="+234 800 000 0000" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Min. 8 characters"
+                              {...field}
+                              className="pr-10"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                              tabIndex={-1}
+                            >
+                              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </motion.div>
+              )}
+
+              {step === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-4"
+                >
+                  <FormField
+                    control={form.control}
+                    name="restaurantName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Restaurant name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Chow Cafe" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="restaurantAddress"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Street, City, State" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid grid-cols-3 gap-3">
                     <FormField
-                      control={form.control as unknown as Control<SignupFormValues>}
+                      control={form.control}
                       name="deliveryFee"
                       render={({ field }) => (
-                        <FormItem className="mt-3">
-                          <FormLabel className="text-[9px] font-bold tracking-wider uppercase text-muted-foreground">
-                            Base Delivery Fee (₦)
-                          </FormLabel>
+                        <FormItem>
+                          <FormLabel>Fee (₦)</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
                               min="0"
                               {...field}
-                              className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs"
+                              onChange={(e) => field.onChange(Number(e.target.value))}
                             />
                           </FormControl>
-                          <FormMessage className="text-[11px] text-red-500" />
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
-
-                    <div className="grid grid-cols-2 gap-3 mt-3">
-                      <FormField
-                        control={form.control as unknown as Control<SignupFormValues>}
-                        name="openingTime"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-[9px] font-bold tracking-wider uppercase text-muted-foreground">
-                              Opening Time
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                type="time"
-                                {...field}
-                                className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs cursor-pointer"
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control as unknown as Control<SignupFormValues>}
-                        name="closingTime"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-[9px] font-bold tracking-wider uppercase text-muted-foreground">
-                              Closing Time
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                type="time"
-                                {...field}
-                                className="bg-background border-border focus:ring-primary/20 h-10 rounded-lg text-xs cursor-pointer"
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
                     <FormField
-                      control={form.control as unknown as Control<SignupFormValues>}
-                      name="description"
+                      control={form.control}
+                      name="openingTime"
                       render={({ field }) => (
-                        <FormItem className="mt-3">
-                          <FormLabel className="text-[9px] font-bold tracking-wider uppercase text-muted-foreground">
-                            Short Description
-                          </FormLabel>
+                        <FormItem>
+                          <FormLabel>Opens</FormLabel>
                           <FormControl>
-                            <Textarea
-                              placeholder="Brief description for menus..."
-                              {...field}
-                              className="bg-background border-border focus:ring-primary/20 rounded-lg text-xs min-h-16"
-                            />
+                            <Input type="time" {...field} />
                           </FormControl>
-                          <FormMessage className="text-[11px] text-red-500" />
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={form.control}
+                      name="closingTime"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Closes</FormLabel>
+                          <FormControl>
+                            <Input type="time" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-                    <div className="flex gap-3 mt-6">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={prevStep}
-                        className="flex-1 h-11 border-border bg-transparent hover:bg-muted text-xs font-semibold rounded-lg"
-                      >
-                        Back
-                      </Button>
-                      <Button
-                        type="button"
-                        onClick={nextStep}
-                        className="flex-[2] h-11 text-xs font-bold tracking-wider uppercase bg-primary text-primary-foreground hover:opacity-90 rounded-lg flex items-center justify-center gap-1 shadow-sm"
-                      >
-                        Continue <ChevronRight size={16} />
-                      </Button>
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Description{" "}
+                          <span className="text-muted-foreground/60">(optional)</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="A brief description of your restaurant..."
+                            rows={3}
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </motion.div>
+              )}
+
+              {step === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-5"
+                >
+                  <div>
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                      Account
+                    </h3>
+                    <div className="space-y-1.5 text-sm">
+                      <p className="text-foreground">
+                        {values.firstName} {values.lastName}
+                      </p>
+                      <p className="text-muted-foreground">{values.email}</p>
+                      <p className="text-muted-foreground">{values.phone}</p>
                     </div>
                   </div>
 
-                  {/* STEP 3: Confirm */}
-                  <div className={step === 3 ? "block animate-in fade-in" : "hidden"}>
-                    <div className="mb-4 pb-2 border-b border-border/40 text-[10px] font-bold tracking-wider uppercase text-muted-foreground font-mono">
-                      Review details
-                    </div>
+                  <hr className="border-border/50" />
 
-                    <div className="bg-background border border-border rounded-lg p-5 mb-5 space-y-4">
-                      <div>
-                        <div className="text-[8px] font-bold text-muted-foreground uppercase font-mono tracking-wider">
-                          Store Representative
-                        </div>
-                        <div className="text-[11px] font-bold text-foreground mt-0.5">
-                          {getValues("firstName")} {getValues("lastName")}
-                        </div>
-                        <div className="text-[10px] text-muted-foreground">
-                          {getValues("email")}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-[8px] font-bold text-muted-foreground uppercase font-mono tracking-wider">
-                          Restaurant Store
-                        </div>
-                        <div className="text-[11px] font-bold text-foreground mt-0.5">
-                          {getValues("restaurantName")}
-                        </div>
-                        <div className="text-[10px] text-muted-foreground">
-                          {getValues("restaurantAddress")}
-                        </div>
-                      </div>
+                  <div>
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                      Restaurant
+                    </h3>
+                    <div className="space-y-1.5 text-sm">
+                      <p className="text-foreground">{values.restaurantName}</p>
+                      <p className="text-muted-foreground">{values.restaurantAddress}</p>
+                      <p className="text-muted-foreground">
+                        ₦{values.deliveryFee} fee &middot; {values.openingTime} &ndash;{" "}
+                        {values.closingTime}
+                      </p>
+                      {values.description && (
+                        <p className="text-muted-foreground text-xs leading-relaxed mt-2">
+                          {values.description}
+                        </p>
+                      )}
                     </div>
+                  </div>
 
-                    <FormField
-                      control={form.control as unknown as Control<SignupFormValues>}
-                      name="agreeTerms"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-2.5 space-y-0 mb-5">
+                  <FormField
+                    control={form.control}
+                    name="agreeTerms"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex items-start gap-2.5">
                           <FormControl>
                             <Checkbox
                               checked={field.value}
                               onCheckedChange={field.onChange}
-                              className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary mt-0.5"
                             />
                           </FormControl>
-                          <div className="leading-tight">
-                            <FormLabel className="text-[10px] font-semibold text-muted-foreground cursor-pointer leading-normal">
-                              I agree to the{" "}
-                              <Link href="/terms" className="text-primary hover:underline">
-                                Terms of Service
-                              </Link>{" "}
-                              and{" "}
-                              <Link href="/privacy" className="text-primary hover:underline">
-                                Privacy Policy
-                              </Link>
-                              .
-                            </FormLabel>
-                            <FormMessage className="text-[11px] text-red-500 pt-1" />
-                          </div>
-                        </FormItem>
-                      )}
-                    />
+                          <FormLabel className="text-xs text-muted-foreground leading-relaxed font-normal cursor-pointer">
+                            I agree to the{" "}
+                            <Link href="/terms" className="font-medium text-primary hover:underline">
+                              Terms of Service
+                            </Link>{" "}
+                            and{" "}
+                            <Link href="/privacy" className="font-medium text-primary hover:underline">
+                              Privacy Policy
+                            </Link>
+                          </FormLabel>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-                    <div className="flex gap-3">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={prevStep}
-                        disabled={loading}
-                        className="flex-1 h-11 border-border bg-transparent hover:bg-muted text-xs font-semibold rounded-lg"
-                      >
-                        Back
-                      </Button>
-                      <Button
-                        type="submit"
-                        disabled={loading}
-                        className="flex-[2] h-11 text-xs font-bold tracking-wider uppercase bg-primary text-primary-foreground hover:opacity-90 rounded-lg shadow-sm"
-                      >
-                        {loading ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <ShinyText text="SUBMIT APPLICATION" className="text-primary-foreground" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                </form>
-              </Form>
-            </SpotlightCard>
-          </div>
-        </div>
+            <div className="mt-6">
+              {step === 1 ? (
+                <Button
+                  type="button"
+                  onClick={handleContinue}
+                  className="w-full"
+                >
+                  Continue
+                </Button>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleBack}
+                    disabled={loading}
+                    className="flex-1"
+                  >
+                    Back
+                  </Button>
+                  {step === 2 ? (
+                    <Button
+                      type="button"
+                      onClick={handleContinue}
+                      className="flex-1"
+                    >
+                      Continue
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="flex-1"
+                    >
+                      {loading ? <Loader2 className="size-4 animate-spin" /> : "Create account"}
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          </form>
+        </Form>
       </div>
-    </main>
+
+      <div className="mt-6 flex flex-col items-center gap-2">
+        <Link href="/" className="focus-ring text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors">
+          &larr; Back to home
+        </Link>
+        <p className="text-xs text-muted-foreground/60">
+          &copy; {new Date().getFullYear()} DFood Network
+        </p>
+      </div>
+    </div>
   );
 }
