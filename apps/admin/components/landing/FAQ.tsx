@@ -33,21 +33,21 @@ export function FAQ() {
   ];
 
   return (
-    <section id="faq" className="px-6 py-24 border-t bg-black border-white/5 md:px-12">
+    <section id="faq" className="px-6 py-20 border-t bg-background border-border md:px-12">
       <div className="grid items-start grid-cols-1 gap-16 mx-auto w-full max-w-7xl lg:grid-cols-2">
         <Reveal>
-          <div className="mb-4 text-[10px] font-bold tracking-widest text-orange uppercase">
+          <div className="mb-4 text-[10px] font-bold tracking-widest text-primary uppercase">
             — FAQ
           </div>
-          <h2 className="mb-6 text-3xl md:text-5xl font-bold tracking-tight text-text">
+          <h2 className="mb-6 text-2xl md:text-4xl font-bold tracking-tight text-foreground">
             Frequently Asked Questions
           </h2>
-          <p className="text-xs leading-relaxed text-text-muted max-w-sm">
+          <p className="text-xs leading-relaxed text-muted-foreground max-w-sm">
             Can&apos;t find what you&apos;re looking for? Contact support team at:
             <br />
             <a
               href="mailto:support@dfood.com"
-              className="inline-flex items-center gap-1 mt-2 text-orange hover:underline font-semibold"
+              className="inline-flex items-center gap-1 mt-2 text-primary hover:underline font-semibold"
             >
               <Mail className="w-3.5 h-3.5" />
               support@dfood.com
@@ -57,22 +57,22 @@ export function FAQ() {
 
         <div className="flex flex-col gap-3">
           {faqs.map((faq, index) => (
-            <Reveal key={index} delay={index * 0.1}>
-              <div className="overflow-hidden border rounded-xl border-white/5 bg-[#080808]">
+            <Reveal key={index} delay={index * 0.08}>
+              <div className="overflow-hidden border rounded-xl border-border bg-card">
                 <button
                   onClick={() =>
                     setOpenIndex(openIndex === index ? null : index)
                   }
                   className={cn(
-                    "flex items-center justify-between w-full p-5 text-left transition-colors hover:bg-white/5 font-semibold text-xs text-text",
-                    openIndex === index && "text-orange"
+                    "flex items-center justify-between w-full p-5 text-left transition-colors hover:bg-muted/50 font-semibold text-xs text-foreground",
+                    openIndex === index && "text-primary"
                   )}
                 >
                   {faq.q}
                   <ChevronDown
                     className={cn(
-                      "w-4 h-4 transition-transform duration-300 text-zinc-500",
-                      openIndex === index && "rotate-180 text-orange"
+                      "w-4 h-4 transition-transform duration-300 text-muted-foreground",
+                      openIndex === index && "rotate-180 text-primary"
                     )}
                   />
                 </button>
@@ -84,7 +84,7 @@ export function FAQ() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.2, ease: "easeInOut" }}
                     >
-                      <div className="px-5 pb-5 text-xs leading-relaxed text-text-dim border-t border-white/[0.03] pt-4">
+                      <div className="px-5 pb-5 text-xs leading-relaxed text-muted-foreground border-t border-border/40 pt-4">
                         {faq.a}
                       </div>
                     </motion.div>

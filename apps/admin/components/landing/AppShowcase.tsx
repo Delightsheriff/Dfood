@@ -11,25 +11,25 @@ export function AppShowcase() {
 
   const tabs = [
     {
-      icon: <Compass className="w-5 h-5" />,
+      icon: <Compass className="w-4 h-4" />,
       title: "Discovery Home",
       desc: "Browse local cuisines, view recommendations, and see open restaurants nearby.",
       image: "/app-screen-1.jpeg",
     },
     {
-      icon: <UtensilsCrossed className="w-5 h-5" />,
+      icon: <UtensilsCrossed className="w-4 h-4" />,
       title: "Menu Catalogs",
       desc: "Detailed menu items complete with calories, visual images, ratings, and variants.",
       image: "/app-screen-2.jpeg",
     },
     {
-      icon: <ShoppingCart className="w-5 h-5" />,
+      icon: <ShoppingCart className="w-4 h-4" />,
       title: "Sleek Checkout",
       desc: "Confirm order pricing, select delivery address, and pay securely in seconds.",
       image: "/cart.jpeg",
     },
     {
-      icon: <Truck className="w-5 h-5" />,
+      icon: <Truck className="w-4 h-4" />,
       title: "Live Order Tracking",
       desc: "Receive real-time push updates as the order prepares and heads to the destination.",
       image: "/app-screen-4.jpeg",
@@ -45,20 +45,20 @@ export function AppShowcase() {
   }, [tabs.length]);
 
   return (
-    <section className="py-24 px-6 md:px-12 overflow-hidden bg-[#080808]">
+    <section className="py-20 px-6 md:px-12 overflow-hidden bg-background">
       <div className="grid grid-cols-1 gap-16 items-center max-w-7xl mx-auto lg:grid-cols-[1fr_1.2fr]">
         {/* Left: Content + Tabs */}
         <div>
           <Reveal>
-            <div className="mb-4 text-[10px] font-bold tracking-widest text-orange uppercase">
+            <div className="mb-4 text-[10px] font-bold tracking-widest text-primary uppercase">
               — Consumer App
             </div>
-            <h2 className="mb-6 text-3xl md:text-5xl font-bold tracking-tight text-text">
+            <h2 className="mb-6 text-2xl md:text-4xl font-bold tracking-tight text-foreground">
               The customer interface
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="mb-10 text-xs leading-relaxed text-text-muted max-w-md">
+            <p className="mb-8 text-xs leading-relaxed text-muted-foreground max-w-md">
               A beautifully simple experience for users to browse menus, manage their profiles, and track delivery progress.
             </p>
           </Reveal>
@@ -69,18 +69,18 @@ export function AppShowcase() {
                 <button
                   onClick={() => setActiveTab(index)}
                   className={cn(
-                    "group flex items-start w-full gap-4 p-4 text-left transition-all duration-300 border rounded-2xl",
+                    "group flex items-start w-full gap-4 p-4 text-left transition-all duration-300 border rounded-xl",
                     activeTab === index
-                      ? "bg-black border-white/10 shadow-xl"
-                      : "bg-transparent border-transparent hover:bg-white/5"
+                      ? "bg-card border-border/80 shadow-sm"
+                      : "bg-transparent border-transparent hover:bg-muted/50"
                   )}
                 >
                   <div
                     className={cn(
-                      "flex items-center justify-center w-10 h-10 border rounded-xl shrink-0 transition-all duration-300",
+                      "flex items-center justify-center w-9 h-9 border rounded-lg shrink-0 transition-all duration-300",
                       activeTab === index
-                        ? "bg-orange text-white border-orange shadow-md shadow-orange/15"
-                        : "bg-white/5 text-zinc-500 border-white/5 group-hover:border-orange/20 group-hover:text-orange"
+                        ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                        : "bg-muted text-muted-foreground border-border group-hover:border-primary/20 group-hover:text-primary"
                     )}
                   >
                     {tab.icon}
@@ -89,7 +89,7 @@ export function AppShowcase() {
                     <div
                       className={cn(
                         "mb-1 text-xs font-bold transition-colors",
-                        activeTab === index ? "text-text" : "text-text-dim group-hover:text-text"
+                        activeTab === index ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
                       )}
                     >
                       {tab.title}
@@ -97,7 +97,7 @@ export function AppShowcase() {
                     <div
                       className={cn(
                         "text-[11px] leading-relaxed transition-colors",
-                        activeTab === index ? "text-text-muted" : "text-text-dim"
+                        activeTab === index ? "text-muted-foreground" : "text-muted-foreground/60"
                       )}
                     >
                       {tab.desc}
@@ -115,38 +115,38 @@ export function AppShowcase() {
           className="relative flex items-center justify-center pt-10 lg:pt-0"
         >
           {/* Decorative Glow */}
-          <div className="absolute w-[450px] h-[450px] bg-orange/5 rounded-full blur-3xl -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+          <div className="absolute w-[400px] h-[400px] bg-primary/5 rounded-full blur-[80px] -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
           {/* Floating Badges */}
           <div className="absolute top-[12%] right-2 md:right-8 z-30 animate-pulse">
-            <div className="flex items-center gap-2.5 p-3 bg-black/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl">
-              <Star className="w-4 h-4 fill-orange text-orange" />
+            <div className="flex items-center gap-2 p-2.5 bg-card/90 backdrop-blur-md border border-border rounded-xl shadow-md">
+              <Star className="w-3.5 h-3.5 fill-primary text-primary" />
               <div>
-                <div className="text-[9px] font-bold text-text-muted uppercase tracking-wider">
+                <div className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider">
                   Store Rating
                 </div>
-                <div className="text-xs font-bold text-text">4.9 Stars</div>
+                <div className="text-[10px] font-bold text-foreground">4.9 Stars</div>
               </div>
             </div>
           </div>
 
           <div className="absolute bottom-[20%] left-2 md:left-8 z-30 animate-pulse">
-            <div className="flex items-center gap-2.5 p-3 bg-black/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl">
-              <ShieldCheck className="w-4 h-4 text-orange" />
+            <div className="flex items-center gap-2 p-2.5 bg-card/90 backdrop-blur-md border border-border rounded-xl shadow-md">
+              <ShieldCheck className="w-3.5 h-3.5 text-primary" />
               <div>
-                <div className="text-[9px] font-bold text-text-muted uppercase tracking-wider">
+                <div className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider">
                   Payments
                 </div>
-                <div className="text-xs font-bold text-text">Secure SSL</div>
+                <div className="text-[10px] font-bold text-foreground">Secure SSL</div>
               </div>
             </div>
           </div>
 
-          <div className="relative z-10 w-[260px] md:w-[280px]">
+          <div className="relative z-10 w-[240px] md:w-[260px]">
             {/* Phone Frame */}
-            <div className="relative aspect-[9/19] bg-black rounded-[40px] border-[6px] border-[#161616] shadow-2xl overflow-hidden ring-1 ring-white/10">
+            <div className="relative aspect-[9/19] bg-card rounded-[32px] border-[5px] border-muted shadow-xl overflow-hidden ring-1 ring-border">
               {/* Screen Content */}
-              <div className="relative w-full h-full bg-[#0a0a0a]">
+              <div className="relative w-full h-full bg-background">
                 {tabs.map((tab, index) => (
                   <div
                     key={index}
