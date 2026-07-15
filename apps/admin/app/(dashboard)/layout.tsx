@@ -3,6 +3,7 @@ import { DashboardRoleProvider } from "@/components/dashboard/DashboardRoleConte
 import { AppSidebar } from "@/components/dashboard/AppSidebar";
 import { Header } from "@/components/dashboard/Header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { DevRoleToolbar } from "@/components/dashboard/DevRoleToolbar";
 
 export default function DashboardLayout({
   children,
@@ -20,6 +21,8 @@ export default function DashboardLayout({
           </main>
         </SidebarInset>
       </SidebarProvider>
+      <DevRoleToolbar />
     </DashboardRoleProvider>
   );
 }
+

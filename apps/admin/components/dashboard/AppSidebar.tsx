@@ -20,11 +20,20 @@ import {
 } from "@/components/ui/sidebar";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useDashboardRole } from "./DashboardRoleContext";
+import { useDashboardRole, Role } from "./DashboardRoleContext";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { navigationLinks } from "@/types/links";
 import { ProfileDropdown } from "./ProfileDropdown";
+
+const roleLabels: Record<Role, string> = {
+  super_admin: "Platform Owner",
+  manager: "Operations Manager",
+  support: "Customer Support",
+  restaurant_admin: "Restaurant Admin",
+  content_manager: "Catalog Editor",
+  finance: "Financial Auditor",
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { role, user, isLoading } = useDashboardRole();
@@ -60,7 +69,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-bold text-orange">FOOD</span>
                   <span className="truncate text-xs text-muted-foreground">
-                    {role === "vendor" ? "Vendor Portal" : "Admin Portal"}
+                    {roleLabels[role] || "Portal"}
                   </span>
                 </div>
               </Link>

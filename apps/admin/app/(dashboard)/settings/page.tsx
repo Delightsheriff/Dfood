@@ -7,8 +7,7 @@ import { ProfileSettings } from "@/components/dashboard/ProfileSettings";
 import { RestaurantSettings } from "@/components/dashboard/RestaurantSettings";
 
 export default function SettingsPage() {
-  const { role } = useDashboardRole();
-  const isVendor = role === "vendor";
+  const { isVendor } = useDashboardRole();
 
   return (
     <PageShell title={isVendor ? "Restaurant Settings" : "Global Settings"}>
